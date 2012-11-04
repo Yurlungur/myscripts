@@ -1,0 +1,6 @@
+# Start this program at the beginning of a homework break.
+# It will then run for $1 minutes (and make that particular
+# terminal shell inoperable) and then calls caramelldansen as
+# an alarm.
+
+CAREMELLDANSEN=/home/jonah/Storage/Music/

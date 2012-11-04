@@ -1,0 +1,132 @@
+Instructions on the cs1300 hacks to make the cs1300 packages compatible
+with linux/mac (natively) or with linux-like command-line behavior (on windows).
+Author: Jonah Miller
+
+
+---------------------------------------------------------------------------
+Linux/mac
+---------------------------------------------------------------------------
+
+For a unix-based system, I think all you need to do is put all the files 
+in the Colorado/cs1300 folder somewhere on your computer, edit the bash 
+script "bgi++" to point to this location, save "bgi++" to a place in your 
+path (if you know what this means, then you don't need instructions remember
+to make it executable) or add it to your path with the following commands:
+
+cd directory/with/bgi++/script/in/it #this is not a real path
+mkdir ~/myscripts
+cp bgi++ ~/myscripts/
+cd ~
+echo 'PATH=$PATH:'$PWD'/myscripts' >> .bash_profile
+echo 'export PATH'
+su -c 'chmod a+x ~/myscripts/bgi++'
+
+Once you've got an executable bgi++ script in your path, and call it 
+using the syntax
+
+bgi++ source.cxx output.exe
+
+You also need wine on the computer you're using. If the computer runs linux, 
+then almost every package manager should have it. If the computer runs macOS, 
+the wine wiki has very rudimentary instructions
+
+http://wiki.winehq.org/MacOSX/Installing
+
+and there are also some (I assume nice, I don't use mac...) tutorials:
+
+http://www.youtube.com/watch?v=msYNfqvv-uw
+http://www.davidbaumgold.com/tutorials/wine-mac/
+
+To run a program, just compile at as an exe using the bgi++ script and then call
+
+wine program.exe
+
+from the command line. I use emacs natively, rather than the cs1300 emacs
+program. This is faster and works more nicely. The debugger no longer interacts
+with emacs properly. This function is missing from my hack, and I have yet to
+figure out how to fix this. However, you can call the debugger from a windows-like
+command line using wineconsole (included with wine):
+
+wineconsole --backend=user gdb program.exe
+
+
+
+
+
+
+--------------------------------------------------------------------------
+WINDOWS
+--------------------------------------------------------------------------
+
+
+For a windows-based system, I have also found the following programs 
+to help mimic linux behavior. For virtual desktops, I use virtuawin:
+
+http://virtuawin.sourceforge.net/
+
+which makes multitasking much easier. To get a bash-like command line 
+(this is not a linux emulator, it's just a bash interpreter that 
+feeds into DOS), I use cygwin:
+
+http://www.cygwin.com/
+
+To install cygwin, download the install file, run it, and choose the programs 
+and functionality you want to have. I added ssh, vim, and X11 
+functionality. This lets me access other unix-based systems and pull 
+program windows accorss the ssh link, which is nice. The xterm terminal 
+(which is part of X11) is also a little nicer than the default terminal.
+
+Intuitively, it would seem like the CS1300 programs that were installed 
+with the windows install file should work in the Cygwin terminal with no 
+change. Unfortunately, this isn't quite true. Without editing some 
+configuration files, Cygwin doesn't know where to find the programs and 
+there are some weird permissions issues with emacs. Cygwin can be made to 
+behave nicely with the CS1300 packages with the following hacks:
+
+First, Cygwin does not, by default, no where to find the CS1300 binaries. 
+To fix this, open a cygwin terminal and call a text editor on your bash_profile. 
+In my example, I will use vim. Someone unfamiliar with vim should probably 
+use nano or notepad, though.
+
+vim .bash_profile
+
+Once in the text file, add the following lines to the end of the file 
+(replace the pach /c/path/to/cs1300 with your own filepath for your 
+particular system):
+
+PATH=$PATH:'/cygdrive/c/Program Files (x86)/Colorado/cs1300'
+PATH=$PATH:'/cygdrive/c/Program Files (x86)/Colorado/cs1300/bin'
+PATH=$PATH:'/cygdrive/c/Program Files (x86)/Colorado/cs1300/emacs/bin'
+PATH=$PATH:'/cygdrive/c/Program Files (x86)/Colorado/cs1300/include'
+PATH=$PATH:'/cygdrive/c/Program Files (x86)/Colorado/cs1300/lib/gcc-lib/mingw32/3.3.1'
+PATH=$PATH:'/cygdrive/c/Program Files (x86)/Colorado/cs1300/ming32'
+PATH=$PATH:'/cygdrive/c/Program Files (x86)/Colorado/cs1300/ming32/bin'
+export PATH
+
+Save and quit. When the cygwin terminal starts up, you also want it to 
+change some variables in windows that the binaries in the cs1300 
+package use (this is what causes permissions problems with emacs in cygwin). 
+To do this, save the attached "startup.sh" file to your home directory. 
+(in cygwin's filesystem, not in Windows file system. If you're in cygwin, 
+find the file by cd-ing to the directory where you saved it and then 
+run the command
+
+cp startup.sh ~/
+
+).
+Now, open your .bashrc file:
+
+vim ~/.bashrc
+
+and add the following line to the bottom of the file:
+
+bash startup.sh
+
+This tells bash to run startup.sh when you open a cygwin terminal. 
+With these changes, you should be able to use the cygwin terminal 
+to do everything you do in the cs1300 DOS-based command line.
+
+
+With this configuration, I'm able to work with the cs1300 probrams in linux
+a linux environment, both in my native linux installation, or on my
+windows partition.

@@ -1,0 +1,10 @@
+#!/usr/bin/env python
+
+# Checks the battery and displays an output in percentage 
+
+# Subprocesses
+import subprocess
+
+bat_info = str(subprocess.check_output(['acpi']))
+bat_percent = bat_info.split()[3][:-1]
+print(bat_percent)

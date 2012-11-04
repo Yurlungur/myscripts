@@ -1,0 +1,3 @@
+# Calls the emacs client to avoid weird graphical glitch
+sleep 0
+emacsclient -nw

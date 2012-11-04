@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Starts the emacs daemon
+emacs -u jonah --daemon -l /home/jonah/.emacs

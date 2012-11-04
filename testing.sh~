@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+MYDIR=$(pwd)
+
+PATHS=$(realpath $@)
+
+for i in $PATHS; do
+    echo "(push \"$i\" *filenamelist*)"
+done
+

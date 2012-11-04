@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Author: Jonah Miller
+# File: bgi++ is a shell script that enables the use of
+# The CSCI1300 and bgi++ compiler packages through the 
+# bash command line.
+# Common prexix commands are already included, and
+# New commands can't be added to the compiler. However
+# Just change the script under the comment "Runs the program"
+# to add or remove prefixes you need.
+#
+# To install the script, edit the CSI1300 home directory
+# variable to mimic your own system, save the script somewhere
+# In your path (in ~/myscripts if you have your own folder,
+# or in /usr/bin, perhaps, if not), and make the script executable
+# with 
+# su -c 'chmod a+x bgi++'
+#
+# To use hte script, just type 
+#
+# bgi++ source.cxx output.exe
+#
+# The -Wall, -g, and -o flags are already in place.
+
+# The CSCI1300 home directory
+# Edit this for your own software configuration
+CSDIR=/home/jonah/myscripts/cs1300
+
+# Set variables. I'm not sure if this does
+# anything useful.
+EMACS_HOME=$CSDIR/emacs/
+C_INCLUDE_PATH=$CSDIR/include/
+CPLUS_INCLUDE_PATH=$CSDIR/include/
+LIBRARY_PATH=$CSDIR/lib/
+GCC_EXEC_PREFIX=$CSDIR/lib/gcc-lib/
+BISON_SIMPLE=$CSDIR/share/bison.simple
+BISON_HAIRY=$CSDIR/share/bison.hairy
+PATH=$PATH:$CSDIR/bin:$CSDIR/lib/gcc-lib/mingw32/3.3.1
+BGI_LOCATION=$CSDIR/bin/bgi++.exe
+
+# Program locations
+WORKING_DIRECTORY=$PWD
+
+# Exports variables
+# Again. I'm not sure how important this is.
+export CSDIR
+export EMACS_HOME
+export C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH
+export LIBRARY_PATH
+export GCC_EXEC_PREFIX
+export BISON_SIMPLE
+export BISON_HAIRY
+export PATH
+
+# Change directory into bin folder where everything works
+cd $CSDIR/bin
+
+# Runs the program
+wine $BGI_LOCATION -Wall -g "Z:$WORKING_DIRECTORY/$1" -o "Z:$WORKING_DIRECTORY/$2"
+
+# Change directory back to where you were
+cd $WORKING_DIRECTORY
