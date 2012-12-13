@@ -1,7 +1,8 @@
 # Author: Yurlungur
 # ----------------------------------------------------------------------
 
-
+module PrimeNumberUtils
+export prime_upper_obund, prime_lower_bound, sieve_of_eratosthenes
 
 # Bounds on primes > 6. Given by the prime number theorem. For values
 # <= 6, gives the exact answer.
@@ -37,3 +38,4 @@ function sieve_of_eratosthenes(N::Int)
     return filter((x)->factors[x],[2:N])
 end
 
+end
