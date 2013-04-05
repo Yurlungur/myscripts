@@ -1,0 +1,2 @@
+To erase a whole line:
+\33[1A\33[2K
