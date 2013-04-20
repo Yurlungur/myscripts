@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
 # Author: Jonah Miller (jonah.maxwell.miller@gmail.com)
-# Time-stamp: <2013-04-05 13:17:37 (jonah)>
+# Time-stamp: <2013-04-05 13:43:05 (jonah)>
 
 # This is a simple program to solve the Fibonacci numbers using
 # dynamic programming.
 
 from copy import copy
+import time
 
 class Fibonacci:
     """
@@ -20,7 +21,13 @@ class Fibonacci:
 
     This class is not meant to be initialized.
     """
+
+    # The list of known Fibonacci numbers, indexed from 0.
+    # two underscores in front of the name makes the variable private.
     __numbers = [0,1]
+
+    # @classmethod is the same as a static method in java
+    # self is the same as this in java.
     @classmethod
     def nth(self,n):
         "Find the nth Fibonacci number."
@@ -71,3 +78,37 @@ class Fibonacci:
         the_nth = self.nth(n)
         return self.output_numbers()[:n+1]
             
+def test_driver():
+    "This is a test driver for the Fibonacci class."
+    print("This is a test driver for the Fibonacci class.")
+    print("First let's see how long it takes to calculate the 10th Fibonacci number.")
+    x = time.time()
+    print("The 10th Fibonacci number is:\n {}".format(Fibonacci.nth(10)))
+    print("The operation took {} ms".format(time.time()-x))
+    print("Now let's try and calculate the 11th Fibonacci number.")
+    x = time.time()
+    print("The 11th Fibonacci number is:\n {}".format(Fibonacci.nth(11)))
+    print("The operation took {} s".format(time.time()-x))
+    print("Faster, right?")
+    print("What about the 1000th Fibonacci number?")
+    x = time.time()
+    print("The 1000th Fibonacci number is:\n {}".format(Fibonacci.nth(1000)))
+    print("The operation took {} s".format(time.time()-x))
+    print("What about the 1250th number?")
+    x = time.time()
+    print("The 1250th Fibonacci number is:\n {}".format(Fibonacci.nth(1250)))
+    print("The operation took {} s".format(time.time()-x))
+    print("What about the 1251st number?")
+    x = time.time()
+    print("The 1251st Fibonacci number is:\n {}".format(Fibonacci.nth(1251)))
+    print("The operation took {} s".format(time.time()-x))
+    print("Accessing older values is easy. We can get the first 20 Fibonacci numbers in constant time.")
+    x = time.time()
+    print("The first 20 Fibonacci numbers are:\n {}".format(Fibonacci.first_n(20)))
+    print("The operation took {} s".format(time.time()-x))
+    print("Cool, huh?")
+    return
+
+# If the program is run from the command line, call the test driver.
+if __name__=="__main__":
+    test_driver()
