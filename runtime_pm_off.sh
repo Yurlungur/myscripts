@@ -1,17 +1,23 @@
-#!/bin/sh 
-#
-# Author: Jonah Miller 
-#
-# A script to act as a workaround for the bug in the runtime power
-# management module, which causes thinkpad laptops to restart after
-# shutting down.
+#!/bin/sh -e
+### BEGIN INIT INFO
+# Provides:          shutdownfixes.sh 
+# Required-Start:    
+# Required-Stop:     
+# X-Stop-After:      $network
+# Default-Start:     
+# Default-Stop:      0
+# Short-Description: Fixes shutdown-to-reboot glitch.
+# Description:       Fixes shutdown-to-reboot glitch.
+### END INIT INFO
 
-# Bus list for the runtime power management module. Probably shouldn't
-# touch this.
-buslist="pci spi i2c"
+PATH="/sbin:/bin"
 
-for bus in $buslist; do
-    for i in /sys/bus/$bus/devices/*/power/control; do
-        echo on > $i
-    done
+echo -n "Preparing PCI busses for shutdown..."
+for i in /sys/bus/pci/devices/*/power/control; do
+  echo on > $i
 done
+echo "done."
+
+echo -n "Removing e1000e module..."
+lsmod | grep -q e1000e && rmmod e1000e
+echo "done."

@@ -1,0 +1,402 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - The Minibuffer</TITLE>
+<P>Go to the <A HREF="emacs_9.html">previous</A>, <A HREF="emacs_11.html">next</A> section.<P>
+<A NAME="IDX139"></A>
+<H1><A NAME="SEC30" HREF="emacs_toc.html#SEC30">The Minibuffer</A></H1>
+<P>
+  The <DFN>minibuffer</DFN> is the facility used by Emacs commands to read
+arguments more complicated than a single number.  Minibuffer arguments
+can be file names, buffer names, Lisp function names, Emacs command
+names, Lisp expressions, and many other things, depending on the command
+reading the argument.  You can use the usual Emacs editing commands in
+the minibuffer to edit the argument text.
+<A NAME="IDX140"></A>
+<P>
+  When the minibuffer is in use, it appears in the echo area, and the
+terminal's cursor moves there.  The beginning of the minibuffer line
+displays a <DFN>prompt</DFN> which says what kind of input you should supply and
+how it will be used.  Often this prompt is derived from the name of the
+command that the argument is for.  The prompt normally ends with a colon.
+<A NAME="IDX141"></A>
+<P>
+  Sometimes a <DFN>default argument</DFN> appears in parentheses after the
+colon; it too is part of the prompt.  The default will be used as the
+argument value if you enter an empty argument (e.g., just type <KBD>RET</KBD>).
+For example, commands that read buffer names always show a default, which
+is the name of the buffer that will be used if you type just <KBD>RET</KBD>.
+<A NAME="IDX142"></A>
+<P>
+  The simplest way to enter a minibuffer argument is to type the text you
+want, terminated by <KBD>RET</KBD> which exits the minibuffer.  You can get out
+of the minibuffer, canceling the command that it was for, by typing
+<KBD>C-g</KBD>.
+<P>
+  Since the minibuffer uses the screen space of the echo area, it can
+conflict with other ways Emacs customarily uses the echo area.  Here is how
+Emacs handles such conflicts:
+<P>
+<UL>
+<LI>
+If a command gets an error while you are in the minibuffer, this does
+not cancel the minibuffer.  However, the echo area is needed for the
+error message and therefore the minibuffer itself is hidden for a
+while.  It comes back after a few seconds, or as soon as you type
+anything.
+<P>
+<LI>
+If in the minibuffer you use a command whose purpose is to print a
+message in the echo area, such as <KBD>C-x =</KBD>, the message is printed
+normally, and the minibuffer is hidden for a while.  It comes back
+after a few seconds, or as soon as you type anything.
+<P>
+<LI>
+Echoing of keystrokes does not take place while the minibuffer is in
+use.
+</UL>
+<P>
+<H2><A NAME="SEC31" HREF="emacs_toc.html#SEC31">Minibuffers for File Names</A></H2>
+<P>
+  Sometimes the minibuffer starts out with text in it.  For example, when
+you are supposed to give a file name, the minibuffer starts out containing
+the <DFN>default directory</DFN>, which ends with a slash.  This is to inform
+you which directory the file will be found in if you do not specify a
+directory.  For example, the minibuffer might start out with
+<P>
+<PRE>
+Find File: /u2/emacs/src/
+</PRE>
+<P>
+where <SAMP>`Find File: '</SAMP> is the prompt.  Typing <KBD>buffer.c</KBD>
+specifies the file <TT>`/u2/emacs/src/buffer.c'</TT>.  To find files in
+nearby directories, use <KBD>..</KBD>; thus, if you type
+<KBD>../lisp/simple.el</KBD>, you will get the file named
+<TT>`/u2/emacs/lisp/simple.el'</TT>.  Alternatively, you can kill with
+<KBD>M-<KBD>DEL</KBD></KBD> the directory names you don't want
+(see section <A HREF="emacs_25.html#SEC156">Words</A>).<P>
+  You can also type an absolute file name, one starting with a slash or
+a tilde, ignoring the default directory.  For example, to find the file
+<TT>`/etc/termcap'</TT>, just insert that name, giving these minibuffer
+contents:
+<P>
+<PRE>
+Find File: /u2/emacs/src//etc/termcap
+</PRE>
+<P>
+Two slashes in a row are not normally meaningful in a file name, but
+they are allowed in GNU Emacs.  They mean, "ignore everything before the
+second slash in the pair."  Thus, <SAMP>`/u2/emacs/src/'</SAMP> is ignored, and
+you get the file <TT>`/etc/termcap'</TT>.
+<P>
+  If you set <CODE>insert-default-directory</CODE> to <CODE>nil</CODE>, the default
+directory is not inserted in the minibuffer.  This way, the minibuffer
+starts out empty.  But the name you type, if relative, is still
+interpreted with respect to the same default directory.
+<P>
+<H2><A NAME="SEC32" HREF="emacs_toc.html#SEC32">Editing in the Minibuffer</A></H2>
+<P>
+  The minibuffer is an Emacs buffer (albeit a peculiar one), and the usual
+Emacs commands are available for editing the text of an argument you are
+entering.
+<P>
+  Since <KBD>RET</KBD> in the minibuffer is defined to exit the minibuffer,
+inserting a newline into the minibuffer must be done with <KBD>C-o</KBD> or with
+<KBD>C-q <KBD>LFD</KBD></KBD>.  (Recall that a newline is really the <KBD>LFD</KBD>
+character.)
+<P>
+  The minibuffer has its own window which always has space on the screen
+but acts as if it were not there when the minibuffer is not in use.  When
+the minibuffer is in use, its window is just like the others; you can
+switch to another window with <KBD>C-x o</KBD>, edit text in other windows and
+perhaps even visit more files, before returning to the minibuffer to submit
+the argument.  You can kill text in another window, return to the
+minibuffer window, and then yank the text to use it in the argument.
+See section <A HREF="emacs_21.html#SEC133">Multiple Windows</A>.
+<P>
+  There are some restrictions on the use of the minibuffer window, however.
+You cannot switch buffers in it--the minibuffer and its window are
+permanently attached.  Also, you cannot split or kill the minibuffer
+window.  But you can make it taller in the normal fashion with <KBD>C-x ^</KBD>.
+<P>
+  If while in the minibuffer you issue a command that displays help text
+of any sort in another window, you can use the <KBD>C-M-v</KBD> command while
+in the minibuffer to scroll the help text.  This lasts until you exit
+the minibuffer.  This feature is especially useful if a completing
+minibuffer gives you a list of possible completions.  See section <A HREF="emacs_21.html#SEC136">Using Other Windows</A>.
+<A NAME="IDX143"></A>
+<P>
+  You can't use a command that reads a minibuffer argument while you are
+in the minibuffer window.  This rule is to prevent recursive minibuffers
+from confusing novice users.  If you want to be able to use such
+commands in the minibuffer, set the variable
+<CODE>enable-recursive-minibuffers</CODE> to a non-<CODE>nil</CODE> value.
+<P>
+<A NAME="IDX144"></A>
+<H2><A NAME="SEC33" HREF="emacs_toc.html#SEC33">Completion</A></H2>
+<P>
+  For certain kinds of arguments, you can use <DFN>completion</DFN> to enter
+the argument value.  Completion means that you type part of the
+argument, then Emacs visibly fills in the rest, or as much as
+can be determined from the part you have typed.
+<P>
+  When completion is available, certain keys---<KBD>TAB</KBD>, <KBD>RET</KBD>, and
+<KBD>SPC</KBD>---are rebound to complete the text present in the minibuffer
+into a longer string that it stands for, by matching it against a set of
+<DFN>completion alternatives</DFN> provided by the command reading the
+argument.  <KBD>?</KBD> is defined to display a list of possible completions
+of what you have inserted.
+<P>
+  For example, when <KBD>M-x</KBD> uses the minibuffer to read the name of a
+command, it provides a list of all available Emacs command names to
+complete against.  The completion keys match the text in the minibuffer
+against all the command names, find any additional name characters
+implied by the ones already present in the minibuffer, and add those
+characters to the ones you have given.  This is what makes it possible
+to type <KBD>M-x ins <KBD>SPC</KBD> b <KBD>RET</KBD></KBD> instead of <KBD>M-x
+insert-buffer <KBD>RET</KBD></KBD> (for example).
+<P>
+  Case is normally significant in completion, because it is significant
+in most of the names that you can complete (buffer names, file names and
+command names).  Thus, <SAMP>`fo'</SAMP> does not complete to <SAMP>`Foo'</SAMP>.
+Completion does ignore case distinctions for certain arguments in which
+case does not matter.
+<P>
+<H3><A NAME="SEC34" HREF="emacs_toc.html#SEC34">Completion Example</A></H3>
+<A NAME="IDX145"></A>
+<A NAME="IDX146"></A>
+<P>
+  A concrete example may help here.  If you type <KBD>M-x au <KBD>TAB</KBD></KBD>,
+the <KBD>TAB</KBD> looks for alternatives (in this case, command names) that
+start with <SAMP>`au'</SAMP>.  There are only two: <CODE>auto-fill-mode</CODE> and
+<CODE>auto-save-mode</CODE>.  These are the same as far as <CODE>auto-</CODE>, so the
+<SAMP>`au'</SAMP> in the minibuffer changes to <SAMP>`auto-'</SAMP>.<P>
+  If you type <KBD>TAB</KBD> again immediately, there are multiple
+possibilities for the very next character--it could be <SAMP>`s'</SAMP> or
+<SAMP>`f'</SAMP>---so no more characters are added; instead, <KBD>TAB</KBD> displays
+a list of all possible completions in another window.
+<P>
+  If you go on to type <KBD>f <KBD>TAB</KBD></KBD>, this <KBD>TAB</KBD> sees
+<SAMP>`auto-f'</SAMP>.  The only command name starting this way is
+<CODE>auto-fill-mode</CODE>, so completion fills in the rest of that.  You now
+have <SAMP>`auto-fill-mode'</SAMP> in the minibuffer after typing just <KBD>au
+<KBD>TAB</KBD> f <KBD>TAB</KBD></KBD>.  Note that <KBD>TAB</KBD> has this effect because in
+the minibuffer it is bound to the command <CODE>minibuffer-complete</CODE>
+when completion is available.
+<P>
+<H3><A NAME="SEC35" HREF="emacs_toc.html#SEC35">Completion Commands</A></H3>
+<P>
+  Here is a list of the completion commands defined in the minibuffer
+when completion is available.
+<P>
+<DL COMPACT>
+<DT><KBD><KBD>TAB</KBD></KBD>
+<DD>Complete the text in the minibuffer as much as possible
+(<CODE>minibuffer-complete</CODE>).
+<DT><KBD><KBD>SPC</KBD></KBD>
+<DD>Complete the minibuffer text, but don't go beyond one word
+(<CODE>minibuffer-complete-word</CODE>).
+<DT><KBD><KBD>RET</KBD></KBD>
+<DD>Submit the text in the minibuffer as the argument, possibly completing
+first as described below (<CODE>minibuffer-complete-and-exit</CODE>).
+<DT><KBD>?</KBD>
+<DD>Print a list of all possible completions of the text in the minibuffer
+(<CODE>minibuffer-list-completions</CODE>).
+<A NAME="IDX148"></A>
+<A NAME="IDX147"></A>
+<DT><KBD>Mouse-2</KBD>
+<DD>Clicking mouse button 2 on a completion in the list of possible
+completions chooses that completion (<CODE>mouse-choose-completion</CODE>).
+Like the above commands, this command is used while you are in the
+minibuffer; but click in the list of completions, not in the minibuffer
+itself.
+</DL>
+<A NAME="IDX149"></A>
+<A NAME="IDX150"></A>
+<P>
+  <KBD>SPC</KBD> completes much like <KBD>TAB</KBD>, but never goes beyond the
+next hyphen or space.  If you have <SAMP>`auto-f'</SAMP> in the minibuffer and
+type <KBD>SPC</KBD>, it finds that the completion is <SAMP>`auto-fill-mode'</SAMP>,
+but it stops completing after <SAMP>`fill-'</SAMP>.  This gives
+<SAMP>`auto-fill-'</SAMP>.  Another <KBD>SPC</KBD> at this point completes all the
+way to <SAMP>`auto-fill-mode'</SAMP>.  <KBD>SPC</KBD> in the minibuffer when
+completion is available runs the command
+<CODE>minibuffer-complete-word</CODE>.
+<P>
+<H3><A NAME="SEC36" HREF="emacs_toc.html#SEC36">Strict Completion</A></H3>
+<P>
+  There are three different ways that <KBD>RET</KBD> can work in completing
+minibuffers, depending on how the argument will be used.
+<P>
+<UL>
+<LI>
+<DFN>Strict</DFN> completion is used when it is meaningless to give any
+argument except one of the known alternatives.  For example, when
+<KBD>C-x k</KBD> reads the name of a buffer to kill, it is meaningless to
+give anything but the name of an existing buffer.  In strict
+completion, <KBD>RET</KBD> refuses to exit if the text in the minibuffer
+does not complete to an exact match.
+<P>
+<LI>
+<DFN>Cautious</DFN> completion is similar to strict completion, except that
+<KBD>RET</KBD> exits only if the text was an exact match already, not
+needing completion.  If the text is not an exact match, <KBD>RET</KBD> does
+not exit, but it does complete the text.  If it completes to an exact
+match, a second <KBD>RET</KBD> will exit.
+<P>
+Cautious completion is used for reading file names for files that must
+already exist.
+<P>
+<LI>
+<DFN>Permissive</DFN> completion is used when any string whatever is
+meaningful, and the list of completion alternatives is just a guide.
+For example, when <KBD>C-x C-f</KBD> reads the name of a file to visit, any
+file name is allowed, in case you want to create a file.  In
+permissive completion, <KBD>RET</KBD> takes the text in the minibuffer
+exactly as given, without completing it.
+</UL>
+<P>
+  The completion commands display a list of all possible completions in
+a window whenever there is more than one possibility for the very next
+character.  Also, typing <KBD>?</KBD> explicitly requests such a list.  If
+the list of completions is long, you can scroll it with <KBD>C-M-v</KBD>
+(see section <A HREF="emacs_21.html#SEC136">Using Other Windows</A>).
+<P>
+<H3><A NAME="SEC37" HREF="emacs_toc.html#SEC37">Completion Options</A></H3>
+<A NAME="IDX151"></A>
+<P>
+  When completion is done on file names, certain file names are usually
+ignored.  The variable <CODE>completion-ignored-extensions</CODE> contains a
+list of strings; a file whose name ends in any of those strings is
+ignored as a possible completion.  The standard value of this variable
+has several elements including <CODE>".o"</CODE>, <CODE>".elc"</CODE>, <CODE>".dvi"</CODE>
+and <CODE>"~"</CODE>.  The effect is that, for example, <SAMP>`foo'</SAMP> can
+complete to <SAMP>`foo.c'</SAMP> even though <SAMP>`foo.o'</SAMP> exists as well.
+However, if all the possible completions end in "ignored" strings,
+then they are not ignored.  Ignored extensions do not apply to lists
+of completions--those always mention all possible completions.
+<A NAME="IDX152"></A>
+<P>
+  Normally, a completion command that finds the next character is undetermined
+automatically displays a list of all possible completions.  If the variable
+<CODE>completion-auto-help</CODE> is set to <CODE>nil</CODE>, this does not happen,
+and you must type <KBD>?</KBD> to display the possible completions.
+<P>
+<A NAME="IDX153"></A>
+<A NAME="IDX154"></A>
+<H2><A NAME="SEC38" HREF="emacs_toc.html#SEC38">Minibuffer History</A></H2>
+<P>
+  Every argument that you enter with the minibuffer is saved on a
+<DFN>minibuffer history list</DFN> so that you can use it again later in
+another argument.  Special commands load the text of an earlier argument
+in the minibuffer.  They discard the old minibuffer contents, so you can
+think of them as moving through the history of previous arguments.
+<P>
+<DL COMPACT>
+<DT><KBD>M-p</KBD>
+<DD>Move to the next earlier argument string saved in the minibuffer history
+(<CODE>previous-history-element</CODE>).
+<DT><KBD>M-n</KBD>
+<DD>Move to the next later argument string saved in the minibuffer history
+(<CODE>next-history-element</CODE>).
+<DT><KBD>M-r <VAR>regexp</VAR> <KBD>RET</KBD></KBD>
+<DD>Move to an earlier saved argument in the minibuffer history that has a
+match for <VAR>regexp</VAR> (<CODE>previous-matching-history-element</CODE>).
+<DT><KBD>M-s <VAR>regexp</VAR> <KBD>RET</KBD></KBD>
+<DD>Move to a later saved argument in the minibuffer history that has a
+match for <VAR>regexp</VAR> (<CODE>next-matching-history-element</CODE>).
+</DL>
+<A NAME="IDX155"></A>
+<A NAME="IDX156"></A>
+<A NAME="IDX157"></A>
+<A NAME="IDX158"></A>
+<P>
+  The simplest way to reuse the saved arguments in the history list is
+to move through the history list one element at a time.  While in the
+minibuffer, type <KBD>M-p</KBD> (<CODE>previous-history-element</CODE>) to "move
+to" the next earlier minibuffer input, and use <KBD>M-n</KBD>
+(<CODE>next-history-element</CODE>) to "move to" the next later input.
+<P>
+  The previous input that you fetch from the history entirely replaces
+the contents of the minibuffer.  To use it as the argument, exit the
+minibuffer as usual with <KBD>RET</KBD>.  You can also edit the text before
+you reuse it; this does not change the history element that you
+"moved" to, but your new argument does go at the end of the history
+list in its own right.
+<A NAME="IDX159"></A>
+<A NAME="IDX160"></A>
+<A NAME="IDX161"></A>
+<A NAME="IDX162"></A>
+<P>
+  There are also commands to search forward or backward through the
+history.  As of this writing, they search for history elements that
+match a regular expression that you specify with the minibuffer.
+<KBD>M-r</KBD> (<CODE>previous-matching-history-element</CODE>) searches older
+elements in the history, while <KBD>M-s</KBD>
+(<CODE>next-matching-history-element</CODE>) searches newer elements.  By
+special dispensation, these commands can use the minibuffer to read
+their arguments even though you are already in the minibuffer when you
+issue them.
+<P>
+  All uses of the minibuffer record your input on a history list, but
+there are separate history lists for different kinds of input.  For
+example, there is a list for file names, used by all the commands that
+read file names.  There is a list for arguments of commands like
+<CODE>query-replace</CODE>.  There are also very specific history lists,
+including one for command names read by <KBD>M-x</KBD> and one for
+compilation commands read by <CODE>compile</CODE>.  Finally, there is one
+"miscellaneous" history list that most minibuffer arguments use.
+<P>
+<A NAME="IDX163"></A>
+<A NAME="IDX164"></A>
+<H2><A NAME="SEC39" HREF="emacs_toc.html#SEC39">Repeating Minibuffer Commands</A></H2>
+<P>
+  Every command that uses the minibuffer at least once is recorded on a
+special history list, together with the values of their
+arguments, so that you can repeat the entire command.  In particular,
+every use of <KBD>M-x</KBD> is recorded, since <KBD>M-x</KBD> uses the minibuffer
+to read the command name.
+<A NAME="IDX165"></A>
+<P>
+<DL COMPACT>
+<DT><KBD>C-x <KBD>ESC</KBD> <KBD>ESC</KBD></KBD>
+<DD>Re-execute a recent minibuffer command <BR>(<CODE>repeat-complex-command</CODE>).
+<DT><KBD>M-x list-command-history</KBD>
+<DD>Display the entire command history, showing all the commands
+<KBD>C-x <KBD>ESC</KBD> <KBD>ESC</KBD></KBD> can repeat, most recent first.
+</DL>
+<A NAME="IDX166"></A>
+<A NAME="IDX167"></A>
+<P>
+  <KBD>C-x <KBD>ESC</KBD> <KBD>ESC</KBD></KBD> is used to re-execute a recent
+minibuffer-using command.  With no argument, it repeats the last such
+command.  A numeric argument specifies which command to repeat; one
+means the last one, and larger numbers specify earlier ones.
+<P>
+  <KBD>C-x <KBD>ESC</KBD> <KBD>ESC</KBD></KBD> works by turning the previous command
+into a Lisp expression and then entering a minibuffer initialized with
+the text for that expression.  If you type just <KBD>RET</KBD>, the command
+is repeated as before.  You can also change the command by editing the
+Lisp expression.  Whatever expression you finally submit is what will be
+executed.  The repeated command is added to the front of the command
+history unless it is identical to the most recently executed command
+already there.
+<P>
+  Even if you don't understand Lisp syntax, it will probably be obvious
+which command is displayed for repetition.  If you do not change the
+text, it will repeat exactly as before.
+<P>
+  Once inside the minibuffer for <KBD>C-x <KBD>ESC</KBD> <KBD>ESC</KBD></KBD>, you can
+use the minibuffer history commands (<KBD>M-p</KBD>, <KBD>M-n</KBD>, <KBD>M-r</KBD>,
+<KBD>M-s</KBD>; see section <A HREF="emacs_10.html#SEC38">Minibuffer History</A>) to move through the history list
+of saved entire commands.  After finding the desired previous command,
+you can edit its expression as usual and then resubmit it by typing
+<KBD>RET</KBD> as usual.
+<A NAME="IDX168"></A>
+<P>
+  The list of previous minibuffer-using commands is stored as a Lisp
+list in the variable <CODE>command-history</CODE>.  Each element is a Lisp
+expression which describes one command and its arguments.  Lisp programs
+can reexecute a command by calling <CODE>eval</CODE> with the
+<CODE>command-history</CODE> element.
+<P>Go to the <A HREF="emacs_9.html">previous</A>, <A HREF="emacs_11.html">next</A> section.<P>

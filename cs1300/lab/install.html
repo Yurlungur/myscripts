@@ -1,0 +1,76 @@
+<TITLE>Installation of the CS1300 Software</TITLE>
+<H2>Installation of the CS1300 Software</H2>
+<P>
+This note describes how to install the CS1300 software on your home
+machine so that it is automatically available each time that you open
+a DOS window. 
+You'll need about 100,000,000 bytes of free space on the hard drive.
+
+<DL>
+<DT><B>Step A: Obtaining the Files</B>
+<DD>To start, you'll need to get these two files and put them at the
+top level of the disc drive that you plan to use:
+<UL>
+<LI><A HREF="../unzip.exe">www.cs.colorado.edu/~main/cs1300/unzip.exe</A>
+<LI><A HREF="../cs1300.zip">www.cs.colorado.edu/~main/cs1300/cs1300.zip</A>
+</UL>
+<P>
+The second of these files is large (about 22MB), but even a modem
+internet connection can probably download it overnight. If you don't
+want to wait overnight, you can download the files to a machine in the
+Engineering Center and copy them to a zip disc if you have a zip
+drive. Or you can buy a CD-ROM that contains the two files ($2 from
+your course instructor).
+<P>
+<DT><B>Step B: Installing the Files</B>
+<OL>
+<LI>Start a DOS session by clicking: Start, Programs, MS-DOS Prompt.
+<LI>If the DOS
+session takes up the whole screen, then reduce it to a smaller window
+by holding down the Alt key and pressing Enter.
+<LI>Click on the small MS-DOS icon in the upper left corner of the DOS
+session.
+Select Properties, Advanced. Make sure that the box "Prevent
+MS-DOS-based programs..." is NOT checked. Click OK to get back to the
+Prompt Properties screen. 
+<LI>Select the Memory tab. In the "Initial environment" box, increase
+the number to 4096. Click OK.
+<LI>Shut down the DOS-session by clicking the X in the upper right
+corner. Then restart a new DOS-session.
+<LI>
+From the DOS-session, given these commands (changing the letter C: to
+the letter of your hard drive that contains the two files):
+<BR><CODE>&nbsp;&nbsp;&nbsp;C:
+<BR>&nbsp;&nbsp;&nbsp;cd \
+<BR>&nbsp;&nbsp;&nbsp;unzip cs1300.zip
+<BR>&nbsp;&nbsp;&nbsp;del&nbsp;unzip.exe
+<BR>&nbsp;&nbsp;&nbsp;del&nbsp;cs1300.zip</CODE>
+<BR>
+   Check that the cs1300 directory was created on your hard drive. Within this
+   directory, there should be several subdirectories (doc,
+   emacs, bin, lib, include, samples, share, and maybe more).
+
+<LI>
+Change to your root directory on your C: drive and
+give the command <CODE>edit&nbsp;autoexec.bat</CODE> to open your
+autoexec.bat file. Note that this is the C: drive, not
+necessarily the drive that you are using for the cs1300 software.
+Add the following lines to the end of this
+autoexec.bat file (changing the letter C: to the letter of the
+hard drive where you installed the cs1300 software):
+<PRE>
+SET EMACS_HOME=C:\cs1300\emacs
+SET C_INCLUDE_PATH=C:\cs1300\include
+SET CPLUS_INCLUDE_PATH=C:\cs1300\include\g++;C:\cs1300\include
+SET LIBRARY_PATH=C:\cs1300\lib
+SET GCC_EXEC_PREFIX=C:\cs1300\lib\gcc-lib\
+SET BISON_SIMPLE=C:\cs1300\share\bison.simple
+SET BISON_HAIRY=C:\cs1300\share\bison.hairy
+PATH=%PATH%;C:\cs1300\bin
+</PRE>
+Notice that there is a backslash at the end of "gcc-lib" in one of
+these commands.
+<LI>Shut down your machine and reboot so that the autoexec.bat commands
+will be executed. 
+</UL>
+</DL>

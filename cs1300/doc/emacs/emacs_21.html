@@ -1,0 +1,227 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Multiple Windows</TITLE>
+<P>Go to the <A HREF="emacs_20.html">previous</A>, <A HREF="emacs_22.html">next</A> section.<P>
+<A NAME="IDX596"></A>
+<A NAME="IDX597"></A>
+<H1><A NAME="SEC133" HREF="emacs_toc.html#SEC133">Multiple Windows</A></H1>
+<P>
+  Emacs can split a frame into two or many windows.  Multiple windows
+can display parts of different buffers, or different parts of one
+buffer.  Multiple frames always imply multiple windows, because each
+window belongs to one and only one frame.
+<P>
+<H2><A NAME="SEC134" HREF="emacs_toc.html#SEC134">Concepts of Emacs Windows</A></H2>
+<P>
+  When multiple windows are being displayed, each window has an Emacs
+buffer designated for display in it.  The same buffer may appear in more
+than one window; if it does, any changes in its text are displayed in all
+the windows where it appears.  But the windows showing the same buffer can
+show different parts of it, because each window has its own value of point.
+<A NAME="IDX598"></A>
+<P>
+  At any time, one of the windows is the <DFN>selected window</DFN>; the buffer
+this window is displaying is the current buffer.  The terminal's cursor
+shows the location of point in this window.  Each other window has a
+location of point as well, but since the terminal has only one cursor there
+is no way to show where those locations are.  When you make multiple frames,
+each frame has a cursor which appears in the frame's selected window.
+<P>
+  Commands to move point affect the value of point for the selected Emacs
+window only.  They do not change the value of point in any other Emacs
+window, even one showing the same buffer.  The same is true for commands
+such as <KBD>C-x b</KBD> to change the selected buffer in the selected window;
+they do not affect other windows at all.  However, there are other commands
+such as <KBD>C-x 4 b</KBD> that select a different window and switch buffers in
+it.  Also, all commands that display information in a window, including
+(for example) <KBD>C-h f</KBD> (<CODE>describe-function</CODE>) and <KBD>C-x C-b</KBD>
+(<CODE>list-buffers</CODE>), work by switching buffers in a nonselected window
+without affecting the selected window.
+<P>
+  When multiple windows show the same buffer, they can have different
+regions, because they can have different values of point.  This means
+that in Transient Mark mode, each window highlights a different part of
+the buffer.  The part that is highlighted in the selected window is the
+region that editing commands use.
+<P>
+  Each window has its own mode line, which displays the buffer name,
+modification status and major and minor modes of the buffer that is
+displayed in the window.  See section <A HREF="emacs_5.html#SEC11">The Mode Line</A>, for full details on the mode
+line.
+<P>
+@break
+<P>
+<H2><A NAME="SEC135" HREF="emacs_toc.html#SEC135">Splitting Windows</A></H2>
+<P>
+<DL COMPACT>
+<DT><KBD>C-x 2</KBD>
+<DD>Split the selected window into two windows, one above the other
+(<CODE>split-window-vertically</CODE>).
+<DT><KBD>C-x 3</KBD>
+<DD>Split the selected window into two windows positioned side by side
+(<CODE>split-window-horizontally</CODE>).
+</DL>
+<A NAME="IDX599"></A>
+<A NAME="IDX600"></A>
+<P>
+  The command <KBD>C-x 2</KBD> (<CODE>split-window-vertically</CODE>) breaks the
+selected window into two windows, one above the other.  Both windows start
+out displaying the same buffer, with the same value of point.  By default
+the two windows each get half the height of the window that was split; a
+numeric argument specifies how many lines to give to the top window.
+<A NAME="IDX601"></A>
+<A NAME="IDX602"></A>
+<P>
+  <KBD>C-x 3</KBD> (<CODE>split-window-horizontally</CODE>) breaks the selected
+window into two side-by-side windows.  A numeric argument specifies
+how many columns to give the one on the left.  A line of vertical bars
+separates the two windows.  Windows that are not the full width of the
+screen have mode lines, but they are truncated; also, they do not
+always appear in inverse video, because the Emacs display routines
+have not been taught how to display a region of inverse video that is
+only part of a line on the screen.
+<A NAME="IDX603"></A>
+<P>
+  When a window is less than the full width, text lines too long to fit are
+frequent.  Continuing all those lines might be confusing.  The variable
+<CODE>truncate-partial-width-windows</CODE> can be set non-<CODE>nil</CODE> to force
+truncation in all windows less than the full width of the screen,
+independent of the buffer being displayed and its value for
+<CODE>truncate-lines</CODE>.  See section <A HREF="emacs_26.html#SEC215">Continuation Lines</A>.<P>
+  Horizontal scrolling is often used in side-by-side windows.
+See section <A HREF="emacs_16.html#SEC70">Controlling the Display</A>.
+<A NAME="IDX604"></A>
+<P>
+  If <CODE>split-window-keep-point</CODE> is non-nil, <KBD>C-x 2</KBD> tries to
+avoid shifting any text on the screen by putting point in whichever
+window happens to contain the screen line the cursor is already on.  The
+default is that <CODE>split-window-keep-point</CODE> is non-nil on slow
+terminals.
+<P>
+<H2><A NAME="SEC136" HREF="emacs_toc.html#SEC136">Using Other Windows</A></H2>
+<P>
+<DL COMPACT>
+<DT><KBD>C-x o</KBD>
+<DD>Select another window (<CODE>other-window</CODE>).  That is <KBD>o</KBD>, not zero.
+<DT><KBD>C-M-v</KBD>
+<DD>Scroll the next window (<CODE>scroll-other-window</CODE>).
+<DT><KBD>M-x compare-windows</KBD>
+<DD>Find next place where the text in the selected window does not match
+the text in the next window.
+</DL>
+<A NAME="IDX605"></A>
+<A NAME="IDX606"></A>
+<P>
+  To select a different window, use <KBD>C-x o</KBD> (<CODE>other-window</CODE>).
+That is an <KBD>o</KBD>, for `other', not a zero.  When there are more than two
+windows, this command moves through all the windows in a cyclic order,
+generally top to bottom and left to right.  After the rightmost and
+bottommost window, it goes back to the one at the upper left corner.  A
+numeric argument means to move several steps in the cyclic order of
+windows.  A negative argument moves around the cycle in the opposite order.
+When the minibuffer is active, the minibuffer is the last window in the
+cycle; you can switch from the minibuffer window to one of the other
+windows, and later switch back and finish supplying the minibuffer argument
+that is requested.  See section <A HREF="emacs_10.html#SEC32">Editing in the Minibuffer</A>.
+<A NAME="IDX607"></A>
+<A NAME="IDX608"></A>
+<P>
+  The usual scrolling commands (see section <A HREF="emacs_16.html#SEC70">Controlling the Display</A>) apply to the selected
+window only, but there is one command to scroll the next window.
+<KBD>C-M-v</KBD> (<CODE>scroll-other-window</CODE>) scrolls the window that
+<KBD>C-x o</KBD> would select.  It takes arguments, positive and negative,
+like <KBD>C-v</KBD>.  (In the minibuffer, <KBD>C-M-v</KBD> scrolls the window
+that contains the minibuffer help display, if any, rather than the
+next window in the standard cyclic order.)
+<P>
+  The command <CODE>M-x compare-windows</CODE> lets you compare two files or
+buffers visible in two windows, by moving through them to the next
+mismatch.  See section <A HREF="emacs_19.html#SEC125">Comparing Files</A>.
+<P>
+<H2><A NAME="SEC137" HREF="emacs_toc.html#SEC137">Displaying in Another Window</A></H2>
+<A NAME="IDX609"></A>
+<A NAME="IDX610"></A>
+<P>
+  <KBD>C-x 4</KBD> is a prefix key for commands that select another window
+(splitting the window if there is only one) and select a buffer in that
+window.  Different <KBD>C-x 4</KBD> commands have different ways of finding the
+buffer to select.
+<P>
+<DL COMPACT>
+<DT><KBD>C-x 4 b <VAR>bufname</VAR> <KBD>RET</KBD></KBD>
+<DD>Select buffer <VAR>bufname</VAR> in another window.  This runs
+<CODE>switch-to-buffer-other-window</CODE>.
+<DT><KBD>C-x 4 C-o <VAR>bufname</VAR> <KBD>RET</KBD></KBD>
+<DD>Display buffer <VAR>bufname</VAR> in another window, but
+don't select that buffer or that window.  This runs
+<CODE>display-buffer</CODE>.
+<DT><KBD>C-x 4 f <VAR>filename</VAR> <KBD>RET</KBD></KBD>
+<DD>Visit file <VAR>filename</VAR> and select its buffer in another window.  This
+runs <CODE>find-file-other-window</CODE>.  See section <A HREF="emacs_19.html#SEC98">Visiting Files</A>.
+<DT><KBD>C-x 4 d <VAR>directory</VAR> <KBD>RET</KBD></KBD>
+<DD>Select a Dired buffer for directory <VAR>directory</VAR> in another window.
+This runs <CODE>dired-other-window</CODE>.  See section <A HREF="emacs_32.html#SEC269">Dired, the Directory Editor</A>.
+<DT><KBD>C-x 4 m</KBD>
+<DD>Start composing a mail message in another window.  This runs
+<CODE>mail-other-window</CODE>; its same-window analogue is <KBD>C-x m</KBD>
+(see section <A HREF="emacs_30.html#SEC247">Sending Mail</A>).
+<DT><KBD>C-x 4 .</KBD>
+<DD>Find a tag in the current tag table in another window.  This runs
+<CODE>find-tag-other-window</CODE>, the multiple-window variant of <KBD>M-.</KBD>
+(see section <A HREF="emacs_26.html#SEC194">Tag Tables</A>).
+<DT><KBD>C-x 4 r <VAR>filename</VAR> <KBD>RET</KBD></KBD>
+<DD>Visit file <VAR>filename</VAR> read-only, and select its buffer in another
+window.  This runs <CODE>find-file-read-only-other-window</CODE>.
+See section <A HREF="emacs_19.html#SEC98">Visiting Files</A>.
+</DL>
+<P>
+<H2><A NAME="SEC138" HREF="emacs_toc.html#SEC138">Deleting and Rearranging Windows</A></H2>
+<P>
+<DL COMPACT>
+<DT><KBD>C-x 0</KBD>
+<DD>Get rid of the selected window (<CODE>delete-window</CODE>).  That is a zero.
+<DT><KBD>C-x 1</KBD>
+<DD>Get rid of all windows except the selected one (<CODE>delete-other-windows</CODE>).
+<DT><KBD>C-x ^</KBD>
+<DD>Make selected window taller (<CODE>enlarge-window</CODE>).
+<DT><KBD>C-x }</KBD>
+<DD>Make selected window wider (<CODE>enlarge-window-horizontally</CODE>).
+</DL>
+<A NAME="IDX611"></A>
+<A NAME="IDX612"></A>
+<P>
+  To delete a window, type <KBD>C-x 0</KBD> (<CODE>delete-window</CODE>).  (That is
+a zero.)  The space occupied by the deleted window is given to an
+adjacent window (but not the minibuffer window, even if that is active
+at the time).  Once a window is deleted, its attributes are forgotten;
+only restoring a window configuration can bring it back.  Deleting the
+window has no effect on the buffer it used to display; the buffer
+continues to exist, and you can select it in any window with <KBD>C-x
+b</KBD>.
+<A NAME="IDX613"></A>
+<A NAME="IDX614"></A>
+<P>
+  <KBD>C-x 1</KBD> (<CODE>delete-other-windows</CODE>) is more powerful than
+<KBD>C-x 0</KBD>; it deletes all the windows except the selected one (and the
+minibuffer); the selected window expands to use the whole frame except
+for the echo area.
+<A NAME="IDX615"></A>
+<A NAME="IDX616"></A>
+<A NAME="IDX617"></A>
+<A NAME="IDX618"></A>
+<A NAME="IDX619"></A>
+<A NAME="IDX620"></A>
+<P>
+  To readjust the division of space among vertically adjacent windows,
+use <KBD>C-x ^</KBD> (<CODE>enlarge-window</CODE>).  It makes the currently
+selected window get one line bigger, or as many lines as is specified
+with a numeric argument.  With a negative argument, it makes the
+selected window smaller.  <KBD>C-x }</KBD>
+(<CODE>enlarge-window-horizontally</CODE>) makes the selected window wider by
+the specified number of columns.  The extra screen space given to a
+window comes from one of its neighbors, if that is possible.  If this
+makes any window too small, it is deleted and its space is given to an
+adjacent window.  The minimum size is specified by the variables
+<CODE>window-min-height</CODE> and <CODE>window-min-width</CODE>.
+<P>Go to the <A HREF="emacs_20.html">previous</A>, <A HREF="emacs_22.html">next</A> section.<P>

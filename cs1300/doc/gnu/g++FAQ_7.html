@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from g++FAQ.texi on 30 July 1999 -->
+
+<TITLE>Frequently asked questions about the GNU C++ compiler - What are the rules for shipping code built with g++ and libg++?</TITLE>
+<link href="g++FAQ_8.html" rel=Next>
+<link href="g++FAQ_6.html" rel=Previous>
+<link href="g++FAQ_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="g++FAQ_1.html">first</A>, <A HREF="g++FAQ_6.html">previous</A>, <A HREF="g++FAQ_8.html">next</A>, <A HREF="g++FAQ_8.html">last</A> section, <A HREF="g++FAQ_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC66" HREF="g++FAQ_toc.html#TOC66">What are the rules for shipping code built with g++ and libg++?</A></H1>
+<P>
+<A NAME="IDX167"></A>
+<A NAME="IDX168"></A>
+
+</P>
+<P>
+"Is it is possible to distribute programs for profit that are created
+with g++ and use the g++ libraries?"
+
+</P>
+<P>
+I am not a lawyer, and this is not legal advice.  In any case, I have
+little interest in telling people how to violate the spirit of the
+GNU licenses without violating the letter.  This section tells you
+how to comply with the intention of the GNU licenses as best I understand
+them.
+
+</P>
+<P>
+<A NAME="IDX169"></A>
+The FSF has no objection to your making money.  Its only interest is that
+source code to their programs, and libraries, and to modified versions of
+their programs and libraries, is always available.
+
+</P>
+<P>
+The short answer is that you do not need to release the source to
+your program, but you can't just ship a stripped executable either,
+unless you use only the subset of libg++ that includes the iostreams
+classes (see discussion below) or the new libstdc++ library (available
+in libg++ 2.6.2 and later).
+
+</P>
+<P>
+Compiling your code with a GNU compiler does not affect its copyright;
+it is still yours.  However, in order to ship code that links in a GNU
+library such as libg++ there are certain rules you must follow.  The
+rules are described in the file COPYING.LIB that accompanies gcc
+distributions; it is also included in the libg++ distribution.
+See that file for the exact rules.  The agreement is called the
+Library GNU Public License or LGPL.  It is much "looser" than the
+GNU Public License, or GPL, that covers must GNU programs.
+
+</P>
+<P>
+<A NAME="IDX170"></A>
+Here's the deal: let's say that you use some version of libg++,
+completely unchanged, in your software, and you want to ship only
+a binary form of your code.  You can do this, but there are several
+special requirements.  If you want to use libg++ but ship only object
+code for your code, you have to ship source for libg++ (or ensure
+somehow that your customer already has the source for the exact
+version you are using), and ship your application in linkable form.
+You cannot forbid your customer from reverse-engineering or extending
+your program by exploiting its linkable form.
+
+</P>
+<P>
+<A NAME="IDX171"></A>
+Furthermore, if you modify libg++ itself, you must provide source
+for your modifications (making a derived class does not count as
+modifying the library -- that is "a work that uses the library").
+
+</P>
+<P>
+<A NAME="IDX172"></A>
+For certain portions of libg++ that implement required parts of the C++
+language (such as iostreams and other standard classes), the FSF has
+loosened the copyright requirement still more by adding the "special
+exception" clause, which reads as follows:
+
+</P>
+
+<BLOCKQUOTE>
+<P>
+As a special exception, if you link this library with files
+compiled with GCC to produce an executable, this does not cause
+the resulting executable to be covered by the GNU General Public License.
+This exception does not however invalidate any other reasons why
+the executable file might be covered by the GNU General Public License.
+</BLOCKQUOTE>
+
+<P>
+If your only use of libg++ uses code with this exception, you may ship
+stripped executables or license your executables under different
+conditions without fear of violating an FSF copyright.  It is the intent
+of FSF and Cygnus that, as the other classes required by the ANSI/ISO
+draft standard are developed, these will also be placed under this
+"special exception" license.
+The code in the new libstdc++ library, intended to implement standard
+classes as defined by ANSI/ISO, is also licensed this way.
+
+</P>
+<P>
+To avoid coming under the influence of the LGPL, you can link with
+<TT>`-liostream'</TT> rather than <TT>`-lg++'</TT> (for version 2.6.x and
+earlier), or <TT>`-lstdc++'</TT> now that it is available.  In version 2.7.0
+all the standard classes are in <TT>`-lstdc++'</TT>; you can do the link
+step with <CODE>c++</CODE> instead of <CODE>g++</CODE> to search only the
+<TT>`-lstdc++'</TT> library and avoid the LGPL'ed code in <TT>`-lg++'</TT>.
+
+</P>
+<P>
+Note that in egcs and in gcc-2.8.x, if you do not
+specify any libraries the <CODE>g++</CODE> command will only link in
+<TT>`-lstdc++'</TT>, so your executable will not be affected by the LGPL
+(unless you link in some other LGPLed library: the GNU C library used
+on GNU/Linux systems is one such library).
+
+</P>
+<P>
+If you wish to discuss legal issues connected with GNU software on the
+net, please use <TT>`gnu.misc.discuss'</TT>, not the technical newsgroups.
+
+</P>
+<P><HR><P>
+<p>Go to the <A HREF="g++FAQ_1.html">first</A>, <A HREF="g++FAQ_6.html">previous</A>, <A HREF="g++FAQ_8.html">next</A>, <A HREF="g++FAQ_8.html">last</A> section, <A HREF="g++FAQ_toc.html">table of contents</A>.
+</BODY>
+</HTML>

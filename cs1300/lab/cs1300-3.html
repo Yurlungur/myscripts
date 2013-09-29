@@ -1,0 +1,466 @@
+<HTML>
+<HEAD>
+<TITLE>
+
+
+CSCI 1300 Exercise 3 - Loops and BGI Graphics
+
+
+</TITLE>
+</HEAD>
+<BODY>
+<TABLE>
+<TD>
+<H2>
+
+
+CSCI 1300 - Exercise 3
+<BR>
+Loops and BGI Graphics
+
+
+</H2>
+<P>
+<B>What You'll Get from This Exercise</B></P>
+<P CLASS="Main-body-small-type">
+<A NAME="pgfId=2086">
+ </A>
+
+
+This exercise is to supplement your reading on loops. It also
+introduces you to the BGI collection of graphics functions that we'll use
+to draw objects from within a C++ program.
+
+
+<P>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>PC Labs in the<BR>Engineering Center</TH>
+<TR><TD>CR 235&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 239
+<TR><TD>CR 244&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 252 (24 hours)
+<TR><TD>CH 107&nbsp;&nbsp;&nbsp;&nbsp;<TD>ME 107
+<TR><TD COLSPAN=2>Other campus sites are<BR>listed 
+at <a href="http://www.colorado.edu/its/labs/">www.colorado.edu/its/labs</a>.
+</TABLE>
+<TD>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>Installing the<BR>CS1300 Software</TH>
+<TR><TD COLSPAN=2>
+Open a DOS window. If the CS1300 software is not permanently 
+<BR>installed on your machine, then use one of these methods:
+<UL>
+<LI>On machines in the Engineering Center, try one of
+<BR>these commands:
+<BR><CODE>&nbsp;&nbsp;H:\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;H:\cs1300\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;Z:\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;Z:\cs1300\gocs</CODE>
+<LI>On other machines, download these two files to the C: drive:
+<BR><A HREF="../unzip.exe">
+www.cs.colorado.edu/~main/cs1300/unzip.exe</A>
+<BR><A HREF="../cs1300.zip">
+www.cs.colorado.edu/~main/cs1300/cs1300.zip</A>
+<BR>
+Then type these commands:
+<BR><CODE>&nbsp;&nbsp;C:</CODE>
+<BR><CODE>&nbsp;&nbsp;cd \</CODE>
+<BR><CODE>&nbsp;&nbsp;unzip cs1300.zip</CODE>
+<BR><CODE>&nbsp;&nbsp;cs1300\gocs</CODE>
+</UL>
+<TR><TD>
+If you get the message "Out of environment space", then:
+<UL>
+<LI> Click on the MS-DOS icon in the top left corner of the window.
+<LI> Select Properties from the pop-up menu.
+<LI> Select the Memory tab from the command box.
+<LI> Click the arrow on the Initial Environment box. Move down in the
+box as far as possible (by clicking the downward arrow). Click on the
+biggest number that you see in this box.
+<LI> Click OK in the command box.
+<LI> Click OK in the MS-DOS Prompt information box.
+<LI> Stop the DOS Session by clicking the X in the top-right or by
+typing the command "exit".
+<LI> Restart a new DOS session and try running your commands again.
+</UL>
+</TABLE>
+</TABLE>
+<FORM METHOD=POST ACTION="../NoSubmitButton">
+
+
+
+<P>
+<B><INPUT TYPE="checkbox" NAME="Register">
+Getting the Demonstration Programs
+</B>
+<P>
+
+Start this exercise by opening a DOS window and making sure that the
+<A HREF="../README.html">CSCI 1300 software</A> is available.
+Create a directory to work in, then copy these files
+to your working directory:
+<UL>
+<LI><A HREF="loops.cxx">www.cs.colorado.edu/~main/cs1300/lab/loops.cxx</A>
+<LI><A HREF="bgidemo0.cxx">www.cs.colorado.edu/~main/cs1300/lab/bgidemo0.cxx</A>
+<LI><A HREF="bgismall.cxx">www.cs.colorado.edu/~main/cs1300/lab/bgismall.cxx</A>
+</UL>
+You can copy these files from your installed cs1300\lab\ directory or
+right click on the names above to download them.
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+The Purpose of loops.cxx
+</B>
+<ul><P><li>
+The purpose of loops.cxx is to let you step through a couple different 
+kinds of loops. Apart from that, the program doesn’t really do anything 
+useful. Anyway, go ahead and start emacs with the 
+loops.cxx file. You can look through the code to get an idea of what the 
+program is doing. Run the program once and give the W response, and run it a 
+second time with the F response. Running the program in this way won’t be 
+particularly enlightening, but using the debugger you can get more out of 
+the program.
+</ul>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Putting some breakpoints in the program
+</B>
+<UL><P><LI>
+The loops program will be most useful if you use the debugger to run the 
+program with two breakpoints. Remember from Exercise 2 that
+a breakpoint is a statement in your program 
+where you want the program to stop so you can examine the state of affairs 
+more closely. To set the first breakpoint, move down through the file until 
+the cursor reaches
+the line in the main program which calls a function named savings_time. 
+It looks like this in the main program:
+
+<PRE>
+ case ‘W’: case ‘w’: // Call savings_time
+     many_years = savings_time(50, 100, 0.10);
+</PRE>
+
+Put the cursor on the "many_years..."
+line shown above, which is the line that calls the 
+savings_time function. We will put a breakpoint at this line, so that when 
+the program executes, it will stop here to let you examine matters. 
+
+To set the breakpoint, open a second window, start gdb in that window,
+move the cursor back to the line where you want a breakpoint,
+and press Ctrl-x Spacebar.
+<P>
+Next, move down to the line that calls the second function, called 
+future_balance. The line looks like this:
+<PRE>
+  case ‘F’: case ‘f’: // Call future_balance
+      final_balance = future_balance(50, 0.10, 5);
+</PRE>
+
+Set a second breakpoint on this "final_balance..." line.
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Running the Program up to the Breakpoint
+</B>
+<ul><li>
+With the two breakpoints in place, you can run the program in the usual way. When you are asked which kind of loop to see, respond with W. 
+The program will then run until it reaches the breakpoint at the statement 
+"<CODE>many_years&nbsp;=&nbsp;savings_time(50,&nbsp;100,&nbsp;0.10);</CODE>".
+  This line calls the savings_time function to determine how many years are 
+  required to increase a balance of $50 to a goal of $100 with an annual 
+  interest rate of 10%. We want to step into this function and watch the 
+  lines execute one at a time to see how a while-loop works. 
+When you are executing a program, the command to 
+
+step into a function and 
+see the lines execute one at a time is the s key followed by the
+return key.
+
+Give the s command now, and 
+the program Steps to the start of the savings_time function.
+(Note that s is slightly different that the n command. The n command executes
+an entire line without stepping through any functions line-by-line.)
+</UL><P>
+
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Setting Watches
+</B>
+<UL><LI>
+In a moment you will step through the savings_time function, one line at a 
+time. But first, let’s set things up to watch the values of a few
+variables.
+Put watches on the local variables balance, goal and years. 
+<P> 
+You should now continue executing the savings_time function.
+In order to execute the lines of the function one at a time, give the 
+n command. The function’s first statement, years=0, is now highlighted and 
+ready to execute. Press n and the statement will execute, setting the value 
+of years to zero in the Watch window. The highlighted line moves down to the 
+first line of the while-loop:
+<PRE>
+    while (balance &lt; goal)
+</PRE>
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Seeing the While-loop in Action
+</B>
+<UL><LI>
+The loop that we are about the execute will calculate how many years are 
+required to increase the balance ($50.00) to the goal ($100.00) at the 
+stated interest rate (10%). At the start of the loop’s execution, the 
+highlighted line is the while-statement:
+<PRE>
+    while (balance &lt; goal)
+</PRE>
+This is the statement that controls the while-loop. The statement indicates 
+that the loop should continue as long as balance is less than goal. 
+At the moment, balance ($50) is less than goal ($100), so the loop will 
+continue executing. To continue this execution, press n again
+(or just press the return key, which repeats the previous command).
+The 
+highlight moves to the first assignment statement in the body of the loop 
+(balance = ...). At this point, you should execute the two lines of the 
+loop’s body by giving two n commands. These statements will increase balance to 
+$55, and increase years to 1. The highlight will once again be at the first 
+line of the while-loop:
+<PRE>
+    while (balance &lt; goal)
+</PRE>
+The balance ($55) is still less than the goal ($100), so the loop continues. 
+Execute three more lines, and once more you are back at the top of the loop. 
+This is what a while-loop does: It goes around and around, always controlled 
+by the expression at the top of the loop. The current balance ($60.5) is 
+still less than the goal ($100), so the loop continues. again. Keep
+executing, 
+keeping an eye on the value of the balance. Stop when you notice that 
+the balance is larger than 100. At this point, the balance should be 
+107.1794, and years is 7.
+<P>
+The program is still executing inside the loop. The highlighted statement:
+<PRE>
+    years = years + 1;
+</PRE>
+is about to be executed. Now, at this point, balance is bigger than goal--so
+ you might be thinking that the loop should stop. But it won’t--not 
+ quite yet. <I>The loop must always continue until it reaches the controlling statement at the top. At that point, the loop uses the control statement to determine whether to continue.</I>
+<P>
+For our example, execute one more line. The value of years increases
+ to 8, and we are back at the top of the loop. Now, balance is less
+ than goal, so the loop will end. To see this, execute
+one  more line and the highlighted statement moves <I>after</I>
+ the loop to: return years; This is the function’s return statement, which returns 8 (the current value of years). In other words, it took 8 years to increase $50 to at least $100 at a 10% interest rate. 
+ <P>
+You can continue pressing return to complete the execution of the
+program. When the execution completes, the arrow will be on the last
+closing bracket of the main program.
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Running to the Second Breakpoint
+</B>
+<UL><LI>
+You can now run the program a second time. This time you should answer F when you are asked what kind of loop you want to see. The program will run to line that calls the future_balance function:
+<PRE>
+    final_balance = future_balance(50, 0.10, 5);
+</PRE>
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Stepping into the future_balance Function
+</B>
+<UL><LI>
+This function call computes how much money will be in an account that starts 
+with a balance of $50 and earns 10% annual interest for 5 years. To step 
+into this function, give the s command once. The compiler jumps to the first 
+line of future_balance, displaying the values of the arguments and
+local variables. 
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Seeing the For-loop in Action
+</B>
+<UL><LI>
+Now we can see the statements of the function’s for loop executed
+one at a time. Give the n command once, and the highlighted line jumps into the function’s body. Here’s what you see on the screen:
+<PRE>
+    for (i=0;
+        i&lt;years;
+        i++
+        )
+</PRE>
+These four lines combined are actually the <I>control statement</I> of a 
+for-loop. Normally the control statement would be written on a single line, 
+like this: for (i=0; i&lt;years; i++)—but we have broken it into separate lines so that the debugger can show precisely how the different parts of the control statement are executed. In order to see this execution more clearly, put a watch on the local variable i, and then move to the next step of this exercise.
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+The Initialization Clause of the For-Loop
+</B>
+<UL><LI>
+The  control statement of every for-loop has three parts, separated by 
+semi-colons. The first part is the initialization clause. For our example, 
+the initialization clause is the highlighted statement i=0; 
+<I>The initialization clause is always executed once when the for-loop 
+begins.</I> For our example, execute one line now; the assignment i=0 will be executed, and i changes to zero in the watch window. The highlight moves to the second clause in the for-loop’s control statement.
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+The Repetition Test Condition
+</B>
+<UL><LI>
+The second part of a for-loop’s control statement is the 
+<I>repetition test condition</I>. This is a test, such as our test 
+i&lt;years. <I>The test is executed each time before the body of the loop 
+is about to begin.</I> If the test is true, then the loop continues. 
+If the test fails, then the loop stops. In our example, the test i&lt;years
+ is true. So, press n to execute this test, and the debugger will move the highlighted statement to the inside of the loop’s body.
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Executing the Body of the For Loop, and the Update Clause
+</B>
+<UL><LI>
+The body of our for-loop is now ready to be executed. This body consists of 
+two assignment statements, so you should press n twice to execute these 
+statements. After the second assignment statement, the debugger will move 
+the highlight to the third clause in the for-loop’s control statement. 
+This clause, which is written i++ in our example, is the update clause. 
+<I>The update clause is executed each time the body of the loop finishes.</I>
+ In our example, the update clause i++ adds one to the value of
+ i. Press n to execute the update clause, and the highlight moves back to the repetition test condition. You have now seen the complete cycle of a for-loop, which looks like this in a diagram:
+ <P>
+<IMG SRC="forloop.gif">
+ <P>
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Execute the For-loop to Completion
+</B>
+<UL><LI> 
+At this point you can use the n key to execute our for-loop to completion. As you are executing the loop, pause for a moment whenever the repetition test condition is highlighted. This condition,
+ i&lt;years, determines whether the loop should continue. When the condition becomes false, the loop will end. When the loop ends, you can continue executing the program to completion. 
+</UL><P>
+
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Introduction to BGI
+</B>
+<UL><LI>
+There's one more brief task before the end of this exercise.
+The task introduces you to the graphics library that we'll use
+throughout the semester. From your working directory, compile
+the program <CODE>bgidemo0.cxx</CODE< with the following command:
+<PRE>
+    g++ bgidemo0.cxx -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32 -o bgidemo0
+</PRE>
+Note that the last name of the file is the number zero (not the letter oh).
+The extra compiler options (each starting with the letter l) tell the compiler
+where to find the three graphics libraries that are used by this
+demostration program.  Thankfully, there is an alternative to
+remembering all those library names.  You can use the bgi++ command
+instead of g++, and all the needed libraries will be automatically
+picked up, like this:
+<PRE>
+    bgi++ bgidemo0.cxx -o bgidemo0
+</PRE>
+With either of these commands, you should end with an executable file called bgidemo0.
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Run the Demonstration Program
+</B>
+<ul><li>From the command line, run the demonstration program by typing
+its name (bgidemo0).
+<li>Press any key to step through the program.  Keep going until it ends.  The last screen contains
+the message
+<dl><dd><code><b>"That's all, folks!"</b></code></dl></ul>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+A Simpler Graphics Program for You To Modify
+</B>
+<UL><P><LI>
+Whenever you run a BGI program, you'll have to compile and run it as you did with
+the bgidemo program (using the bgi++ command). 
+Writing a BGI program also requires some techniques that
+are more easily illustrated with the small graphics program, 
+<A HREF="bgismall.cxx">bgismall.cxx</A>.
+Compile and run
+this file now. Then bring up the source code in emacs and
+notice these things:
+<OL>
+<LI>
+In order to use any BGI graphics, you must always compile with the
+-lbgi -lgdi32 -luser options.
+<LI>
+To access the BGI library, the program includes the graphics.h header file with the
+directive
+<dl><dd><code><b>#include &lt;graphics.h&gt;</b></code></dl>
+<P><LI>
+When a program begins execution, it opens a graphics window where the
+drawing will occur. Text input and output may still go through the
+original text window (using cin or cout), or it may go to the graphics
+window using other commands.
+<P><LI>
+The program needs to call the <code><b> initwindow(...)</b></code> function to
+initialize the graphics screen and begin graphics mode. In <CODE>bgismall.cxx</CODE>,
+the main program calls <CODE>initwindow(450,&nbsp;300)</CODE>, which
+creates a graphics window that is 450 pixels wide and 300 pixels high.
+<P><LI>
+The graphics screen consists of a grid of pixels which can be thought of as points of light on the
+screen.  For smaller monitors, the grid usually has a maximum of
+640 pixels in the horizontal direction ( numbered 0 to
+639 from left to right ) and 480 pixels in the vertical direction ( numbered 0 to 479 from top to
+bottom).  
+If we take x to be our name for the coordinate in the horizontal direction and y for the
+vertical direction, then the origin ( x = 0, y = 0 ) of the numbered grid is in the upper left corner
+of the screen.  The x-coordinate increases as one moves to the right.  The y-coordinate increases
+as one moves down the screen.  The direction for increasing y is opposite to our usual practice,
+and will probably cause much hardship until everyone becomes used to it. 
+<P>
+In general, the code that you write should not depend on a particular screen size. Instead,
+you should call the BGI functions <CODE>getmaxx()</CODE> and <CODE>getmaxy()</CODE> to
+get the maximum x and y pixel numbers.
+<P><LI>
+Once the program in in graphics mode, there are nearly 100 different BGI functions that can
+be used. The <CODE>bgismall</CODE> program uses these functions:
+<UL>
+<LI><CODE>putpixel(x, y, color)</CODE> -- draws a pixel in a particular color at a given x and y
+location.
+<LI><CODE>setcolor(color)</CODE> -- determines the color for subsequent drawing functions such
+as <CODE>line</CODE> and <CODE>circle</CODE>.
+<LI><CODE>line(x1, y1, x2, y2)</CODE> -- draws a line from (x1,y1) to (x2,y2).
+<LI><CODE>circle(x, y, radius)</CODE> -- draws a circle with center (x,y) and the specified radius.
+</UL>
+These graphics functions may also be called from within other functions (such as within
+the <CODE>triangle</CODE> function that is part of <CODE>bgismall.cxx</CODE>).
+<P><LI>
+When the program is finished drawing it should call the function
+<CODE>getch()</CODE>.
+This pauses for the user to press the return key (with the mouse focus
+in the graphics window). Then call
+<CODE>closegraph()</CODE> to close the graphics window.
+</OL></UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+More BGI Functions
+</B>
+<ul><li>
+Play around with the <CODE>bgismall.cxx</CODE> program a little bit, making it draw
+some new lines or use new colors. 
+Further BGI information is available 
+at
+<A HREF="../doc/bgi/bgi.html">
+www.cs.colorado.edu/~main/cs1300/doc/bgi/bgi.html</A>).
+A complete list of the BGI functions is
+available at
+<A HREF="../doc/bgi/index.html">
+www.cs.colorado.edu/~main/cs1300/doc/bgi/index.html</A>).
+<P>
+You may have noticed that any program that's compiled with g++ or
+bgi++ will always open a DOS command window when the program is run.
+If you want to stop this window from opening, then add the option
+-mwindows to the compile line (just after g++ or bgi++).
+</UL><P>
+
+</BODY>
+</HTML>

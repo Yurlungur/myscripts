@@ -1,0 +1,368 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Controlling the Display</TITLE>
+<P>Go to the <A HREF="emacs_15.html">previous</A>, <A HREF="emacs_17.html">next</A> section.<P>
+<H1><A NAME="SEC70" HREF="emacs_toc.html#SEC70">Controlling the Display</A></H1>
+<P>
+  Since only part of a large buffer fits in the window, Emacs tries to show
+the part that is likely to be interesting.  The display control commands
+allow you to specify which part of the text you want to see.
+<P>
+<DL COMPACT>
+<DT><KBD>C-l</KBD>
+<DD>Clear screen and redisplay, scrolling the selected window to center
+point vertically within it (<CODE>recenter</CODE>).
+<DT><KBD>C-v</KBD>
+<DD>Scroll forward (a windowful or a specified number of lines) (<CODE>scroll-up</CODE>).
+<DT><KBD><KBD>NEXT</KBD></KBD>
+<DD>Likewise, scroll forward.
+<DT><KBD>M-v</KBD>
+<DD>Scroll backward (<CODE>scroll-down</CODE>).
+<DT><KBD><KBD>PRIOR</KBD></KBD>
+<DD>Likewise, scroll backward.
+<DT><KBD><VAR>arg</VAR> C-l</KBD>
+<DD>Scroll so point is on line <VAR>arg</VAR> (<CODE>recenter</CODE>).
+<DT><KBD>C-x &#60;</KBD>
+<DD>Scroll text in current window to the left (<CODE>scroll-left</CODE>).
+<DT><KBD>C-x &#62;</KBD>
+<DD>Scroll to the right (<CODE>scroll-right</CODE>).
+<DT><KBD>C-x $</KBD>
+<DD>Make deeply indented lines invisible (<CODE>set-selective-display</CODE>).
+</DL>
+<P>
+  The names of all scroll commands are based on the direction that the text
+moves in the window.  Thus, the command to scrolling forward is called
+<CODE>scroll-up</CODE>, since the text moves up.
+<P>
+<H2><A NAME="SEC71" HREF="emacs_toc.html#SEC71">Scrolling</A></H2>
+<P>
+  If a buffer contains text that is too large to fit entirely within a
+window that is displaying the buffer, Emacs shows a contiguous portion of
+the text.  The portion shown always contains point.
+<A NAME="IDX301"></A>
+<P>
+  <DFN>Scrolling</DFN> means moving text up or down in the window so that
+different parts of the text are visible.  Scrolling forward means that text
+moves up, and new text appears at the bottom.  Scrolling backward moves
+text down and new text appears at the top.
+<P>
+  Scrolling happens automatically if you move point past the bottom or top
+of the window.  You can also explicitly request scrolling with the commands
+in this section.
+<P>
+<A NAME="IDX302"></A>
+<A NAME="IDX303"></A>
+<P>
+  The most basic scrolling command is <KBD>C-l</KBD> (<CODE>recenter</CODE>) with
+no argument.  It clears the entire screen and redisplays all windows.
+In addition, it scrolls the selected window so that point is halfway
+down from the top of the window.
+<A NAME="IDX304"></A>
+<A NAME="IDX305"></A>
+<A NAME="IDX306"></A>
+<A NAME="IDX307"></A>
+<A NAME="IDX308"></A>
+<A NAME="IDX309"></A>
+<P>
+  The scrolling commands <KBD>C-v</KBD> and <KBD>M-v</KBD> let you move all the text
+in the window up or down a few lines.  <KBD>C-v</KBD> (<CODE>scroll-up</CODE>) with an
+argument shows you that many more lines at the bottom of the window, moving
+the text and point up together as <KBD>C-l</KBD> might.  <KBD>C-v</KBD> with a
+negative argument shows you more lines at the top of the window.
+<KBD>M-v</KBD> (<CODE>scroll-down</CODE>) is like <KBD>C-v</KBD>, but moves in the
+opposite direction.  The function keys <KBD>NEXT</KBD> and <KBD>PRIOR</KBD> are
+equivalent to <KBD>C-v</KBD> and <KBD>M-v</KBD>.
+<A NAME="IDX310"></A>
+<P>
+  To read the buffer a windowful at a time, use <KBD>C-v</KBD> with no argument.
+It takes the last two lines at the bottom of the window and puts them at
+the top, followed by nearly a whole windowful of lines not previously
+visible.  If point was in the text scrolled off the top, it moves to the
+new top of the window.  <KBD>M-v</KBD> with no argument moves backward with
+overlap similarly.  The number of lines of overlap across a <KBD>C-v</KBD> or
+<KBD>M-v</KBD> is controlled by the variable <CODE>next-screen-context-lines</CODE>; by
+default, it is two.
+<P>
+  Another way to do scrolling is with <KBD>C-l</KBD> with a numeric argument.
+<KBD>C-l</KBD> does not clear the screen when given an argument; it only scrolls
+the selected window.  With a positive argument <VAR>n</VAR>, it repositions text
+to put point <VAR>n</VAR> lines down from the top.  An argument of zero puts
+point on the very top line.  Point does not move with respect to the text;
+rather, the text and point move rigidly on the screen.  <KBD>C-l</KBD> with a
+negative argument puts point that many lines from the bottom of the window.
+For example, <KBD>C-u - 1 C-l</KBD> puts point on the bottom line, and <KBD>C-u
+- 5 C-l</KBD> puts it five lines from the bottom.  Just <KBD>C-u</KBD> as argument,
+as in <KBD>C-u C-l</KBD>, scrolls point to the center of the screen.
+<A NAME="IDX311"></A>
+<A NAME="IDX312"></A>
+<P>
+  The <KBD>C-M-l</KBD> command (<CODE>reposition-window</CODE>) scrolls the current
+window heuristically in a way designed to get useful information onto
+the screen.  For example, in a Lisp file, this command tries to get the
+entire current defun onto the screen if possible.
+<A NAME="IDX313"></A>
+<P>
+  Scrolling happens automatically if point has moved out of the visible
+portion of the text when it is time to display.  Usually the scrolling is
+done so as to put point vertically centered within the window.  However, if
+the variable <CODE>scroll-step</CODE> has a nonzero value, an attempt is made to
+scroll the buffer by that many lines; if that is enough to bring point back
+into visibility, that is what is done.
+<P>
+<H2><A NAME="SEC72" HREF="emacs_toc.html#SEC72">Horizontal Scrolling</A></H2>
+<P>
+<A NAME="IDX314"></A>
+<A NAME="IDX315"></A>
+<A NAME="IDX316"></A>
+<A NAME="IDX317"></A>
+<A NAME="IDX318"></A>
+<P>
+  The text in a window can also be scrolled horizontally.  This means that
+each line of text is shifted sideways in the window, and one or more
+characters at the beginning of each line are not displayed at all.  When a
+window has been scrolled horizontally in this way, text lines are truncated
+rather than continued (see section <A HREF="emacs_26.html#SEC215">Continuation Lines</A>), with a <SAMP>`$'</SAMP> appearing
+in the first column when there is text truncated to the left, and in the
+last column when there is text truncated to the right.
+<P>
+  The command <KBD>C-x &#60;</KBD> (<CODE>scroll-left</CODE>) scrolls the selected
+window to the left by <VAR>n</VAR> columns with argument <VAR>n</VAR>.  This moves
+part of the beginning of each line off the left edge of the window.
+With no argument, it scrolls by almost the full width of the window (two
+columns less, to be precise).
+<P>
+  <KBD>C-x &#62;</KBD> (<CODE>scroll-right</CODE>) scrolls similarly to the right.  The
+window cannot be scrolled any farther to the right once it is displaying
+normally (with each line starting at the window's left margin);
+attempting to do so has no effect.  This means that you don't have to
+calculate the argument precisely for <KBD>C-x &#62;</KBD>; any sufficiently large
+argument will restore normally display.
+<P>
+<A NAME="IDX319"></A>
+<A NAME="IDX320"></A>
+<H2><A NAME="SEC73" HREF="emacs_toc.html#SEC73">Selective Display</A></H2>
+<P>
+  Emacs has the ability to hide lines indented more than a certain number
+of columns (you specify how many columns).  You can use this to get an
+overview of a part of a program.
+<P>
+  To hide lines, type <KBD>C-x $</KBD> (<CODE>set-selective-display</CODE>) with a
+numeric argument <VAR>n</VAR>.  Then lines with at least <VAR>n</VAR> columns of
+indentation disappear from the screen.  The only indication of their
+presence is that three dots (<SAMP>`...'</SAMP>) appear at the end of each
+visible line that is followed by one or more invisible ones.
+<P>
+  The commands <KBD>C-n</KBD> and <KBD>C-p</KBD> move across the invisible lines
+as if they were not there.
+<P>
+  The invisible lines are still present in the buffer, and most editing
+commands see them as usual, so you may find point in the middle of
+invisible text.  When this happens, the cursor appears at the end of the
+previous line, after the three dots.  If point is at the end of the
+visible line, before the newline that ends it, the cursor appears before
+the three dots.
+<P>
+  To make everything visible again, type <KBD>C-x $</KBD> with no argument.
+<P>
+<H2><A NAME="SEC74" HREF="emacs_toc.html#SEC74">European Character Set Display</A></H2>
+<A NAME="IDX321"></A>
+<A NAME="IDX322"></A>
+<A NAME="IDX323"></A>
+<A NAME="IDX324"></A>
+<A NAME="IDX325"></A>
+<P>
+  Emacs can display accented characters, assuming the font in use
+supports them.  The <KBD>M-x standard-display-european</KBD> command toggles
+European character display.  When enabled, Emacs displays characters
+according to the ISO 8859 Latin-1 encoding for European languages; when
+disabled, Emacs uses octal notation for all characters not specified by
+the ordinary ASCII standard.  Load the library <CODE>iso-syntax</CODE> to specify
+the correct syntactic properties for the character codes 128 and above.
+<P>
+  With a prefix argument, <KBD>M-x standard-display-european</KBD> enables
+European character display if and only if the argument is positive.
+<P>
+  If your terminal can send character codes 128 and up to represent
+ISO Latin-1 characters, execute the following expression to
+enable Emacs to understand them:
+<P>
+<PRE>
+(set-input-mode (car (current-input-mode))
+                (nth 1 (current-input-mode))
+                0)
+</PRE>
+<P>
+<A NAME="IDX327"></A>
+<A NAME="IDX326"></A>
+Otherwise, you can load the library <CODE>iso-transl</CODE> to turn the key
+<KBD>C-x 8</KBD> into a "compose character" prefix for entry of the extra
+ISO Latin-1 printing characters.  <KBD>C-x 8</KBD> is good for insertion (in
+the minibuffer as well as other buffers), for searching, and in any
+other context where a key sequence is allowed.
+<A NAME="IDX328"></A>
+<P>
+  If you enter non-ASCII ISO Latin-1 characters often, you might find
+ISO Accents mode convenient.  When this minor mode is enabled, the
+characters <SAMP>``'</SAMP>, <SAMP>`''</SAMP>, <SAMP>`"'</SAMP>, <SAMP>`^'</SAMP>, <SAMP>`/'</SAMP> and <SAMP>`~'</SAMP>
+modify the following letter by adding the corresponding diacritical mark
+to it, if possible.  To enter one of those six special characters, type
+a space after it.
+<P>
+  Some of those characters have a corresponding "dead key" accent
+character in the ISO Latin-1 character set; to enter that character, type the
+corresponding ASCII character twice.  For example, <KBD>"</KBD> enters the
+Latin-1 character acute-accent (character code 0264).
+<P>
+  In addition to the accented letters, you can use these special
+sequences in ISO Accents mode to enter certain other ISO Latin-1
+characters:
+<P>
+<DL COMPACT>
+<DT><KBD>~C</KBD>
+<DD><SAMP>`C'</SAMP> with cedilla.
+<DT><KBD>~D</KBD>
+<DD><SAMP>`D'</SAMP> with stroke.
+<DT><KBD>~c</KBD>
+<DD><SAMP>`c'</SAMP> with cedilla.
+<DT><KBD>~d</KBD>
+<DD><SAMP>`d'</SAMP> with stroke.
+<DT><KBD>~&#60;</KBD>
+<DD>Left guillemet.
+<DT><KBD>~&#62;</KBD>
+<DD>Right guillemet.
+</DL>
+<P>
+  This feature is available whenever a key sequence is expected: for
+ordinary insertion, for searching, and for certain command arguments.
+<A NAME="IDX329"></A>
+<P>
+  To enable or disable ISO Accents mode, use the command <KBD>M-x
+iso-accents-mode</KBD>.  This command affects only the current buffer.
+<P>
+<H2><A NAME="SEC75" HREF="emacs_toc.html#SEC75">Optional Display Features</A></H2>
+<A NAME="IDX330"></A>
+<A NAME="IDX331"></A>
+<A NAME="IDX332"></A>
+<P>
+  To add the current line number of point to the mode line, enable Line
+Number mode with the command <KBD>M-x line-number-mode</KBD>.  The line
+number appears before <VAR>pos</VAR>, with the letter <SAMP>`L'</SAMP> to indicate
+what it is.  See section <A HREF="emacs_35.html#SEC333">Minor Modes</A>, for more information about minor modes
+and about how to use this command.
+<A NAME="IDX333"></A>
+<P>
+  If the buffer is very large (larger than the value of
+<CODE>line-number-display-limit</CODE>), then the line number doesn't appear.
+Emacs doesn't compute the line number when the buffer is large, because
+that would be too slow.
+<A NAME="IDX334"></A>
+<A NAME="IDX335"></A>
+<P>
+  Emacs can optionally display the time and system load in all mode
+lines.  To enable this feature, type <KBD>M-x display-time</KBD>.  The
+information added to the mode line usually appears after the buffer
+name, before the mode names and their parentheses.  It looks like this:
+<P>
+<PRE>
+<VAR>hh</VAR>:<VAR>mm</VAR>pm <VAR>l.ll</VAR> [<VAR>d</VAR>]
+</PRE>
+<P>
+Here <VAR>hh</VAR> and <VAR>mm</VAR> are the hour and minute, followed always by
+<SAMP>`am'</SAMP> or <SAMP>`pm'</SAMP>.  <VAR>l.ll</VAR> is the average number of running
+processes in the whole system recently.  <VAR>d</VAR> is an approximate index
+of the ratio of disk activity to cpu activity for all users.  (Some
+fields may be missing if your operating system cannot support them.)
+<A NAME="IDX336"></A>
+<P>
+  The word <SAMP>`Mail'</SAMP> appears after the load level if there is mail
+for you that you have not read yet.
+<P>
+  Customization note: the variable <CODE>mode-line-inverse-video</CODE> controls
+whether the mode line is displayed in inverse video (assuming the terminal
+supports it); <CODE>nil</CODE> means no inverse video.  The default is <CODE>t</CODE>.
+See section <A HREF="emacs_16.html#SEC76">Variables Controlling Display</A>.
+<P>
+<H2><A NAME="SEC76" HREF="emacs_toc.html#SEC76">Variables Controlling Display</A></H2>
+<P>
+  This section contains information for customization only.  Beginning
+users should skip it.
+<A NAME="IDX337"></A>
+<P>
+  The variable <CODE>mode-line-inverse-video</CODE> controls whether the mode
+line is displayed in inverse video (assuming the terminal supports it);
+<CODE>nil</CODE> means don't do so.  See section <A HREF="emacs_5.html#SEC11">The Mode Line</A>.
+<A NAME="IDX338"></A>
+<P>
+  If the variable <CODE>inverse-video</CODE> is non-<CODE>nil</CODE>, Emacs attempts
+to invert all the lines of the display from what they normally are.
+<A NAME="IDX339"></A>
+<P>
+  If the variable <CODE>visible-bell</CODE> is non-<CODE>nil</CODE>, Emacs attempts
+to make the whole screen blink when it would normally make an audible bell
+sound.  This variable has no effect if your terminal does not have a way
+to make the screen blink.<A NAME="IDX340"></A>
+<P>
+  When you reenter Emacs after suspending, Emacs normally clears the
+screen and redraws the entire display.  On some terminals with more than
+one page of memory, it is possible to arrange the termcap entry so that
+the <SAMP>`ti'</SAMP> and <SAMP>`te'</SAMP> strings (output to the terminal when Emacs
+is entered and exited, respectively) switch between pages of memory so
+as to use one page for Emacs and another page for other output.  Then
+you might want to set the variable <CODE>no-redraw-on-reenter</CODE>
+non-<CODE>nil</CODE>; this tells Emacs to assume, when resumed, that the
+screen page it is using still contains what Emacs last wrote there.
+<A NAME="IDX341"></A>
+<P>
+  The variable <CODE>echo-keystrokes</CODE> controls the echoing of multi-character
+keys; its value is the number of seconds of pause required to cause echoing
+to start, or zero meaning don't echo at all.  See section <A HREF="emacs_5.html#SEC10">The Echo Area</A>.
+<A NAME="IDX342"></A>
+<P>
+  If the variable <CODE>ctl-arrow</CODE> is <CODE>nil</CODE>, control characters in
+the buffer are displayed with octal escape sequences, all except newline
+and tab.  Altering the value of <CODE>ctl-arrow</CODE> makes it local to the
+current buffer; until that time, the default value is in effect.  The
+default is initially <CODE>t</CODE>.  See section 'Display Tables' in <CITE>The Emacs Lisp Reference Manual</CITE>.
+<A NAME="IDX343"></A>
+<P>
+  Normally, a tab character in the buffer is displayed as whitespace which
+extends to the next display tab stop position, and display tab stops come
+at intervals equal to eight spaces.  The number of spaces per tab is
+controlled by the variable <CODE>tab-width</CODE>, which is made local by
+changing it, just like <CODE>ctl-arrow</CODE>.  Note that how the tab character
+in the buffer is displayed has nothing to do with the definition of
+<KBD>TAB</KBD> as a command.  The variable <CODE>tab-width</CODE> must have an
+integer value between 1 and 1000, inclusive.
+<A NAME="IDX344"></A>
+<P>
+  If you set the variable <CODE>selective-display-ellipses</CODE> to <CODE>nil</CODE>,
+the three dots do not appear at the end of a line that precedes invisible
+lines.  Then there is no visible indication of the invisible lines.
+This variable too becomes local automatically when set.
+<P>
+  If the variable <CODE>truncate-lines</CODE> is non-<CODE>nil</CODE>, then each
+line of text gets just one screen line for display; if the text line is
+too long, display shows only the part that fits.  If
+<CODE>truncate-lines</CODE> is <CODE>nil</CODE>, then long text lines display as
+more than one screen line, enough to show the whole text of the line.
+See section <A HREF="emacs_26.html#SEC215">Continuation Lines</A>.  Altering the value of <CODE>truncate-lines</CODE>
+makes it local to the current buffer; until that time, the default value
+is in effect.  The default is initially <CODE>nil</CODE>.
+<P>
+  If the variable <CODE>truncate-partial-width-windows</CODE> is
+non-<CODE>nil</CODE>, it forces truncation rather than continuation in any
+window less than the full width of the screen or frame, regardless of
+the value of <CODE>truncate-lines</CODE>.  For information about side-by-side
+windows, see section <A HREF="emacs_21.html#SEC135">Splitting Windows</A>.  See also section 'Display' in <CITE>The Emacs Lisp Reference Manual</CITE>.
+<A NAME="IDX345"></A>
+<P>
+  The variable <CODE>baud-rate</CODE> holds the the output speed of the
+terminal, as far as Emacs knows.  Setting this variable does not change
+the speed of actual data transmission, but the value is used for
+calculations such as padding.  It also affects decisions about whether
+to scroll part of the screen or redraw it instead--even when using a
+window system, (We designed it this way, despite the fact that a window
+system has no true "output speed", to give you a way to tune these
+decisions.)
+<P>Go to the <A HREF="emacs_15.html">previous</A>, <A HREF="emacs_17.html">next</A> section.<P>

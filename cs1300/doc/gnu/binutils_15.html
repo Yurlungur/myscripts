@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from ../../binutils/binutils.texi on 16 March 1999 -->
+
+<TITLE>gnu Binary Utilities - readelf</TITLE>
+<link href="binutils_16.html" rel=Next>
+<link href="binutils_14.html" rel=Previous>
+<link href="binutils_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="binutils_1.html">first</A>, <A HREF="binutils_14.html">previous</A>, <A HREF="binutils_16.html">next</A>, <A HREF="binutils_18.html">last</A> section, <A HREF="binutils_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC17" HREF="binutils_toc.html#TOC17">readelf</A></H1>
+
+<P>
+<A NAME="IDX121"></A>
+<A NAME="IDX122"></A>
+
+</P>
+
+<PRE>
+readelf [ -a | --all ] 
+        [ -h | --file-header]
+        [ -l | --program-headers | --segments]
+        [ -S | --section-headers | --sections]
+        [ -s | --symbols]
+        [ -r | --relocs]
+        [ -d | --dynamic]
+        [ -V | --version-info]
+        [ -D | --use-dynamic]
+        [ -x &#60;number&#62; | --hex-dump=&#60;number&#62;]
+        [ -v | --version]
+        [ -H | --help]
+        <VAR>elffile</VAR>...
+</PRE>
+
+<P>
+<CODE>readelf</CODE> displays information about one or more ELF format object
+files.  The options control what particular information to display.
+
+</P>
+<P>
+<VAR>elffile</VAR>... are the object files to be examined.  At the
+moment, <CODE>readelf</CODE> does not support examining archives, nor does it
+support examing 64 bit ELF files.
+
+</P>
+<P>
+The long and short forms of options, shown here as alternatives, are
+equivalent.  At least one option besides <SAMP>`-v'</SAMP> or <SAMP>`-H'</SAMP> must be
+given. 
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>-a</CODE>
+<DD>
+<DT><CODE>--all</CODE>
+<DD>
+Equivalent to specifiying <SAMP>`--file-header'</SAMP>,
+<SAMP>`--program-headers'</SAMP>, <SAMP>`--sections'</SAMP>, <SAMP>`--symbols'</SAMP>,
+<SAMP>`--relocs'</SAMP>, <SAMP>`--dynamic'</SAMP> and <SAMP>`--version-info'</SAMP>.
+
+<DT><CODE>-h</CODE>
+<DD>
+<DT><CODE>--file-header</CODE>
+<DD>
+<A NAME="IDX123"></A>
+Displays the information contained in the ELF header at the start of the
+file.
+
+<DT><CODE>-l</CODE>
+<DD>
+<DT><CODE>--program-headers</CODE>
+<DD>
+<DT><CODE>--segments</CODE>
+<DD>
+<A NAME="IDX124"></A>
+<A NAME="IDX125"></A>
+Displays the information contained in the file's segment headers, if it
+has any.
+
+<DT><CODE>-S</CODE>
+<DD>
+<DT><CODE>--sections</CODE>
+<DD>
+<A NAME="IDX126"></A>
+Displays the information contained in the file's section headers, if it
+has any.
+
+<DT><CODE>-s</CODE>
+<DD>
+<DT><CODE>--symbols</CODE>
+<DD>
+<A NAME="IDX127"></A>
+Displays the entries in symbol table section of the file, if it has one.
+
+<DT><CODE>-r</CODE>
+<DD>
+<DT><CODE>--relocs</CODE>
+<DD>
+<A NAME="IDX128"></A>
+Displays the contents of the file's relocation section, if it ha one.
+
+<DT><CODE>-d</CODE>
+<DD>
+<DT><CODE>--dynamic</CODE>
+<DD>
+<A NAME="IDX129"></A>
+Displays the contents of the file's dynamic section, if it has one.
+
+<DT><CODE>-V</CODE>
+<DD>
+<DT><CODE>--version-info</CODE>
+<DD>
+<A NAME="IDX130"></A>
+Displays the contents of the version sections in the file, it they
+exist.
+
+<DT><CODE>-D</CODE>
+<DD>
+<DT><CODE>--use-dynamic</CODE>
+<DD>
+When displaying symbols, this option makes <CODE>readelf</CODE> use the
+symblol table in the file's dynamic section, rather than the one in the
+symbols section.
+
+<DT><CODE>-x &#60;number&#62;</CODE>
+<DD>
+<DT><CODE>--hex-dump=&#60;number&#62;</CODE>
+<DD>
+Displays the contents of the indicated section as a hexadecimal dump.
+
+<DT><CODE>-v</CODE>
+<DD>
+<DT><CODE>--version</CODE>
+<DD>
+Display the version number of readelf.
+
+<DT><CODE>-H</CODE>
+<DD>
+<DT><CODE>--help</CODE>
+<DD>
+Display the command line options understood by <CODE>readelf</CODE>.
+
+</DL>
+
+<P><HR><P>
+<p>Go to the <A HREF="binutils_1.html">first</A>, <A HREF="binutils_14.html">previous</A>, <A HREF="binutils_16.html">next</A>, <A HREF="binutils_18.html">last</A> section, <A HREF="binutils_toc.html">table of contents</A>.
+</BODY>
+</HTML>

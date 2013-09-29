@@ -1,0 +1,357 @@
+<HTML>
+<HEAD>
+<TITLE>
+CSCI 1300 Exercise 6 - Using Make for G++ Compilations
+</TITLE>
+</HEAD>
+<BODY>
+<TABLE>
+<TD>
+<H2>
+
+
+CSCI 1300 - Exercise 6
+<BR>
+Using Make for G++ Compilations
+
+
+</H2>
+<P>
+<B>What You'll Get from This Exercise</B></P>
+<P CLASS="Main-body-small-type">
+<A NAME="pgfId=2086">
+ </A>
+
+
+This week's lab
+introduces another important tool: The <STRONG>make</STRONG> facility.
+This facility allows you to easily maintain and keep your files up to date
+when you are working on a project that is split accross several cxx files
+(and their associated header files). For each of your future assignments,
+you should keep all of the files for that assignment in one directory, and
+create a make file to manage the files in that directory.
+
+<P>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>PC Labs in the<BR>Engineering Center</TH>
+<TR><TD>CR 235&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 239
+<TR><TD>CR 244&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 252 (24 hours)
+<TR><TD>CH 107&nbsp;&nbsp;&nbsp;&nbsp;<TD>ME 107
+<TR><TD COLSPAN=2>Other campus sites are<BR>listed 
+at <a href="http://www.colorado.edu/its/labs/">www.colorado.edu/its/labs</a>.
+</TABLE>
+<TD>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>Installing the<BR>CS1300 Software</TH>
+<TR><TD COLSPAN=2>
+Open a DOS window. If the CS1300 software is not permanently 
+<BR>installed on your machine, then use one of these methods:
+<UL>
+<LI>On machines in the Engineering Center, try one of
+<BR>these commands:
+<BR><CODE>&nbsp;&nbsp;H:\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;H:\cs1300\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;Z:\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;Z:\cs1300\gocs</CODE>
+<LI>On other machines, download these two files to the C: drive:
+<BR><A HREF="../unzip.exe">
+www.cs.colorado.edu/~main/cs1300/unzip.exe</A>
+<BR><A HREF="../cs1300.zip">
+www.cs.colorado.edu/~main/cs1300/cs1300.zip</A>
+<BR>
+Then type these commands:
+<BR><CODE>&nbsp;&nbsp;C:</CODE>
+<BR><CODE>&nbsp;&nbsp;cd \</CODE>
+<BR><CODE>&nbsp;&nbsp;unzip cs1300.zip</CODE>
+<BR><CODE>&nbsp;&nbsp;cs1300\gocs</CODE>
+</UL>
+<TR><TD>
+If you get the message "Out of environment space", then:
+<UL>
+<LI> Click on the MS-DOS icon in the top left corner of the window.
+<LI> Select Properties from the pop-up menu.
+<LI> Select the Memory tab from the command box.
+<LI> Click the arrow on the Initial Environment box. Move down in the
+box as far as possible (by clicking the downward arrow). Click on the
+biggest number that you see in this box.
+<LI> Click OK in the command box.
+<LI> Click OK in the MS-DOS Prompt information box.
+<LI> Stop the DOS Session by clicking the X in the top-right or by
+typing the command "exit".
+<LI> Restart a new DOS session and try running your commands again.
+</UL>
+</TABLE>
+</TABLE>
+<FORM METHOD=POST ACTION="../NoSubmitButton">
+
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Copy an Example Makefile
+</STRONG> </DT>
+    <DD>
+    This week's lab exercise starts in your working directory.
+    You'll need to copy four files into that directory from the
+    installed cs1300\lab\ directory:
+<PRE>
+    <A HREF="makefile">makefile</A>
+    <A HREF="sinewave.cxx">sinewave</A>
+    <A HREF="intarray.cxx">intarray.cxx</A>
+    <A HREF="intarray.h">intarray.h</A>
+</PRE>
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+What's in a Makefile?
+</STRONG> </DT>
+    <DD>
+    The file makefile is the usual input file for a tool called make. The 
+    purpose of make is to help you maintain and update a collection of related
+    program files. The collection usually has header files, cxx files, and 
+    compiled files--all of which depend on each other. For example, consider 
+    last week's sinewave program.
+    The final product is an executable file named 
+    sinewave.exe, which is created by linking together two other compiled files, 
+    sinewave.o and intarray.o. The two compiled files were created by 
+    compiling 
+    <A HREF=
+    "sinewave.cxx"
+    >
+    sinewave.cxx
+    </A>
+    and
+    <A HREF=
+    "intarray.cxx"
+    >
+    intarray.cxx
+    </A>
+    (both of which used the header file
+    <A HREF=
+    "intarray.h"
+    >
+    intarray.h</A>).
+    The complete dependencies among the files can be 
+    drawn like this:
+    <P>
+    <IMG SRC="makew.gif">
+    <P>
+    The upward arrows in the file express how each file is created. For
+    example, the file sinewave.o is created by compiling sinewave.cxx and  also
+    includes intarray.h. To state the matter simply: 
+
+    <P><I>
+    If sinewave.cxx or intarray.h changes, then sinewave.o must be regenerated 
+    by giving the compiler command:</I>
+    <BR><CODE>
+    g++ -Wall -c -gstabs sinewave.cxx
+    </CODE><P>
+
+    This requirement
+    to sometimes regenerate sinewave.o is one of the dependencies
+    that the example makefile expresses. To see this dependency, use emacs
+    to open up the file named makefile. 
+    <P>
+    Near the bottom of the file you'll find these two lines:
+
+<P><PRE>
+sinewave.o: sinewave.cxx intarray.h
+        g++ -Wall -c -gstabs sinewave.cxx
+</PRE><P>
+
+    The first line is called a target line, which begins with a file name and
+    a colon. After the colon is a list of  more file names. Here's how to
+    interpret the line: The file before the colon (called the target file)
+    depends on  the other files (after the colon). Whenever one of the files
+    after the colon changes, the make tool knows that  the target file needs
+    to be regenerated. After the target line, there is a series of commands
+    that tell exactly  how to regenerate the target file. For the case of
+    sinewave.o, we only need the one g++ command to  regenerate the file.
+    (Notice that we included the -c flag to indicate that we should only
+    compile and not create an executable file yet. We also included the
+    -gstabs flag in case we want to use the debugger.)
+    <P>
+    There is one
+    other peculiar requirement: The command lines (such as the g++ command)
+    must  each begin with a tab <STRONG>(not with 8 spaces!)</STRONG>.
+    <P>
+    As a second example of a dependency, the executable file sinewave.exe is
+    created by compiling together the  object files sinewave.o and intarray.o.
+    If either of these two object files should change, then sinewave.exe also
+    needs to be recreated. Here is the appropriate target line and command
+    from our makefile:
+
+<P><PRE>
+sinewave.exe: sinewave.o intarray.o
+        g++ -Wall -gstabs sinewave.o intarray.o -o sinewave
+</PRE><P>
+
+    This target line says that if sinewave.o or intarray.o should happen to
+    change, then the sinewave.exe  must be regenerated with the g++ command that is
+    shown.
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Using Make to Regenerate a Specified Target File
+</STRONG> </DT>
+    <DD>
+    In order to illustrate how the make facility works, start by getting rid of
+    all the object files and executable files.  You can do this with the
+    delete command:
+
+    <P><PRE>
+    del  intarray.o 
+    del  sinewave.o 
+    del  sinewave.exe
+    </PRE>
+
+    There are two simple ways to use the make facility to automatically
+    regenerate
+    your files. The first approach  regenerates a specific file. For example,
+    suppose you want to regenerate intarray.o. Then you can use  the make
+    command, as shown here:
+
+    <P><CODE>
+    make -k intarray.o
+    </CODE><P>
+
+    The make command will find the dependency information in the makefile
+    file. It sees that intarray.o  depends on other files, so it will first
+    ensure that those files are present (and regenerate them if necessary). In
+    this example, the two files intarray.h and intarray.cxx are necessary for
+    generating  intarray.o. These two files are present, so the make command
+    proceeds to generate intarray.o,  using the g++ command that is specified
+    in the makefile. When the g++ command is executed, it is  displayed on the
+    screen, so you will see this appear on the screen:
+
+    <P><CODE>
+    g++ -Wall -c -gstabs intarray.cxx
+    </CODE><P>
+
+    After this command finishes, you should list the files in your directory,
+    where you will find the object file  intarray.o is once again present.
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Using Make without Specifying a Target File
+</STRONG> </DT>
+    <DD>
+    You may also use the make command without specifying a file, like this:
+
+    <P><CODE>
+    make -k
+    </CODE><P>
+
+    Without a specified file, the make command will regenerate the first
+    target that it finds in  makefile. Try  this now, and you will see that
+    the executable file sinewave.exe is regenerated, since sinewave.exe is the first 
+    target file in makefile. During the process of regenerating the sinewave.exe
+    file, the make command had  to carry out several steps. In the first step,
+    the make command realizes that sinewave.exe depends on  intarray.o and also on
+    sinewave.o. But the file sinewave.o is not present. So, the make command 
+    first regenerates sinewave.o, and then it can proceed to regenerate the
+    executable file sinewave. On the  screen you'll see the two steps
+    displayed:
+
+    <P><CODE>
+    g++ -Wall -c -gstabs sinewave.cxx
+    <BR>
+    g++ -Wall -gstabs sinewave.o intarray.o -lm -o sinewave
+    </CODE><P>
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Using Make from within Emacs
+</STRONG> </DT>
+    <DD>
+    The best feature of the make command is how it automatically keeps track
+    of exactly which object files and  executable files need to be recompiled.
+    As an example, you should now change one of your source files. I  suggest
+    that you use emacs to
+    make a small change to the sinewave.cxx program, perhaps adding
+    another small output  statement. Then save the new sinewave.cxx
+    (CTRL-x s) and
+    from within emacs give the compile command (ESC x compile RETURN).
+    <P>
+    What happens? The emacs compile command automatically issues the
+    "make -k" command. The make facility realizes that sinewave.cxx has changed, and
+    therefore the object file  sinewave.o is regenerated with the command:
+
+    <P><CODE>
+    g++  -Wall -c -gstabs  sinewave.cxx
+    </CODE><P>
+
+    Next, the make facility realizes that sinewave.o has just changed, and
+    therefore the executable file  sinewave.exe is regenerated with:
+    
+    <P><CODE>
+    g++  -Wall -gstabs sinewave.o intarray.o -lm -o sinewave
+    </CODE><P>
+
+    But, notice that the object file intarray.o was not recompiled. The
+    dependencies in the makefile were  sufficient to show that intarray.o did
+    not need recreation.
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Using Make with Special Targets
+</STRONG> </DT>
+    <DD>
+    A makefile can also have special target lines that carry out special
+    actions rather than regenerate files. There  are two such target lines at
+    the bottom of the example makefile:
+
+<P><PRE>
+clean:
+        rm $(EXPENDABLES)
+
+all:
+        @make $(EXPENDABLES)
+</PRE><P>
+
+    The special target clean simply removes all of the files that can be
+    generated. (These are called the  "expendable" files because they are easy
+    to replace by regenerating them.) It does the removal with the rm
+    command (which is part of the compiler files that you downloaded).
+    The rm command removes one or more files.
+    The term $(EXPENDABLES) is a
+    macro expansion--meaning that the make command will look elsewhere in the file for the
+    meaning of the word EXPENDABLES.
+    It will find this at the top of the file, where 
+    EXPENDABLES is defined to be the sequence of all files that we can
+    regenerate.
+    <P>
+    The special target "all" generates all expendable files.
+    The @ symbol in front of make command suppresses
+    printing of the command, so that "make. . ." will not be printed on the
+    screen.
+
+    The two special targets can be activated just like any other target. For
+    example:
+
+    <P><CODE>
+    make -k all
+    </CODE><P>
+
+    The make all command is useful when you want to make certain that all
+    files are up to date. It will only regenerate files that need to
+    be regenerated because the corresponding cxx or h files have changed.
+</DL>
+
+
+
+</FORM>
+<P>
+<HR>
+<address>
+<A HREF="http://www.cs.colorado.edu/~main/Home.html">Michael Main</A>
+(<A HREF="mailto:main@colorado.edu">main@colorado.edu</A>)
+<HR>
+
+</BODY>
+</HTML>
+

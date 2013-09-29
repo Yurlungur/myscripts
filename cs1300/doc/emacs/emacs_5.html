@@ -1,0 +1,196 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - The Organization of the Screen</TITLE>
+<P>Go to the <A HREF="emacs_4.html">previous</A>, <A HREF="emacs_6.html">next</A> section.<P>
+<A NAME="IDX1"></A>
+<A NAME="IDX2"></A>
+<H1><A NAME="SEC8" HREF="emacs_toc.html#SEC8">The Organization of the Screen</A></H1>
+<P>
+  On a text-only terminal, the Emacs display occupies the whole screen.
+On the X Window System, Emacs creates its own X windows to use.  We use
+the term <DFN>frame</DFN> to mean an entire text-only screen or an entire X
+window used by Emacs.  Emacs uses both kinds of frames in the same way
+to display your editing.  Emacs normally starts out with just one frame,
+but under X you can create additional frames if you wish.  See section <A HREF="emacs_22.html#SEC139">Frames and X Windows</A>.
+<P>
+  When you start Emacs, the entire frame except for the last line is
+devoted to the text you are editing.  This area is called <DFN>window</DFN>.
+The last line is a special <DFN>echo area</DFN> or <DFN>minibuffer window</DFN>
+where prompts appear and where you can enter responses.  You can
+subdivide the large text window horizontally or vertically into multiple
+text windows, each of which can be used for a different file
+(see section <A HREF="emacs_21.html#SEC133">Multiple Windows</A>).  In this manual, the word "window" always refers to
+the subdivisions of a frame within Emacs.
+<P>
+  The window that the cursor is in is the <DFN>selected window</DFN>, in
+which editing takes place.  Most Emacs commands implicitly apply to the
+text in the selected window.  The other windows display text for
+reference only, unless/until you select them.
+<P>
+  Each window's last line is a <DFN>mode line</DFN> which describes what is
+going on in that window.  It is in inverse video if the terminal
+supports that, and contains text that starts like <SAMP>`-----Emacs:
+<VAR>something</VAR>'</SAMP>.  Its purpose is to indicate what buffer is being
+displayed above it in the window; what major and minor modes are in use;
+and whether the buffer contains unsaved changes.
+<P>
+<A NAME="IDX3"></A>
+<A NAME="IDX4"></A>
+<H2><A NAME="SEC9" HREF="emacs_toc.html#SEC9">Point</A></H2>
+<P>
+  Within Emacs, the terminal's cursor shows the location at which
+editing commands will take effect.  This location is called
+<DFN>point</DFN>.  Other commands move point through the text, so that you
+can edit at different places in it.
+<P>
+  While the cursor appears to point <VAR>at</VAR> a character, you should
+think of point as <VAR>between</VAR> two characters; it points <VAR>before</VAR>
+the character that appears under the cursor.  For example, if your text
+looks like <SAMP>`frob'</SAMP> with the cursor over the <SAMP>`b'</SAMP>, then point is
+between the <SAMP>`o'</SAMP> and the <SAMP>`b'</SAMP>.  If you insert the character
+<SAMP>`!'</SAMP> at that position, the result is <SAMP>`fro!b'</SAMP>, with point
+between the <SAMP>`!'</SAMP> and the <SAMP>`b'</SAMP>.  Thus, the cursor remains over
+the <SAMP>`b'</SAMP>, as before.
+<P>
+  Sometimes people speak of "the cursor" when they mean "point", or
+speak of commands that move point as "cursor motion" commands.
+<P>
+  Terminals have only one cursor, and when output is in progress it must
+appear where the typing is being done.  This does not mean that point is
+moving.  It is only that Emacs has no way to show you the location of point
+except when the terminal is idle.
+<P>
+  If you are editing several files in Emacs, each in its own buffer,
+each buffer has its own point location.  A buffer that is not currently
+displayed remembers where point is in case you display it again later.
+<P>
+  When there are multiple windows, each window has its own point
+location.  The cursor shows the location of point in the selected
+window.  This also is how you can tell which window is selected.  If the
+same buffer appears in more than one window, each window has its own
+position for point in that buffer.
+<P>
+  The term `point' comes from the character <SAMP>`.'</SAMP>, which was the
+command in TECO (the language in which the original Emacs was written)
+for accessing the value now called `point'.
+<P>
+<A NAME="IDX5"></A>
+<H2><A NAME="SEC10" HREF="emacs_toc.html#SEC10">The Echo Area</A></H2>
+<P>
+  The line at the bottom of the screen (below the mode line) is the
+<DFN>echo area</DFN>.  It is used to display small amounts of text for several
+purposes.
+<P>
+  <DFN>Echoing</DFN> means printing out the characters that you type.
+Outside Emacs, the operating system normally echoes all your input.
+Emacs handles echoing differently.
+<P>
+  Single-character commands do not echo in Emacs, and multi-character
+commands echo only if you pause while typing them.  As soon as you pause
+for more than a second in the middle of a command, Emacs echoes all the
+characters of the command so far.  This is to <DFN>prompt</DFN> you for the
+rest of the command.  Once echoing has started, the rest of the command
+echoes immediately as you type it.  This behavior is designed to give
+confident users fast response, while giving hesitant users maximum
+feedback.  You can change this behavior by setting a variable
+(see section <A HREF="emacs_16.html#SEC76">Variables Controlling Display</A>).
+<A NAME="IDX6"></A>
+<P>
+  If a command cannot be executed, it may print an <DFN>error message</DFN> in
+the echo area.  Error messages are accompanied by a beep or by flashing the
+screen.  Also, any input you have typed ahead is thrown away when an error
+happens.
+<P>
+  Some commands print informative messages in the echo area.  These
+messages look much like error messages, but they are not announced with
+a beep and do not throw away input.  Sometimes the message tells you
+what the command has done, when this is not obvious from looking at the
+text being edited.  Sometimes the sole purpose of a command is to print
+a message giving you specific information--for example, <KBD>C-x =</KBD>
+prints a message describing the character position of point in the text
+and its current column in the window.  Commands that take a long time
+often display messages ending in <SAMP>`...'</SAMP> while they are working, and
+add <SAMP>`done'</SAMP> at the end when they are finished.
+<P>
+  The echo area is also used to display the <DFN>minibuffer</DFN>, a window that
+is used for reading arguments to commands, such as the name of a file to be
+edited.  When the minibuffer is in use, the echo area begins with a prompt
+string that usually ends with a colon; also, the cursor appears in that line
+because it is the selected window.  You can always get out of the
+minibuffer by typing <KBD>C-g</KBD>.  See section <A HREF="emacs_10.html#SEC30">The Minibuffer</A>.
+<P>
+<A NAME="IDX7"></A>
+<A NAME="IDX8"></A>
+<H2><A NAME="SEC11" HREF="emacs_toc.html#SEC11">The Mode Line</A></H2>
+<P>
+  Each text window's last line is a <DFN>mode line</DFN> which describes what is
+going on in that window.  When there is only one text window, the mode line
+appears right above the echo area.  The mode line is in inverse video if
+the terminal supports that, starts and ends with dashes, and contains text
+like <SAMP>`Emacs: <VAR>something</VAR>'</SAMP>.
+<P>
+  If a mode line has something else in place of <SAMP>`Emacs: <VAR>something</VAR>'</SAMP>,
+then the window above it is in a special subsystem such as Dired.  The mode
+line then indicates the status of the subsystem.
+<P>
+  Normally, the mode line looks like this:
+<P>
+<PRE>
+--<VAR>ch</VAR>-Emacs: <VAR>buf</VAR>      (<VAR>major</VAR> <VAR>minor</VAR>)----<VAR>pos</VAR>------
+</PRE>
+<P>
+This gives information about the buffer being displayed in the window: the
+buffer's name, what major and minor modes are in use, whether the buffer's
+text has been changed, and how far down the buffer you are currently
+looking.
+<P>
+  <VAR>ch</VAR> contains two stars <SAMP>`**'</SAMP> if the text in the buffer has been
+edited (the buffer is "modified"), or <SAMP>`--'</SAMP> if the buffer has not been
+edited.  Exception: for a read-only buffer, it is <SAMP>`%%'</SAMP>.
+<P>
+  <VAR>buf</VAR> is the name of the window's <DFN>buffer</DFN>.  In most cases
+this is the same as the name of a file you are editing.  See section <A HREF="emacs_20.html#SEC127">Using Multiple Buffers</A>.
+<P>
+  The buffer displayed in the selected window (the window that the
+cursor is in) is also Emacs's selected buffer, the one that editing
+takes place in.  When we speak of what some command does to "the
+buffer", we are talking about the currently selected buffer.
+<P>
+  <VAR>pos</VAR> tells you whether there is additional text above the top of
+the window, or below the bottom.  If your buffer is small and it is all
+visible in the window, <VAR>pos</VAR> is <SAMP>`All'</SAMP>.  Otherwise, it is
+<SAMP>`Top'</SAMP> if you are looking at the beginning of the buffer, <SAMP>`Bot'</SAMP>
+if you are looking at the end of the buffer, or <SAMP>`<VAR>nn</VAR>%'</SAMP>, where
+<VAR>nn</VAR> is the percentage of the buffer above the top of the
+window.<P>
+  <VAR>major</VAR> is the name of the <DFN>major mode</DFN> in effect in the buffer.  At
+any time, each buffer is in one and only one of the possible major modes.
+The major modes available include Fundamental mode (the least specialized),
+Text mode, Lisp mode, and C mode.  See section <A HREF="emacs_23.html#SEC149">Major Modes</A>, for details
+of how the modes differ and how to select one.<P>
+  <VAR>minor</VAR> is a list of some of the <DFN>minor modes</DFN> that are turned on
+at the moment in the window's chosen buffer.  <SAMP>`Fill'</SAMP> means that Auto
+Fill mode is on.  <SAMP>`Abbrev'</SAMP> means that Word Abbrev mode is on.
+<SAMP>`Ovwrt'</SAMP> means that Overwrite mode is on.  See section <A HREF="emacs_35.html#SEC333">Minor Modes</A>, for more
+information.  <SAMP>`Narrow'</SAMP> means that the buffer being displayed has
+editing restricted to only a portion of its text.  This is not really a
+minor mode, but is like one.  See section <A HREF="emacs_34.html#SEC323">Narrowing</A>.  <SAMP>`Def'</SAMP> means that a
+keyboard macro is being defined.  See section <A HREF="emacs_35.html#SEC340">Keyboard Macros</A>.
+<P>
+  Some buffers display additional information after the minor modes.  For
+example, Rmail buffers display the current message number and the total
+number of messages.  Compilation buffers and Shell mode display the status
+of the subprocess.
+<P>
+  In addition, if Emacs is currently inside a recursive editing level,
+square brackets (<SAMP>`[...]'</SAMP>) appear around the parentheses that
+surround the modes.  If Emacs is in one recursive editing level within
+another, double square brackets appear, and so on.  Since recursive
+editing levels affect Emacs globally and not any one buffer, the square
+brackets appear in every window's mode line or not in any of them.
+See section <A HREF="emacs_36.html#SEC365">Recursive Editing Levels</A>.<P>
+  See section <A HREF="emacs_16.html#SEC75">Optional Display Features</A>, for features that add other handy information
+to the mode line, such as the current line number of point, the current
+time, and whether mail has arrived for you.
+<P>Go to the <A HREF="emacs_4.html">previous</A>, <A HREF="emacs_6.html">next</A> section.<P>

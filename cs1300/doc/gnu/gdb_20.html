@@ -1,0 +1,186 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from gdb.texinfo on 7 November 1999 -->
+
+<TITLE>Debugging with GDB - Using History Interactively</TITLE>
+<link href="gdb_21.html" rel=Next>
+<link href="gdb_19.html" rel=Previous>
+<link href="gdb_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="gdb_1.html">first</A>, <A HREF="gdb_19.html">previous</A>, <A HREF="gdb_21.html">next</A>, <A HREF="gdb_23.html">last</A> section, <A HREF="gdb_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC176" HREF="gdb_toc.html#TOC176">Using History Interactively</A></H1>
+
+<P>
+This chapter describes how to use the GNU History Library interactively,
+from a user's standpoint.
+
+</P>
+
+<UL>
+<LI><A HREF="gdb_20.html#SEC177">History Interaction</A>: What it feels like using History as a user.
+</UL>
+
+
+
+<H2><A NAME="SEC177" HREF="gdb_toc.html#TOC177">History Interaction</A></H2>
+<P>
+<A NAME="IDX814"></A>
+
+</P>
+<P>
+The History library provides a history expansion feature similar
+to the history expansion in <CODE>csh</CODE>.  The following text describes the 
+syntax you use to manipulate history information.
+
+</P>
+<P>
+History expansion takes two parts.  In the first part, determine
+which line from the previous history will be used for substitution.
+This line is called the <STRONG>event</STRONG>.
+In the second part, select portions of that line for inclusion into the
+current line.  These portions are called <STRONG>words</STRONG>.  
+GDB breaks the line into words in the same 
+way that the Bash shell does, so that several English (or Unix) words
+surrounded by quotes are considered one word.
+
+</P>
+
+<UL>
+<LI><A HREF="gdb_20.html#SEC178">Event Designators</A>: How to specify which history line to use.
+<LI><A HREF="gdb_20.html#SEC179">Word Designators</A>: Specifying which words are of interest.
+<LI><A HREF="gdb_20.html#SEC180">Modifiers</A>: Modifying the results of susbstitution.
+</UL>
+
+
+
+<H3><A NAME="SEC178" HREF="gdb_toc.html#TOC178">Event Designators</A></H3>
+<P>
+<A NAME="IDX815"></A>
+
+</P>
+<P>
+An <STRONG>event designator</STRONG> is a reference to a command line entry in the
+history list.
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>!</CODE>
+<DD>
+Start a history subsititution, except when followed by a space, tab, or
+the end of the line... <KBD>=</KBD> or <KBD>(</KBD>.
+
+<DT><CODE>!!</CODE>
+<DD>
+Refer to the previous command.  This is a synonym for <CODE>!-1</CODE>.
+
+<DT><CODE>!n</CODE>
+<DD>
+Refer to command line <VAR>n</VAR>.
+
+<DT><CODE>!-n</CODE>
+<DD>
+Refer to the command line <VAR>n</VAR> lines back.
+
+<DT><CODE>!string</CODE>
+<DD>
+Refer to the most recent command starting with <VAR>string</VAR>.
+
+<DT><CODE>!?string</CODE>[<CODE>?</CODE>]
+<DD>
+Refer to the most recent command containing <VAR>string</VAR>.
+
+</DL>
+
+
+
+<H3><A NAME="SEC179" HREF="gdb_toc.html#TOC179">Word Designators</A></H3>
+
+<P>
+A <KBD>:</KBD> separates the event designator from the <STRONG>word designator</STRONG>.  
+It can be omitted if the word designator begins with a <KBD>^</KBD>, <KBD>$</KBD>,
+<KBD>*</KBD> or <KBD>%</KBD>.  Words are numbered from the beginning of the line,
+with the first word being denoted by a 0 (zero).
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>0 (zero)</CODE>
+<DD>
+The zero'th word.  For many applications, this is the command word.
+
+<DT><CODE>n</CODE>
+<DD>
+The <VAR>n</VAR>'th word.
+
+<DT><CODE>^</CODE>
+<DD>
+The first argument.  that is, word 1.
+
+<DT><CODE>$</CODE>
+<DD>
+The last argument.
+
+<DT><CODE>%</CODE>
+<DD>
+The word matched by the most recent <CODE>?string?</CODE> search.
+
+<DT><CODE>x-y</CODE>
+<DD>
+A range of words; <CODE>-<VAR>y</VAR></CODE> Abbreviates <CODE>0-<VAR>y</VAR></CODE>.
+
+<DT><CODE>*</CODE>
+<DD>
+All of the words, excepting the zero'th.  This is a synonym for <CODE>1-$</CODE>.
+It is not an error to use <KBD>*</KBD> if there is just one word in the event.
+The empty string is returned in that case.
+
+</DL>
+
+
+
+<H3><A NAME="SEC180" HREF="gdb_toc.html#TOC180">Modifiers</A></H3>
+
+<P>
+After the optional word designator, you can add a sequence of one or more
+of the following <STRONG>modifiers</STRONG>, each preceded by a <KBD>:</KBD>.
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>#</CODE>
+<DD>
+The entire command line typed so far.  This means the current command,
+not the previous command.
+
+<DT><CODE>h</CODE>
+<DD>
+Remove a trailing pathname component, leaving only the head.
+
+<DT><CODE>r</CODE>
+<DD>
+Remove a trailing suffix of the form <SAMP>`.'</SAMP><VAR>suffix</VAR>, leaving the basename.
+
+<DT><CODE>e</CODE>
+<DD>
+Remove all but the suffix.
+
+<DT><CODE>t</CODE>
+<DD>
+Remove all leading  pathname  components, leaving the tail.
+
+<DT><CODE>p</CODE>
+<DD>
+Print the new command but do not execute it.
+</DL>
+
+<P><HR><P>
+<p>Go to the <A HREF="gdb_1.html">first</A>, <A HREF="gdb_19.html">previous</A>, <A HREF="gdb_21.html">next</A>, <A HREF="gdb_23.html">last</A> section, <A HREF="gdb_toc.html">table of contents</A>.
+</BODY>
+</HTML>

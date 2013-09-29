@@ -1,0 +1,149 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Registers</TITLE>
+<P>Go to the <A HREF="emacs_14.html">previous</A>, <A HREF="emacs_16.html">next</A> section.<P>
+<A NAME="IDX287"></A>
+<H1><A NAME="SEC64" HREF="emacs_toc.html#SEC64">Registers</A></H1>
+<P>
+  Emacs <DFN>registers</DFN> are places you can save text or positions for
+later use.  Text and rectangles saved in registers can be copied into
+the buffer once or many times; you can move point to a position saved in
+a register.
+<A NAME="IDX288"></A>
+<P>
+  Each register has a name which is a single character.  A register can
+store a piece of text, a rectangle, a position, a window configuration
+or a file name, but only one thing at any given time.  Whatever you
+store in a register remains there until you store something else in that
+register.  To see what a register <VAR>r</VAR> contains, use <KBD>M-x
+view-register</KBD>.
+<P>
+<DL COMPACT>
+<DT><KBD>M-x view-register <KBD>RET</KBD> <VAR>r</VAR></KBD>
+<DD>Display a description of what register <VAR>r</VAR> contains.
+</DL>
+<P>
+<H2><A NAME="SEC65" HREF="emacs_toc.html#SEC65">Saving Positions in Registers</A></H2>
+<P>
+  Saving a position records a spot in a buffer so that you can move back
+there later.  Moving to a saved position reselects that buffer and moves
+point to that spot.
+<P>
+<DL COMPACT>
+<DT><KBD>C-x r <KBD>SPC</KBD> <VAR>r</VAR></KBD>
+<DD>Save position of point in register <VAR>r</VAR> (<CODE>point-to-register</CODE>).
+<DT><KBD>C-x r j <VAR>r</VAR></KBD>
+<DD>Jump to the position saved in register <VAR>r</VAR> (<CODE>jump-to-register</CODE>).
+</DL>
+<A NAME="IDX289"></A>
+<A NAME="IDX290"></A>
+<P>
+  To save the current position of point in a register, choose a name
+<VAR>r</VAR> and type <KBD>C-x r <KBD>SPC</KBD> <VAR>r</VAR></KBD>.  The register <VAR>r</VAR>
+retains the position thus saved until you store something else in that
+register.
+<A NAME="IDX291"></A>
+<A NAME="IDX292"></A>
+<P>
+  The command <KBD>C-x r j <VAR>r</VAR></KBD> moves point to the position recorded
+in register <VAR>r</VAR>.  The register is not affected; it continues to
+record the same position.  You can jump to the same position using the
+same register any number of times.
+<P>
+<H2><A NAME="SEC66" HREF="emacs_toc.html#SEC66">Saving Text in Registers</A></H2>
+<P>
+  When you want to insert a copy of the same piece of text several
+times, it may be inconvenient to yank it from the kill ring, since each
+subsequent kill moves that entry further down the ring.  An alternative
+is to store the text in a register with <KBD>C-x r s</KBD>
+(<CODE>copy-to-register</CODE>) and then retrieve it with <KBD>C-x r i</KBD>
+(<CODE>insert-register</CODE>).
+<P>
+<DL COMPACT>
+<DT><KBD>C-x r s <VAR>r</VAR></KBD>
+<DD>Copy region into register <VAR>r</VAR> (<CODE>copy-to-register</CODE>).
+<DT><KBD>C-x r i <VAR>r</VAR></KBD>
+<DD>Insert text from register <VAR>r</VAR> (<CODE>insert-register</CODE>).
+</DL>
+<A NAME="IDX293"></A>
+<A NAME="IDX294"></A>
+<A NAME="IDX295"></A>
+<A NAME="IDX296"></A>
+<P>
+  <KBD>C-x r s <VAR>r</VAR></KBD> stores a copy of the text of the region into the
+register named <VAR>r</VAR>.  Given a numeric argument, <KBD>C-x r s <VAR>r</VAR></KBD>
+deletes the text from the buffer as well.
+<P>
+  <KBD>C-x r i <VAR>r</VAR></KBD> inserts in the buffer the text from register
+<VAR>r</VAR>.  Normally it leaves point before the text and places the mark
+after, but with a numeric argument (<KBD>C-u</KBD>) it puts point after the
+text and the mark before.
+<P>
+<H2><A NAME="SEC67" HREF="emacs_toc.html#SEC67">Saving Rectangles in Registers</A></H2>
+<P>
+  A register can contain a rectangle instead of linear text.  The
+rectangle is represented as a list of strings.  See section <A HREF="emacs_14.html#SEC63">Rectangles</A>, for
+basic information on how to specify a rectangle in the buffer.
+<P>
+<DL COMPACT>
+<DT><KBD>C-x r r <VAR>r</VAR></KBD>
+<DD>Copy the region-rectangle into register <VAR>r</VAR>
+(<CODE>copy-region-to-rectangle</CODE>).  With numeric argument, delete it as
+well.
+<DT><KBD>C-x r i <VAR>r</VAR></KBD>
+<DD>Insert the rectangle stored in register <VAR>r</VAR> (if it contains a
+rectangle) (<CODE>insert-register</CODE>).
+</DL>
+<P>
+  The <KBD>C-x r i <VAR>r</VAR></KBD> command inserts a text string if the
+register contains one, and inserts a rectangle if the register contains
+one.
+<P>
+<H2><A NAME="SEC68" HREF="emacs_toc.html#SEC68">Saving Window Configurations in Registers</A></H2>
+<A NAME="IDX297"></A>
+<A NAME="IDX298"></A>
+<A NAME="IDX299"></A>
+<A NAME="IDX300"></A>
+<P>
+  You can save the window configuration of the selected frame in a
+register, or even the configuration of all frames, and restore the
+configuration later.
+<P>
+<DL COMPACT>
+<DT><KBD>C-x r w <VAR>r</VAR></KBD>
+<DD>Save the state of the selected frame's windows in register <VAR>r</VAR>
+(<CODE>window-configuration-to-register</CODE>).
+<DT><KBD>C-x r f <VAR>r</VAR></KBD>
+<DD>Save the state of all windows in all frames in register <VAR>r</VAR>
+(<CODE>frame-configuration-to-register</CODE>).
+</DL>
+<P>
+  Use <KBD>C-x r j <VAR>r</VAR></KBD> to restore a window or frame configuration.
+This is the same command used to restore a cursor position.  When you
+restore a frame configuration, any existing frames not included in the
+configuration become invisible.  If you wish to delete these frames
+instead, use <KBD>C-u C-x r j <VAR>r</VAR></KBD>.
+<P>
+<H2><A NAME="SEC69" HREF="emacs_toc.html#SEC69">Keeping File Names in Registers</A></H2>
+<P>
+  If you visit certain file names frequently, you can visit them more
+conveniently if you put their names in registers.  Here's the Lisp code
+used to put a file name in a register:
+<P>
+<PRE>
+(set-register ?<VAR>r</VAR> '(file . <VAR>name</VAR>))
+</PRE>
+<P>
+For example,
+<P>
+<PRE>
+(set-register ?z '(file . "/gd/gnu/emacs/19.0/src/ChangeLog"))
+</PRE>
+<P>
+puts the file name shown in register <SAMP>`z'</SAMP>.
+<P>
+  To visit the file whose name is in register <VAR>r</VAR>, type <KBD>C-x r j
+<VAR>r</VAR></KBD>.  (This is the same command used to jump to a position or
+restore a frame configuration.)
+<P>Go to the <A HREF="emacs_14.html">previous</A>, <A HREF="emacs_16.html">next</A> section.<P>

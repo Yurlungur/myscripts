@@ -1,0 +1,209 @@
+;;; FILE: .emacs (with a period as the first character of the filename)
+;;;
+;;; This is a small emacs initialization file. You may use and modify
+;;; this file as you like. For a Linux system, put .emacs in your own home
+;;; directory. For Windows, put .emacs (or _emacs) in one of these:
+;;; 1. The directory given by HOME environment variable.
+;;; 2. The subdirectory site-lisp under the directory given by the
+;;;    EMACS_HOME environment variable.
+;;; 3. C:\
+
+
+;;; Michael's Preferences                  *** -------------------------------
+(setq kill-whole-line t)                   ;;; Killing line also deletes \n
+(setq next-line-add-newlines nil)          ;;; Down arrow won't add \n at end
+(setq require-final-newline t)             ;;; Put \n at end of last line
+(setq make-backup-files nil)               ;;; Don't make backup files
+(setq scroll-step 1)                       ;;; Scroll 1 line at a time
+(setq line-number-mode t)                  ;;; Put line number in display
+(setq column-number-mode t)                ;;; Put column number in display
+(setq system-name "main")                  ;;; My login name
+(setq default-major-mode 'text-mode)       ;;; New buffers are text mode
+(setq fill-column 80)                      ;;; Text lines limit to 80 chars
+(add-hook 'text-mode-hook 'turn-on-auto-fill); Line limit on in text mode
+                                           ;;; -------------------------------
+
+;;; Disable those commands that cause trouble because students accidentally
+;;; save the compile buffer on top of their source code.
+(put 'save-buffer 'disabled
+     "\n!!!!!!!\nPlease use ctrl-x ctrl-s to save a buffer instead of using \nsave-buffer from the menu. \nType n to return to emacs.\n!!!!!!!\n\n"
+)
+(put 'write-file 'disabled
+     "\n!!!!!!!\nPlease use ctrl-x ctrl-s to save a buffer instead of using \nsave-buffer-as from the menu. \nType n to return to emacs, or \ntype y if you really want save-buffer-as.\n!!!!!!!\n\n"
+)
+
+;;; Michael's
+;;; Function
+;;; Definitions:        *** --------------------------------------------------
+;;;  indent-all         ;;; Indents buffer (use fset because of indent-region) 
+;;;  open-new-line      ;;; Open a new line after the current line
+;;;  c-return           ;;; In c: indent & open indented new line
+;;;  java-return        ;;; In java: indent & open indented new line
+;;;  prolog-return      ;;; In prolog: indent & open indented new line
+;;;  scheme-return      ;;; In scheme: indent & open indented new line
+;;;  delete-whole-line  ;;; Delete all of a line
+;;;  join-lines         ;;; Join this line with the next line
+;;;  front              ;;; Move cursor to front of buffer
+;;;  quit               ;;; Save files and quit emacs 
+;;;  exchange-mp        ;;; Exchange the cursor with the region's mark
+;;;  split              ;;; Split window, move to other window, open new file
+;;;                     *** --------------------------------------------------
+(defun indent-all ()
+    "Indent entire buffer."
+    (interactive)
+    (indent-region (point-min) (point-max) nil)
+)
+(defun open-new-line( ) (interactive) (end-of-line) (newline-and-indent))
+(defun c-return( ) (interactive) (c-indent-line) (newline-and-indent))
+(defun java-return( ) (interactive) (c-indent-line) (newline-and-indent))
+(defun prolog-return( ) (interactive) (prolog-indent-line) (newline-and-indent))
+(defun scheme-return( ) (interactive) (scheme-indent-line) (newline-and-indent))
+(defun delete-whole-line( ) (interactive) (beginning-of-line) (kill-line))
+(defun join-lines( ) (interactive) (end-of-line) (kill-line))
+(defun front( ) (interactive) (beginning-of-buffer))
+(defun quit( ) (interactive) (save-buffers-kill-emacs))
+(defun exchange-mp( ) (interactive) (exchange-point-and-mark))
+(defun split( ) (interactive) 
+    (split-window-vertically)
+    (other-window 1)
+)
+(defun kill-something( ) (interactive)
+    (if (and mark-active transient-mark-mode)
+        (kill-region (point) (mark)) 
+        (delete-backward-char 1)
+    )
+)
+
+
+;;; Some key bindings                      *** ------------------------------
+;;; Note that save-some-buffers is safer for beginners because otherwise
+;;; they sometimes save the compiler buffer on top of their source code.
+(global-set-key [8]  'delete-backward-char);;; Ctrl-h = Backspace 
+(global-set-key [7]  'goto-line)           ;;; Ctrl-g = Goto specified line
+(global-set-key [11] 'delete-whole-line)   ;;; Ctrl-k = Kill whole line
+(global-set-key "\C-x\C-s" 'save-some-buffers) ;;; Ctrl-x Ctrl-s = save
+
+;;; Home, end, del keys                    *** --------------------------
+(global-set-key [delete]  'kill-something) ;;; Delete = Delete region or char
+(global-set-key [kp-delete] 'kill-something);; Delete = Delete region or char
+(global-set-key [home] 'beginning-of-line) ;;; Home = Beginning of line
+(global-set-key [kp-home] 'beginning-of-line); Home = Beginning of line
+(global-set-key [kp-end] 'end-of-line)     ;;; End = End of line
+(global-set-key [end] 'end-of-line)        ;;; End = End of line
+(global-set-key [f1] 'help-command)        ;;; F1 = Help
+(global-set-key [C-home] 'front)           ;;; Ctrl-Home = Front of buffer
+(global-set-key [C-kp-home] 'front)        ;;; Ctrl-Home = Front of buffer
+(global-set-key [C-kp-end] 'end-of-buffer) ;;; Ctrl-End = End of buffer
+(global-set-key [C-end] 'end-of-buffer)    ;;; Ctrl End = End of buffer 
+;;; Keypad keys from VT-100                *** ------------------------------
+(global-set-key "\M-[M" 'scroll-down)      ;;; PgUp = scroll-down
+(global-set-key "\M-[H\M-[2J" 'scroll-up)  ;;; PgDn = scroll-up
+(global-set-key "\M-[H\M-[H"               ;;; Home Home = start of line 
+   'beginning-of-line)                     ;;;    (note: that's Home twice!)
+(global-set-key "\M-[K" 'end-of-line)      ;;; End = end of line
+(global-set-key "\M-[L" 'overwrite-mode)   ;;; Insert = toggle overwrite
+(global-set-key "\M-OA" 'previous-line)    ;;; Up arrow = previous line
+(global-set-key "\M-OB" 'next-line)        ;;; Down arrow = next line
+(global-set-key "\M-OC" 'forward-char)     ;;; Right arrow = forward char
+(global-set-key "\M-OD" 'backward-char)    ;;; Left arrow = backward char
+(global-set-key "\e\e[H" 'front)           ;;; Esc Home = front of file
+(global-set-key "\e\e[K" 'end-of-buffer)   ;;; Esc End = end of file
+                                           ;;; ------------------------------
+
+;;; Michael's special actions upon entering various editing modes
+;;; c-mode
+(add-hook 'c-mode-hook
+   '(lambda() 
+        (local-set-key [13] 'c-return)        ;;; RET with automatic indent
+        (local-set-key "\ep" 'indent-all)     ;;; Esc-p pretty-prints file
+        (c-set-style "k&r")                   ;;; Kernihan & Richie's style
+        (setq c-basic-offset 4)               ;;; 4 spaces for indentations
+        (c-set-offset 'substatement-open 0)   ;;; No indent for open bracket
+    )
+)
+;;; c++-mode
+(add-hook 'c++-mode-hook
+   '(lambda() 
+        (local-set-key [13] 'c-return)        ;;; RET with automatic indent
+        (local-set-key "\ep" 'indent-all)     ;;; Esc-p pretty-prints file
+        (c-set-style "k&r")                   ;;; Kernihan & Richie's style
+        (setq c-basic-offset 4)               ;;; 4 spaces for indentations
+        (c-set-offset 'substatement-open 0)   ;;; No indent for open bracket
+        (c-set-offset 'statement-cont 0)      ;;; No indent for new stmts 
+                                              ;;; Needed n emacs 19
+                                              ;;; because it thinks
+                                              ;;; function definitions are
+                                              ;;; new statements!
+    )
+)
+;;; jde-mode
+(add-hook 'jde-mode-hook
+   '(lambda() 
+        (local-set-key [13] 'java-return)     ;;; RET with automatic indent
+        (local-set-key "\ep" 'indent-all)     ;;; Esc-p pretty-prints file
+        (c-set-style "k&r")                   ;;; Kernihan & Richie's style
+        (setq java-basic-offset 4)            ;;; 4 spaces for indentations
+        (c-set-offset 'substatement-open 0)   ;;; No indent for open bracket
+    )
+)
+;;; prolog-mode
+(add-hook 'prolog-mode-hook
+   '(lambda() 
+        (local-set-key [13] 'prolog-return)   ;;; RET with automatic indent
+        (local-set-key "\ep" 'indent-all)     ;;; Esc-p pretty-prints file
+    )
+)
+;;; scheme-mode
+;;; This mode is not entirely to my liking because I prefer to place
+;;; the closing parenthesis on a line of its own, lined up under its
+;;; corresponding closing parenthesis. The modification of this mode
+;;; to support that programming style is on my to-do list.
+(add-hook 'scheme-mode-hook
+   '(lambda() 
+        (local-set-key [13] 'scheme-return)   ;;; RET with automatic indent
+        (local-set-key "\ep" 'indent-all)     ;;; Esc-p pretty-prints file
+        (setq lisp-indent-offset 4)           ;;; 4 spaces for indentation
+    )
+)
+
+ 
+;;; Michael's connections between editing modes and file names:
+;;; Files ending in .h or .template should be edited in c++-mode.
+;;; Emacs already knows what to do with .c and .scm files.
+;;; I haven't yet found a good mode for bison/flex files, so I just use
+;;; indented-text-mode (where a TAB indents a line the same as last line).
+(setq auto-mode-alist (cons '("\\.h$" . c++-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.template$" . c++-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.cxx$" . c++-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.java$" . jde-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.pl$" . prolog-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.y$" . indented-text-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.lex$" . indented-text-mode) auto-mode-alist))
+
+
+;;; The following lines tell emacs where to find the Java Development
+;;; environment. There are these possibilities on the machines that I use.
+;;;  (1) My Windows machine uses c:/cs1300/emacs/site-lisp/jde
+;;;  (2) My Linux machine uses /usr/share/emacs/site-lisp/jde
+;;;  (3) Machines in the CU labs have the jde installed in main's home
+;;;      directory, so I use: /home/cia/main/jde
+;;;  (4) My second Win machine uses c:/language/cs1300/emacs/site-lisp/jde
+;;; Note that you use a slash (/) rather than a backslash (\) in Windows.
+;;; If you're using this initialization file on just one machine, then you
+;;; may cut out the unused lines. The final (require 'jde) line forces emacs
+;;; to load the jde-mode on start-up (according to the instructions at
+;;; http://www.geocities.com/SiliconValley/Lakes/1506/install.html
+;(setq load-path (nconc '( "c:/cs1300/emacs/site-lisp/jde") load-path) )
+;(setq load-path (nconc '( "/usr/share/emacs/site-lisp/jde") load-path) )
+;(setq load-path (nconc '( "/home/cia/main/jde") load-path) )
+;(setq load-path (nconc '( "c:language/cs1300/emacs/site-lisp/jde") load-path) )
+;(require 'jde)
+
+
+;;; Uncomment the next two lines if you are in Windows and want ctrl-x ctrl-f
+;;; to open the usual Windows file dialog box. You'll also have to copy
+;;; www.cs.colorado.edu/~main/emacs/dlgopen.elc to the site-lisp subdirectory
+;;; and copy www.cs.colorado.edu/~main/emacs/getfile.exe to
+;;; somewhere that is visible from the DOS command line.
+;;;(load "dlgopen")
+;;;(global-set-key "\C-x\C-f" 'dlgopen-open-files)

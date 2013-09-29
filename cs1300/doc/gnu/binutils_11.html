@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from ../../binutils/binutils.texi on 16 March 1999 -->
+
+<TITLE>gnu Binary Utilities - addr2line</TITLE>
+<link href="binutils_12.html" rel=Next>
+<link href="binutils_10.html" rel=Previous>
+<link href="binutils_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="binutils_1.html">first</A>, <A HREF="binutils_10.html">previous</A>, <A HREF="binutils_12.html">next</A>, <A HREF="binutils_18.html">last</A> section, <A HREF="binutils_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC13" HREF="binutils_toc.html#TOC13">addr2line</A></H1>
+
+<P>
+<A NAME="IDX113"></A>
+<A NAME="IDX114"></A>
+
+</P>
+
+<PRE>
+addr2line [ -b <VAR>bfdname</VAR> | --target=<VAR>bfdname</VAR> ]
+          [ -C | --demangle ]
+          [ -e <VAR>filename</VAR> | --exe=<VAR>filename</VAR> ]
+          [ -f | --functions ] [ -s | --basename ]
+          [ -H | --help ] [ -V | --version ]
+          [ addr addr ... ]
+</PRE>
+
+<P>
+<CODE>addr2line</CODE> translates program addresses into file names and line
+numbers.  Given an address and an executable, it uses the debugging
+information in the executable to figure out which file name and line
+number are associated with a given address.
+
+</P>
+<P>
+The executable to use is specified with the <CODE>-e</CODE> option.  The
+default is <TT>`a.out'</TT>.
+
+</P>
+<P>
+<CODE>addr2line</CODE> has two modes of operation.
+
+</P>
+<P>
+In the first, hexadecimal addresses are specified on the command line,
+and <CODE>addr2line</CODE> displays the file name and line number for each
+address.
+
+</P>
+<P>
+In the second, <CODE>addr2line</CODE> reads hexadecimal addresses from
+standard input, and prints the file name and line number for each
+address on standard output.  In this mode, <CODE>addr2line</CODE> may be used
+in a pipe to convert dynamically chosen addresses.
+
+</P>
+<P>
+The format of the output is <SAMP>`FILENAME:LINENO'</SAMP>.  The file name and
+line number for each address is printed on a separate line.  If the
+<CODE>-f</CODE> option is used, then each <SAMP>`FILENAME:LINENO'</SAMP> line is
+preceded by a <SAMP>`FUNCTIONNAME'</SAMP> line which is the name of the function
+containing the address.
+
+</P>
+<P>
+If the file name or function name can not be determined,
+<CODE>addr2line</CODE> will print two question marks in their place.  If the
+line number can not be determined, <CODE>addr2line</CODE> will print 0.
+
+</P>
+<P>
+The long and short forms of options, shown here as alternatives, are
+equivalent.
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>-b <VAR>bfdname</VAR></CODE>
+<DD>
+<DT><CODE>--target=<VAR>bfdname</VAR></CODE>
+<DD>
+<A NAME="IDX115"></A>
+Specify that the object-code format for the object files is
+<VAR>bfdname</VAR>.
+
+<DT><CODE>-C</CODE>
+<DD>
+<DT><CODE>--demangle</CODE>
+<DD>
+<A NAME="IDX116"></A>
+Decode (<STRONG>demangle</STRONG>) low-level symbol names into user-level names.
+Besides removing any initial underscore prepended by the system, this
+makes C++ function names readable.  See section <A HREF="binutils_10.html#SEC12">c++filt</A>, for more information
+on demangling.
+
+<DT><CODE>-e <VAR>filename</VAR></CODE>
+<DD>
+<DT><CODE>--exe=<VAR>filename</VAR></CODE>
+<DD>
+Specify the name of the executable for which addresses should be
+translated.  The default file is <TT>`a.out'</TT>.
+
+<DT><CODE>-f</CODE>
+<DD>
+<DT><CODE>--functions</CODE>
+<DD>
+Display function names as well as file and line number information.
+
+<DT><CODE>-s</CODE>
+<DD>
+<DT><CODE>--basenames</CODE>
+<DD>
+Display only the base of each file name.
+</DL>
+
+<P><HR><P>
+<p>Go to the <A HREF="binutils_1.html">first</A>, <A HREF="binutils_10.html">previous</A>, <A HREF="binutils_12.html">next</A>, <A HREF="binutils_18.html">last</A> section, <A HREF="binutils_toc.html">table of contents</A>.
+</BODY>
+</HTML>

@@ -1,0 +1,337 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from ../../../gas/doc/as.texinfo on 16 March 1999 -->
+
+<TITLE>Using as - H8/500 Dependent Features</TITLE>
+<link href="as_16.html" rel=Next>
+<link href="as_14.html" rel=Previous>
+<link href="as_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="as_1.html">first</A>, <A HREF="as_14.html">previous</A>, <A HREF="as_16.html">next</A>, <A HREF="as_28.html">last</A> section, <A HREF="as_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC198" HREF="as_toc.html#TOC198">H8/500 Dependent Features</A></H1>
+
+<P>
+<A NAME="IDX586"></A>
+
+<UL>
+<LI><A HREF="as_15.html#SEC199">H8/500 Options</A>: Options
+<LI><A HREF="as_15.html#SEC200">H8/500 Syntax</A>: Syntax
+<LI><A HREF="as_15.html#SEC204">H8/500 Floating Point</A>: Floating Point
+<LI><A HREF="as_15.html#SEC205">H8/500 Directives</A>: H8/500 Machine Directives
+<LI><A HREF="as_15.html#SEC206">H8/500 Opcodes</A>: Opcodes
+</UL>
+
+
+
+<H2><A NAME="SEC199" HREF="as_toc.html#TOC199">Options</A></H2>
+
+<P>
+<A NAME="IDX587"></A>
+<A NAME="IDX588"></A>
+<CODE>as</CODE> has no additional command-line options for the Hitachi
+H8/500 family.
+
+</P>
+
+
+<H2><A NAME="SEC200" HREF="as_toc.html#TOC200">Syntax</A></H2>
+
+
+<UL>
+<LI><A HREF="as_15.html#SEC201">H8/500-Chars</A>: Special Characters
+<LI><A HREF="as_15.html#SEC202">H8/500-Regs</A>: Register Names
+<LI><A HREF="as_15.html#SEC203">H8/500-Addressing</A>: Addressing Modes
+</UL>
+
+
+
+<H3><A NAME="SEC201" HREF="as_toc.html#TOC201">Special Characters</A></H3>
+
+<P>
+<A NAME="IDX589"></A>
+<A NAME="IDX590"></A>
+<SAMP>`!'</SAMP> is the line comment character.
+
+</P>
+<P>
+<A NAME="IDX591"></A>
+<A NAME="IDX592"></A>
+<A NAME="IDX593"></A>
+<SAMP>`;'</SAMP> can be used instead of a newline to separate statements.
+
+</P>
+<P>
+<A NAME="IDX594"></A>
+<A NAME="IDX595"></A>
+Since <SAMP>`$'</SAMP> has no special meaning, you may use it in symbol names.
+
+</P>
+
+
+<H3><A NAME="SEC202" HREF="as_toc.html#TOC202">Register Names</A></H3>
+
+<P>
+<A NAME="IDX596"></A>
+<A NAME="IDX597"></A>
+You can use the predefined symbols <SAMP>`r0'</SAMP>, <SAMP>`r1'</SAMP>, <SAMP>`r2'</SAMP>,
+<SAMP>`r3'</SAMP>, <SAMP>`r4'</SAMP>, <SAMP>`r5'</SAMP>, <SAMP>`r6'</SAMP>, and <SAMP>`r7'</SAMP> to refer to
+the H8/500 registers.
+
+</P>
+<P>
+The H8/500 also has these control registers:
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>cp</CODE>
+<DD>
+code pointer
+
+<DT><CODE>dp</CODE>
+<DD>
+data pointer
+
+<DT><CODE>bp</CODE>
+<DD>
+base pointer
+
+<DT><CODE>tp</CODE>
+<DD>
+stack top pointer
+
+<DT><CODE>ep</CODE>
+<DD>
+extra pointer
+
+<DT><CODE>sr</CODE>
+<DD>
+status register
+
+<DT><CODE>ccr</CODE>
+<DD>
+condition code register
+</DL>
+
+<P>
+All registers are 16 bits long.  To represent 32 bit numbers, use two
+adjacent registers; for distant memory addresses, use one of the segment
+pointers (<CODE>cp</CODE> for the program counter; <CODE>dp</CODE> for
+<CODE>r0</CODE>--<CODE>r3</CODE>; <CODE>ep</CODE> for <CODE>r4</CODE> and <CODE>r5</CODE>; and
+<CODE>tp</CODE> for <CODE>r6</CODE> and <CODE>r7</CODE>.
+
+</P>
+
+
+<H3><A NAME="SEC203" HREF="as_toc.html#TOC203">Addressing Modes</A></H3>
+
+<P>
+<A NAME="IDX598"></A>
+<A NAME="IDX599"></A>
+as understands the following addressing modes for the H8/500:
+<DL COMPACT>
+
+<DT><CODE>R<VAR>n</VAR></CODE>
+<DD>
+Register direct
+
+<DT><CODE>@R<VAR>n</VAR></CODE>
+<DD>
+Register indirect
+
+<DT><CODE>@(d:8, R<VAR>n</VAR>)</CODE>
+<DD>
+Register indirect with 8 bit signed displacement
+
+<DT><CODE>@(d:16, R<VAR>n</VAR>)</CODE>
+<DD>
+Register indirect with 16 bit signed displacement
+
+<DT><CODE>@-R<VAR>n</VAR></CODE>
+<DD>
+Register indirect with pre-decrement
+
+<DT><CODE>@R<VAR>n</VAR>+</CODE>
+<DD>
+Register indirect with post-increment
+
+<DT><CODE>@<VAR>aa</VAR>:8</CODE>
+<DD>
+8 bit absolute address
+
+<DT><CODE>@<VAR>aa</VAR>:16</CODE>
+<DD>
+16 bit absolute address
+
+<DT><CODE>#<VAR>xx</VAR>:8</CODE>
+<DD>
+8 bit immediate
+
+<DT><CODE>#<VAR>xx</VAR>:16</CODE>
+<DD>
+16 bit immediate
+</DL>
+
+
+
+<H2><A NAME="SEC204" HREF="as_toc.html#TOC204">Floating Point</A></H2>
+
+<P>
+<A NAME="IDX600"></A>
+<A NAME="IDX601"></A>
+The H8/500 family has no hardware floating point, but the <CODE>.float</CODE>
+directive generates IEEE floating-point numbers for compatibility
+with other development tools.
+
+</P>
+
+
+<H2><A NAME="SEC205" HREF="as_toc.html#TOC205">H8/500 Machine Directives</A></H2>
+
+<P>
+<A NAME="IDX602"></A>
+<A NAME="IDX603"></A>
+<A NAME="IDX604"></A>
+<A NAME="IDX605"></A>
+<CODE>as</CODE> has no machine-dependent directives for the H8/500.
+However, on this platform the <SAMP>`.int'</SAMP> and <SAMP>`.word'</SAMP> directives
+generate 16-bit numbers.
+
+</P>
+
+
+<H2><A NAME="SEC206" HREF="as_toc.html#TOC206">Opcodes</A></H2>
+
+<P>
+<A NAME="IDX606"></A>
+<A NAME="IDX607"></A>
+<A NAME="IDX608"></A>
+<A NAME="IDX609"></A>
+For detailed information on the H8/500 machine instruction set, see
+<CITE>H8/500 Series Programming Manual</CITE> (Hitachi M21T001).
+
+</P>
+<P>
+<CODE>as</CODE> implements all the standard H8/500 opcodes.  No additional
+pseudo-instructions are needed on this family.
+
+</P>
+
+<P>
+The following table summarizes H8/500 opcodes and their operands:
+
+</P>
+
+<PRE>
+<I>Legend:</I>
+abs8      8-bit absolute address
+abs16     16-bit absolute address
+abs24     24-bit absolute address
+crb       <CODE>ccr</CODE>, <CODE>br</CODE>, <CODE>ep</CODE>, <CODE>dp</CODE>, <CODE>tp</CODE>, <CODE>dp</CODE>
+disp8     8-bit displacement
+ea        <CODE>rn</CODE>, <CODE>@rn</CODE>, <CODE>@(d:8, rn)</CODE>, <CODE>@(d:16, rn)</CODE>,
+          <CODE>@-rn</CODE>, <CODE>@rn+</CODE>, <CODE>@aa:8</CODE>, <CODE>@aa:16</CODE>,
+          <CODE>#xx:8</CODE>, <CODE>#xx:16</CODE>
+ea_mem    <CODE>@rn</CODE>, <CODE>@(d:8, rn)</CODE>, <CODE>@(d:16, rn)</CODE>,
+          <CODE>@-rn</CODE>, <CODE>@rn+</CODE>, <CODE>@aa:8</CODE>, <CODE>@aa:16</CODE>
+ea_noimm  <CODE>rn</CODE>, <CODE>@rn</CODE>, <CODE>@(d:8, rn)</CODE>, <CODE>@(d:16, rn)</CODE>,
+          <CODE>@-rn</CODE>, <CODE>@rn+</CODE>, <CODE>@aa:8</CODE>, <CODE>@aa:16</CODE>
+fp        r6
+imm4      4-bit immediate data
+imm8      8-bit immediate data
+imm16     16-bit immediate data
+pcrel8    8-bit offset from program counter
+pcrel16   16-bit offset from program counter
+qim       <CODE>-2</CODE>, <CODE>-1</CODE>, <CODE>1</CODE>, <CODE>2</CODE>
+rd        any register
+rs        a register distinct from rd
+rlist     comma-separated list of registers in parentheses;
+          register ranges <CODE>rd-rs</CODE> are allowed
+sp        stack pointer (<CODE>r7</CODE>)
+sr        status register
+sz        size; <SAMP>`.b'</SAMP> or <SAMP>`.w'</SAMP>.  If omitted, default <SAMP>`.w'</SAMP>
+
+ldc[.b] ea,crb                 bcc[.w] pcrel16
+ldc[.w] ea,sr                  bcc[.b] pcrel8 
+add[:q] sz qim,ea_noimm        bhs[.w] pcrel16
+add[:g] sz ea,rd               bhs[.b] pcrel8 
+adds sz ea,rd                  bcs[.w] pcrel16
+addx sz ea,rd                  bcs[.b] pcrel8 
+and sz ea,rd                   blo[.w] pcrel16
+andc[.b] imm8,crb              blo[.b] pcrel8 
+andc[.w] imm16,sr              bne[.w] pcrel16
+bpt                            bne[.b] pcrel8 
+bra[.w] pcrel16                beq[.w] pcrel16
+bra[.b] pcrel8                 beq[.b] pcrel8 
+bt[.w] pcrel16                 bvc[.w] pcrel16
+bt[.b] pcrel8                  bvc[.b] pcrel8 
+brn[.w] pcrel16                bvs[.w] pcrel16
+brn[.b] pcrel8                 bvs[.b] pcrel8 
+bf[.w] pcrel16                 bpl[.w] pcrel16
+bf[.b] pcrel8                  bpl[.b] pcrel8 
+bhi[.w] pcrel16                bmi[.w] pcrel16
+bhi[.b] pcrel8                 bmi[.b] pcrel8 
+bls[.w] pcrel16                bge[.w] pcrel16
+bls[.b] pcrel8                 bge[.b] pcrel8 
+blt[.w] pcrel16                mov[:g][.b] imm8,ea_mem       
+blt[.b] pcrel8                 mov[:g][.w] imm16,ea_mem      
+bgt[.w] pcrel16                movfpe[.b] ea,rd              
+bgt[.b] pcrel8                 movtpe[.b] rs,ea_noimm        
+ble[.w] pcrel16                mulxu sz ea,rd                
+ble[.b] pcrel8                 neg sz ea                     
+bclr sz imm4,ea_noimm          nop                           
+bclr sz rs,ea_noimm            not sz ea                     
+bnot sz imm4,ea_noimm          or sz ea,rd                   
+bnot sz rs,ea_noimm            orc[.b] imm8,crb              
+bset sz imm4,ea_noimm          orc[.w] imm16,sr              
+bset sz rs,ea_noimm            pjmp abs24                    
+bsr[.b] pcrel8                 pjmp @rd                     
+bsr[.w] pcrel16                pjsr abs24                    
+btst sz imm4,ea_noimm          pjsr @rd                     
+btst sz rs,ea_noimm            prtd imm8                     
+clr sz ea                      prtd imm16                    
+cmp[:e][.b] imm8,rd            prts                          
+cmp[:i][.w] imm16,rd           rotl sz ea                    
+cmp[:g].b imm8,ea_noimm        rotr sz ea                    
+cmp[:g][.w] imm16,ea_noimm     rotxl sz ea                   
+Cmp[:g] sz ea,rd               rotxr sz ea                   
+dadd rs,rd                     rtd imm8                     
+divxu sz ea,rd                 rtd imm16                    
+dsub rs,rd                     rts                          
+exts[.b] rd                    scb/f rs,pcrel8               
+extu[.b] rd                    scb/ne rs,pcrel8             
+jmp @rd                        scb/eq rs,pcrel8             
+jmp @(imm8,rd)                 shal sz ea                   
+jmp @(imm16,rd)                shar sz ea                    
+jmp abs16                      shll sz ea            
+jsr @rd                        shlr sz ea            
+jsr @(imm8,rd)                 sleep                 
+jsr @(imm16,rd)                stc[.b] crb,ea_noimm  
+jsr abs16                      stc[.w] sr,ea_noimm   
+ldm @sp+,(rlist)               stm (rlist),@-sp     
+link fp,imm8                   sub sz ea,rd          
+link fp,imm16                  subs sz ea,rd         
+mov[:e][.b] imm8,rd            subx sz ea,rd         
+mov[:i][.w] imm16,rd           swap[.b] rd           
+mov[:l][.w] abs8,rd            tas[.b] ea     
+mov[:l].b abs8,rd              trapa imm4     
+mov[:s][.w] rs,abs8            trap/vs        
+mov[:s].b rs,abs8              tst sz ea      
+mov[:f][.w] @(disp8,fp),rd     unlk fp        
+mov[:f][.w] rs,@(disp8,fp)     xch[.w] rs,rd 
+mov[:f].b @(disp8,fp),rd       xor sz ea,rd   
+mov[:f].b rs,@(disp8,fp)       xorc.b imm8,crb
+mov[:g] sz rs,ea_mem           xorc.w imm16,sr
+mov[:g] sz ea,rd              
+</PRE>
+
+<P><HR><P>
+<p>Go to the <A HREF="as_1.html">first</A>, <A HREF="as_14.html">previous</A>, <A HREF="as_16.html">next</A>, <A HREF="as_28.html">last</A> section, <A HREF="as_toc.html">table of contents</A>.
+</BODY>
+</HTML>

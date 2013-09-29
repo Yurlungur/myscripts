@@ -1,0 +1,244 @@
+<HTML>
+<HEAD>
+<TITLE>
+Summary of GNU Emacs Editing Commands
+</TITLE>
+</HEAD>
+<BODY>
+
+<H2>
+    The GNU Emacs Editor
+</H2>
+
+<P>
+For more information, see the <I>GNU Emacs Manual</I> by
+Richard M. Stallman (about $25 at local bookstores) or see:
+<UL>
+<LI><A HREF="http://www.cs.utah.edu/csinfo/texinfo/emacs19/emacs_toc.html">Online emacs manual</A>
+<LI><A HREF="refcard.html">A more complete emacs reference card</A>
+<LI><A HREF="refcard-emacs.pdf">PDF version of the emacs reference card</A>
+<LI><A HREF="../emacs/site-lisp/emacs1">A sample .emacs initialization file</A>
+<LI><A HREF="../emacs/site-lisp/emacs2">A .emacs file with changes to key bindings</A>
+</UL>
+
+
+
+</DL>
+<TABLE BORDER CELLSPACING="1" CELLPADDING="3">
+    <TR>
+   <TD ROWSPAN="28">
+       <STRONG>Basic <BR> Emacs <BR> Commands</STRONG>
+            <P>
+       <UL>
+              <LI> "Ctrl-x" means to
+                <BR> hold down the 
+                <BR> control key
+                <BR> and press x.
+                <P>
+                <LI> "ESC" means to
+                <BR> press the escape
+                <BR> (or "meta") key.
+                <P>
+                <LI> "RET" means to
+                <BR> press the
+                <BR> return key.
+       </UL>
+   <TD><STRONG>Category</STRONG>
+   <TD><STRONG>Command</STRONG>
+   <TD><STRONG>Keystrokes</STRONG>
+    <TR>
+        <TD ROWSPAN="6"><STRONG>HELP!</STRONG>
+        <TD>Exit emacs
+   <TD>Ctrl-x Ctrl-c
+    <TR>
+   <TD>Get out of the miniwindow
+   <TD>Ctrl-g
+    <TR>
+   <TD>Undo last action
+   <TD>Ctrl-x u
+    <TR>
+        <TD>Redraw screen
+   <TD>Ctrl-l
+    <TR>
+        <TD>Run a tutorial
+   <TD>Ctrl-h t
+    <TR>
+   <TD>Psychotherapy
+   <TD>ESC x doctor RET
+    <TR>
+        <TD ROWSPAN="3"><STRONG>Movement</STRONG>
+        <TD>Goto line number (using 
+            <A HREF="../emacs/site-lisp/_emacs">
+            my .emacs file
+            </A>)
+   <TD>Ctrl-g
+    <TR>
+   <TD>Move to front or end of function
+   <TD>ESC { or ESC }
+    <TR>
+   <TD>Move to front or end of buffer
+   <TD>ESC &lt; or ESC &gt;
+    <TR>
+        <TD ROWSPAN="4"><STRONG>Inserting</STRONG>
+        <TD>Insert characters
+   <TD>Just type them!
+    <TR>
+   <TD>Insert new line
+   <TD>RET key
+    <TR>
+   <TD>Open new line
+   <TD>Ctrl-o
+    <TR>
+   <TD>Insert a copy of last deleted line
+   <TD>Ctrl-y
+    <TR>
+        <TD ROWSPAN="2"><STRONG>Deleting</STRONG>
+        <TD>If BACKSPACE won't work
+   <TD>Use DEL key
+    <TR>
+   <TD>Delete line
+   <TD>Ctrl-k
+    <TR>
+        <TD ROWSPAN="5"><STRONG>Searching<BR>and<BR>Replacing</STRONG>
+   <TD>Search forward
+   <TD>Ctrl-s RET or <BR> ESC x search-forward
+    <TR>
+        <TD>Reverse search
+   <TD>Ctrl-r RET
+    <TR>
+        <TD>Repeat search
+   <TD>Ctrl-s ESC p
+    <TR>
+        <TD>Interactive replace
+   <TD>ESC %
+    <TR>
+   <TD>Global replace
+   <TD>ESC x replace-string
+    <TR>
+        <TD ROWSPAN="6"><STRONG>Files</STRONG>
+   <TD>Make new buffer and read file
+   <TD>Ctrl-x Ctrl-f
+    <TR>
+   <TD>Close current file and read a new one
+   <TD>Ctrl-x Ctrl-v
+    <TR>
+   <TD>Insert contents of a file here
+   <TD>Ctrl-x i
+    <TR>
+        <TD>Save current buffer
+   <TD>Ctrl-x Ctrl-s
+    <TR>
+   <TD>Write current buffer to new file
+   <TD>Crtl-x Ctrl-w
+    <TR>
+   <TD>Save all files from all buffers
+   <TD>Ctrl-x s
+</TABLE>
+
+<P>
+<TABLE BORDER CELLSPACING="1" CELLPADDING="3">
+    <TR>
+   <TD ROWSPAN="28">
+       <STRONG>Further <BR> Emacs <BR> Commands</STRONG>
+            <P>
+       <UL>
+              <LI> "Ctrl-x" means to
+                <BR> hold down the 
+                <BR> control key
+                <BR> and press x.
+                <P>
+                <LI> "ESC" means to
+                <BR> press the escape
+                <BR> (or "meta") key.
+                <P>
+                <LI> "RET" means to
+                <BR> press the
+                <BR> return key.
+       </UL>
+   <TD><STRONG>Category</STRONG>
+   <TD><STRONG>Command</STRONG>
+   <TD><STRONG>Keystrokes</STRONG>
+    <TR>
+        <TD ROWSPAN="5"><STRONG>Windows</STRONG>
+   <TD>Eliminate current window
+   <TD>Ctrl-x 0 (zero)
+    <TR>
+        <TD>Make the entire screen 1 window
+   <TD>Ctrl-x 1
+    <TR>
+        <TD>Split window in 2 vertically
+   <TD>Ctrl-x 2
+    <TR>
+        <TD>Split window in 2 horizontally
+   <TD>Ctrl-x 3
+    <TR>
+   <TD>Move cursor to other window
+   <TD>Ctrl-x o
+    <TR>
+        <TD ROWSPAN="3"><STRONG>Buffers</STRONG>
+        <TD>Move another buffer to this window
+   <TD>Ctrl-x b
+    <TR>
+   <TD>List all active buffers
+   <TD>Ctrl-x Ctrl-b
+    <TR>
+   <TD>Close the buffer in this window
+   <TD>Ctrl-x k
+    <TR>
+        <TD ROWSPAN="6"><STRONG>Files</STRONG>
+   <TD>Make new buffer and read file
+   <TD>Ctrl-x Ctrl-f
+    <TR>
+   <TD>Close current file and read a new one
+   <TD>Ctrl-x Ctrl-v
+    <TR>
+   <TD>Insert contents of a file here
+   <TD>Ctrl-x i
+    <TR>
+        <TD>Save current buffer
+   <TD>Ctrl-x Ctrl-s
+    <TR>
+   <TD>Write current buffer to new file
+   <TD>Crtl-x Ctrl-w
+    <TR>
+   <TD>Save all files from all buffers
+   <TD>Ctrl-x s
+    <TR>
+        <TD ROWSPAN="5"><STRONG>C++ Commands</STRONG>
+   <TD>Compile
+   <TD>Esc x compile <BR> then g++ -Wall -gstabs ...
+    <TR>
+        <TD>Indent current line
+   <TD>TAB
+    <TR>
+        <TD>Indent whole file (using 
+            <A HREF="../emacs/site-lisp/_emacs">
+            my .emacs file
+            </A>)
+   <TD>ESC-p
+    <TR>
+   <TD>Find location of compile error
+   <TD>CTRL-x ` <BR>
+       (backward quote)
+    <TR>
+   <TD>Start <A HREF="./lab2.html"> gdb debugger </A>
+   <TD>ESC x gdb
+    <TR>
+        <TD ROWSPAN="2"><STRONG>Unix</STRONG>
+   <TD>Suspend emacs temporarily
+   <TD>Ctrl-z (fg or exit to resume)
+    <TR>
+        <TD>Execute one Unix or DOS command
+   <TD>ESC !
+
+</TABLE>        
+
+<P>
+<HR>
+<address>
+<A HREF="http://www.cs.colorado.edu/~main/Home.html">Michael Main</A>
+(<A HREF="mailto:main@colorado.edu">main@colorado.edu</A>)
+<HR>
+</BODY>
+</HTML>
+

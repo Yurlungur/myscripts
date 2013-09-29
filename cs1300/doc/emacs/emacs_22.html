@@ -1,0 +1,434 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Frames and X Windows</TITLE>
+<P>Go to the <A HREF="emacs_21.html">previous</A>, <A HREF="emacs_23.html">next</A> section.<P>
+<A NAME="IDX621"></A>
+<H1><A NAME="SEC139" HREF="emacs_toc.html#SEC139">Frames and X Windows</A></H1>
+<P>
+  When using the X Window System, you can create multiple windows at the
+X level in a single Emacs session.  Each X window that belongs to Emacs
+displays a <DFN>frame</DFN> which can contain one or several Emacs windows.
+A frame initially contains a single general-purpose Emacs window which
+you can subdivide vertically or horizontally into smaller windows.  A
+frame normally contains its own echo area and minibuffer, but you can
+make frames that don't have these--they use the echo area and
+minibuffer of another frame.
+<P>
+  Anything you do in one frame also affects the other frames.  For
+instance, if you put text in the kill ring in one frame, you can yank it
+in another frame.  If you exit emacs through <KBD>C-x C-c</KBD> in one frame,
+it terminates all the frames.  To delete just one frame, use <KBD>C-x 5
+0</KBD>.
+<P>
+  To avoid confusion, we reserve the word "window" for the
+subdivisions that Emacs implements, and never use it to refer to a
+frame.
+<P>
+<A NAME="IDX622"></A>
+<H2><A NAME="SEC140" HREF="emacs_toc.html#SEC140">Mouse Commands</A></H2>
+<A NAME="IDX623"></A>
+<A NAME="IDX624"></A>
+<A NAME="IDX625"></A>
+<A NAME="IDX626"></A>
+<A NAME="IDX627"></A>
+<P>
+<DL COMPACT>
+<DT><KBD>mouse-1</KBD>
+<DD>Move point to where you click (<CODE>mouse-set-point</CODE>).
+This is normally the left button.
+<P>
+<DT><KBD>drag-mouse-1</KBD>
+<DD>Set the region to the text you select by dragging, and copy it to the
+kill ring (<CODE>mouse-set-region</CODE>). Thus, you can specify both ends of
+the region.
+<P>
+If you move the mouse off the top or bottom of the window while
+dragging, the window scrolls at a steady rate until you move the mouse
+back into the window.  This way, you can mark regions that don't fit
+entirely on the screen.
+<P>
+<DT><KBD>mouse-2</KBD>
+<DD>Yank the last killed text, where you click (<CODE>mouse-yank-at-click</CODE>).
+This is normally the middle button.
+<P>
+<DT><KBD>mouse-3</KBD>
+<DD>This command, <CODE>mouse-save-then-kill</CODE>, has several functions
+depending on where you click and the status of the region.
+<P>
+If you have a highlighted region, or if the region was set just before
+by dragging button 1, <CODE>mouse-save-then-kill</CODE> adjusts the nearer
+end of the region by moving it to where you click.  The adjusted
+region's text also replaces the old region's text in the kill ring.
+<P>
+Otherwise, <CODE>mouse-save-then-kill</CODE> sets mark where you click,
+without changing point.  It copies the new region to the kill ring.
+<P>
+If you originally specified the region using a double or triple
+<KBD>Mouse-1</KBD>, so that the region is defined to consist of entire words
+or lines, then adjusting the region also proceeds by entire words or
+lines.
+<P>
+If you use <CODE>mouse-save-then-kill</CODE> twice in a row at the same place,
+that kills the region already selected.
+<P>
+<DT><KBD>double-mouse-1</KBD>
+<DD>This key sets the region around the word which you click on.
+<P>
+<DT><KBD>double-drag-mouse-1</KBD>
+<DD>This key selects a region made up of the words that you drag across.
+<P>
+<DT><KBD>triple-mouse-1</KBD>
+<DD>This key sets the region around the line which you click on.
+<P>
+<DT><KBD>triple-drag-mouse-1</KBD>
+<DD>This key selects a region made up of the lines that you drag across.
+</DL>
+<P>
+The simplest way to kill some text is to press <KBD>Mouse-1</KBD> at one end,
+then press <KBD>Mouse-3</KBD> twice at the other end.  See section <A HREF="emacs_14.html#SEC54">Deletion and Killing</A>.  To
+copy the text into the kill ring without deleting it from the buffer,
+press <KBD>Mouse-3</KBD> just once--or just drag across the text with
+<KBD>Mouse-1</KBD>.  Then you can copy it elsewhere by yanking it.
+<P>
+To yank the killed or copied text somewhere else, move the mouse there
+and press <KBD>Mouse-2</KBD>.  See section <A HREF="emacs_14.html#SEC58">Yanking</A>.
+<P>
+The mouse commands for selecting a region are mostly compatible with the
+<CODE>xterm</CODE> program.
+<A NAME="IDX628"></A>
+<A NAME="IDX629"></A>
+<A NAME="IDX630"></A>
+<A NAME="IDX631"></A>
+<P>
+To copy text to another X window, kill it or save it in the kill ring.
+Under X, this also sets the <DFN>primary selection</DFN>.  Then use the
+"paste" or "yank" command of the program operating the other window
+to insert the text from the selection.
+<P>
+  To copy text from another X window, use the "cut" or "copy" command
+of the program operating the other window, to select the text you want.
+Then yank it in Emacs with <KBD>C-y</KBD> or <KBD>Mouse-2</KBD>.
+<A NAME="IDX632"></A>
+<A NAME="IDX633"></A>
+<A NAME="IDX634"></A>
+<P>
+  When Emacs puts text into the kill ring, or rotates text to the front
+of the kill ring, it sets the <DFN>primary selection</DFN> in the X server.
+This is how other X clients can access the text.  Emacs also stores the
+text in the cut buffer, if the text is short enough
+(<CODE>x-cut-buffer-max</CODE> specifies the maximum number of characters);
+putting long strings in the cut buffer can be slow.
+<P>
+  When you yank in Emacs, Emacs checks for a primary selection in
+another program; after that, it checks for text in the cut buffer.  
+<P>
+<A NAME="IDX635"></A>
+<H2><A NAME="SEC141" HREF="emacs_toc.html#SEC141">Secondary Selection</A></H2>
+<P>
+  The <DFN>secondary selection</DFN> is another way of selecting text using
+X.  It does not use point or the mark, so you can use it to kill text
+without setting point or the mark.
+<P>
+<A NAME="IDX636"></A>
+<A NAME="IDX637"></A>
+<DL COMPACT>
+<DT><KBD>drag-M-mouse-1</KBD>
+<DD>Set the secondary selection, with one end at the place where you press
+down the button, and the other end at the place where you release it
+(<CODE>mouse-set-secondary</CODE>).  In Transient Mark mode, highlighting
+appears and changes as you drag.
+<P>
+If you move the mouse off the top or bottom of the window while
+dragging, the window scrolls at a steady rate until you move the mouse
+back into the window.  This way, you can mark regions that don't fit
+entirely on the screen.
+<A NAME="IDX638"></A>
+<A NAME="IDX639"></A>
+<P>
+<DT><KBD>M-mouse-1</KBD>
+<DD>Set one endpoint for the <DFN>secondary selection</DFN>
+(<CODE>mouse-start-secondary</CODE>).
+<A NAME="IDX640"></A>
+<A NAME="IDX641"></A>
+<P>
+<DT><KBD>M-mouse-3</KBD>
+<DD>Make a secondary selection, using the place specified with <KBD>M-mouse-1</KBD>
+as the other end (<CODE>mouse-secondary-save-then-kill</CODE>).  A second click
+at the same place kills the secondary selection just made.
+<A NAME="IDX642"></A>
+<A NAME="IDX643"></A>
+<P>
+<DT><KBD>M-mouse-2</KBD>
+<DD>Kill the secondary selection (<CODE>mouse-kill-secondary</CODE>).
+</DL>
+<P>
+Double or triple clicking of <KBD>M-<KBD>Mouse-1</KBD></KBD> operates on words and
+lines, much like <KBD>Mouse-1</KBD>.
+<P>
+<A NAME="IDX644"></A>
+<H2><A NAME="SEC142" HREF="emacs_toc.html#SEC142">Creating Frames</A></H2>
+<A NAME="IDX645"></A>
+<P>
+  The prefix key <KBD>C-x 5</KBD> is analogous to <KBD>C-x 4</KBD>, with parallel
+subcommands.  The difference is that <KBD>C-x 5</KBD> commands create a new
+frame rather than just a new window in the selected frame.  (See section <A HREF="emacs_21.html#SEC137">Displaying in Another Window</A>.)  Different <KBD>C-x 5</KBD> commands have different ways of
+finding the buffer to select.
+<P>
+<DL COMPACT>
+<DT><KBD>C-x 5 b <VAR>bufname</VAR> <KBD>RET</KBD></KBD>
+<DD>Select buffer <VAR>bufname</VAR> in another window.  This runs <BR>
+<CODE>switch-to-buffer-other-frame</CODE>.
+<DT><KBD>C-x 5 f <VAR>filename</VAR> <KBD>RET</KBD></KBD>
+<DD>Visit file <VAR>filename</VAR> and select its buffer in another frame.  This
+runs <CODE>find-file-other-frame</CODE>.  See section <A HREF="emacs_19.html#SEC98">Visiting Files</A>.
+<DT><KBD>C-x 5 d <VAR>directory</VAR> <KBD>RET</KBD></KBD>
+<DD>Select a Dired buffer for directory <VAR>directory</VAR> in another frame.
+This runs <CODE>dired-other-frame</CODE>.  See section <A HREF="emacs_32.html#SEC269">Dired, the Directory Editor</A>.
+<DT><KBD>C-x 5 m</KBD>
+<DD>Start composing a mail message in another frame.  This runs
+<CODE>mail-other-frame</CODE>, and its same-frame version is <KBD>C-x m</KBD>.
+See section <A HREF="emacs_30.html#SEC247">Sending Mail</A>.
+<DT><KBD>C-x 5 .</KBD>
+<DD>Find a tag in the current tag table in another frame.  This runs
+<CODE>find-tag-other-frame</CODE>, the multiple-frame variant of <KBD>M-.</KBD>.
+See section <A HREF="emacs_26.html#SEC194">Tag Tables</A>.
+<DT><KBD>C-x 5 r <VAR>filename</VAR> <KBD>RET</KBD></KBD>
+<DD>Visit file <VAR>filename</VAR> read-only, and select its buffer in another
+frame.  This runs <CODE>find-file-read-only-other-frame</CODE>.
+See section <A HREF="emacs_19.html#SEC98">Visiting Files</A>.
+</DL>
+<P>
+<A NAME="IDX646"></A>
+<A NAME="IDX647"></A>
+<A NAME="IDX648"></A>
+<H2><A NAME="SEC143" HREF="emacs_toc.html#SEC143">Setting Frame Parameters</A></H2>
+<P>
+  This section describes commands for altering the display style and
+window management behavior of the selected frame.
+<A NAME="IDX649"></A>
+<A NAME="IDX650"></A>
+<A NAME="IDX651"></A>
+<A NAME="IDX652"></A>
+<A NAME="IDX653"></A>
+<A NAME="IDX654"></A>
+<A NAME="IDX655"></A>
+<P>
+<DL COMPACT>
+<DT><KBD>M-x set-foreground-color <KBD>RET</KBD> <VAR>color</VAR> <KBD>RET</KBD></KBD>
+<DD>Specify color <VAR>color</VAR> for the foreground of the selected frame.
+<P>
+<DT><KBD>M-x set-background-color <KBD>RET</KBD> <VAR>color</VAR> <KBD>RET</KBD></KBD>
+<DD>Specify color <VAR>color</VAR> for the background of the selected frame.
+<P>
+<DT><KBD>M-x set-cursor-color <KBD>RET</KBD> <VAR>color</VAR> <KBD>RET</KBD></KBD>
+<DD>Specify color <VAR>color</VAR> for the cursor of the selected frame.
+<P>
+<DT><KBD>M-x set-mouse-color <KBD>RET</KBD> <VAR>color</VAR> <KBD>RET</KBD></KBD>
+<DD>Specify color <VAR>color</VAR> for the mouse cursor when it is over the
+selected frame.
+<P>
+<DT><KBD>M-x set-border-color <KBD>RET</KBD> <VAR>color</VAR> <KBD>RET</KBD></KBD>
+<DD>Specify color <VAR>color</VAR> for the border of the selected frame.
+<P>
+<DT><KBD>M-x auto-raise-mode</KBD>
+<DD>Toggle whether or not the selected frame should auto-raise.
+Auto-raise means that every time you move the mouse onto the frame,
+it raises the frame.
+<P>
+<DT><KBD>M-x auto-lower-mode</KBD>
+<DD>Toggle whether or not the selected frame should auto-lower.
+Auto-lower means that every time you move the mouse off of the frame,
+the frame moves to the bottom of the stack of X windows.
+<A NAME="IDX656"></A>
+<P>
+<DT><KBD>M-x set-default-font <KBD>RET</KBD> <VAR>font</VAR> <KBD>RET</KBD></KBD>
+<DD>Specify font <VAR>font</VAR> as the default for the selected frame. 
+See section <A HREF="emacs_37.html#SEC383">Font Specification Options</A>, for ways to list the available fonts on your system.
+<P>
+You can also set a frame's default font through a pop-up menu.
+Press <KBD>C-<KBD>Mouse-3</KBD></KBD> to activate this menu.
+</DL>
+<P>
+<A NAME="IDX657"></A>
+<A NAME="IDX658"></A>
+<H2><A NAME="SEC144" HREF="emacs_toc.html#SEC144">Scroll Bars</A></H2>
+<P>
+  When using X, Emacs normally makes a <DFN>scroll bar</DFN> at the right of
+each Emacs window.  The scroll bar runs the height of the window, and
+shows a moving rectangular inner box which represents the portion of the
+buffer currently displayed.  The entire height of the scroll bar
+represents the entire length of the buffer.
+<P>
+  You can use <KBD>Mouse-2</KBD> (normally, the middle button) in the scroll
+bar to move or drag the inner box up and down.  If you move it to the
+top of the scroll bar, you see the top of the buffer.  If you move it to
+the bottom of the scroll bar, you see the bottom of the buffer.
+<P>
+  The left and right buttons in the scroll bar scroll by controlled
+increments.  <KBD>Mouse-1</KBD> (normally, the left button) moves the line at
+the level where you click up to the top of the window.  <KBD>Mouse-3</KBD>
+(normally, the right button) moves the line at the top of the window
+down to the level where you click.  By clicking repeatedly in the same
+place, you can scroll by the same distance over and over.
+<A NAME="IDX659"></A>
+<P>
+  You can enable or disable Scroll Bar mode with the command <KBD>M-x
+scroll-bar-mode</KBD>.  With no argument, it toggles the use of scroll bars.
+With an argument, it turns use of scroll bars on if and only if the
+argument is positive.  This command applies to all frames, including
+frames yet to be created.
+<A NAME="IDX660"></A>
+<P>
+  To enable or disable scroll bars for just the selected frame, use the
+<KBD>M-x toggle-scroll-bar</KBD> command.
+<P>
+<A NAME="IDX661"></A>
+<A NAME="IDX662"></A>
+<H2><A NAME="SEC145" HREF="emacs_toc.html#SEC145">Menu Bars</A></H2>
+<P>
+  By default, each Emacs frame has a menu bar at the top which you can
+use to perform certain common operations.  There's no need to describe
+them in detail here, as you can more easily see for yourself; also,
+we may change them and add to them in subsequent Emacs versions.
+<P>
+  Each of the operations in the menu bar is bound to an ordinary Emacs
+command which you can invoke equally well with <KBD>M-x</KBD> or with its own
+key bindings.  To see the command's name and documentation, type
+<KBD>C-h k</KBD> and then select the menu bar item you are interested in.
+<P>
+  You can turn display of menu bars on or off with <KBD>M-x menu-bar-mode</KBD>.
+With no argument, this command toggles Menu Bar mode, a minor mode.
+With an argument, the command turns Menu Bar mode on if the argument
+is positive, off if the argument is not positive.
+<P>
+<A NAME="IDX663"></A>
+<H2><A NAME="SEC146" HREF="emacs_toc.html#SEC146">Using Multiple Typefaces</A></H2>
+<P>
+  When using Emacs with X, you can set up multiple styles of displaying
+characters.  The aspects of style that you can control are the type
+font, the foreground color, the background color, and whether to
+underline.
+<P>
+  The way you control display style is by defining named <DFN>faces</DFN>.
+Each face can specify a type font, a foreground color, a background
+color, and an underline flag; but it does not have to specify all of
+them.
+<P>
+  The style of display used for a given character in the text is
+determined by combining several faces.  Which faces to use is always set
+up by Lisp programs, at present, by means of text properties and
+overlays.  Any aspect of the display style that isn't specified by
+overlays or text properties comes from the frame itself.
+<A NAME="IDX664"></A>
+<P>
+  To see what faces are currently defined, and what they look like, type
+<KBD>M-x list-faces-display</KBD>.  It's possible for a given face to look
+different in different frames; this command shows the appearance in the
+frame in which you type it.
+<A NAME="IDX665"></A>
+<A NAME="IDX666"></A>
+<P>
+  When Transient Mark mode is enabled, the text of the region is
+highlighted when the mark is active.  This uses a face named
+<CODE>region</CODE>; you can control the style of highlighting by changing the
+style of this face with the commands below.  See section <A HREF="emacs_13.html#SEC48">Setting the Mark</A>, for
+more information about Transient Mark mode and activation and
+deactivation of the mark.
+<P>
+  One easy way to use faces is to turn on Font-Lock mode.
+This minor mode, which is always local to a particular buffer, arranges
+to choose faces according to the syntax of the text you are editing.
+It can recognize comments and strings in any major mode; for several
+major modes, it can also recognize and properly highlight various other
+important parts of the text.  To get the full benefit of Font-Lock mode,
+you need to choose a default font which has bold, italic, and bold-italic
+variants.
+<P>
+<H2><A NAME="SEC147" HREF="emacs_toc.html#SEC147">Modifying Faces</A></H2>
+<P>
+  Here are the commands for users to change the font of a face.
+<A NAME="IDX667"></A>
+<A NAME="IDX668"></A>
+<A NAME="IDX669"></A>
+<A NAME="IDX670"></A>
+<A NAME="IDX671"></A>
+<A NAME="IDX672"></A>
+<A NAME="IDX673"></A>
+<A NAME="IDX674"></A>
+<A NAME="IDX675"></A>
+<P>
+<DL COMPACT>
+<DT><KBD>M-x set-face-font <KBD>RET</KBD> <VAR>face</VAR> <KBD>RET</KBD> <VAR>font</VAR> <KBD>RET</KBD></KBD>
+<DD>Use font <VAR>font</VAR> in face <VAR>face</VAR>.
+<P>
+<DT><KBD>M-x make-face-bold <KBD>RET</KBD> <VAR>face</VAR> <KBD>RET</KBD></KBD>
+<DD>Convert face <VAR>face</VAR> to use a bold version of its current font.
+<P>
+<DT><KBD>M-x make-face-italic <KBD>RET</KBD> <VAR>face</VAR> <KBD>RET</KBD></KBD>
+<DD>Convert face <VAR>face</VAR> to use a italic version of its current font.
+<P>
+<DT><KBD>M-x make-face-bold-italic <KBD>RET</KBD> <VAR>face</VAR> <KBD>RET</KBD></KBD>
+<DD>Convert face <VAR>face</VAR> to use a bold-italic version of its current font.
+<P>
+<DT><KBD>M-x make-face-unbold <KBD>RET</KBD> <VAR>face</VAR> <KBD>RET</KBD></KBD>
+<DD>Convert face <VAR>face</VAR> to use a non-bold version of its current font.
+<P>
+<DT><KBD>M-x make-face-unitalic <KBD>RET</KBD> <VAR>face</VAR> <KBD>RET</KBD></KBD>
+<DD>Convert face <VAR>face</VAR> to use a non-italic version of its current font.
+</DL>
+<P>
+  Here are the commands for users to set the colors and underline flag
+of a face:
+<A NAME="IDX676"></A>
+<A NAME="IDX677"></A>
+<A NAME="IDX678"></A>
+<A NAME="IDX679"></A>
+<A NAME="IDX680"></A>
+<A NAME="IDX681"></A>
+<A NAME="IDX682"></A>
+<P>
+<DL COMPACT>
+<DT><KBD>M-x set-face-foreground <KBD>RET</KBD> <VAR>face</VAR> <KBD>RET</KBD> <VAR>color</VAR> <KBD>RET</KBD></KBD>
+<DD>Use color <VAR>color</VAR> for the foreground of characters in face <VAR>face</VAR>.
+<P>
+<DT><KBD>M-x set-face-background <KBD>RET</KBD> <VAR>face</VAR> <KBD>RET</KBD> <VAR>color</VAR> <KBD>RET</KBD></KBD>
+<DD>Use color <VAR>color</VAR> for the background of characters in face <VAR>face</VAR>.
+<P>
+<DT><KBD>M-x set-face-underline-p <KBD>RET</KBD> <VAR>face</VAR> <KBD>RET</KBD> <VAR>flag</VAR> <KBD>RET</KBD></KBD>
+<DD>Specify whether to underline characters in face <VAR>face</VAR>.
+<P>
+<DT><KBD>M-x invert-face <KBD>RET</KBD> <VAR>face</VAR> <KBD>RET</KBD></KBD>
+<DD>Swap the foreground and background colors of face <VAR>face</VAR>.
+</DL>
+<P>
+<H2><A NAME="SEC148" HREF="emacs_toc.html#SEC148">Miscellaneous X Window Features</A></H2>
+<P>
+The following commands do user-level mangement of frames under a window
+system:
+<P>
+<DL COMPACT>
+<A NAME="IDX683"></A>
+<A NAME="IDX684"></A>
+<DT><KBD>C-z</KBD>
+<DD>To iconify the selected Emacs frame, type <KBD>C-z</KBD>
+(<CODE>iconify-or-deiconify-frame</CODE>).  The normal meaning of <KBD>C-z</KBD>,
+to suspend Emacs, is not useful under a window system, so it has a
+different binding in that case.
+<P>
+If you type this command on an Emacs icon, it deiconifies the frame.
+<P>
+<A NAME="IDX685"></A>
+<A NAME="IDX686"></A>
+<DT><KBD>C-x 5 0</KBD>
+<DD>To delete the selected frame, type <KBD>C-x 5 0</KBD> (<CODE>delete-frame</CODE>).
+If there is more than one frame in this invocation of Emacs, the current
+frame is deleted.
+<P>
+<DT><KBD>M-x transient-mark-mode</KBD>
+<DD>Under X Windows, when Transient Mark mode is enabled, Emacs highlights
+the region when the mark is active.  This is the main motive for using
+Transient Mark mode.  To toggle the state of this mode, use the command
+<KBD>M-x transient-mark-mode</KBD>.  See section <A HREF="emacs_13.html#SEC47">The Mark and the Region</A>.
+</DL>
+<P>Go to the <A HREF="emacs_21.html">previous</A>, <A HREF="emacs_23.html">next</A> section.<P>

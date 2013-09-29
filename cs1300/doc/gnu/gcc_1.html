@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from gcc.texi on 7 November 1999 -->
+
+<TITLE>Using and Porting the GNU Compiler Collection (GCC) - Compile C, C++, Objective C, or Fortran</TITLE>
+<link href="gcc_2.html" rel=Next>
+<link href="gcc_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the first, previous, <A HREF="gcc_2.html">next</A>, <A HREF="gcc_24.html">last</A> section, <A HREF="gcc_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC1" HREF="gcc_toc.html#TOC1">Compile C, C++, Objective C, or Fortran</A></H1>
+
+<P>
+<A NAME="IDX2"></A>
+The C, C++, and Objective C, and Fortran versions of the compiler are
+integrated; this is why we use the name "GNU Compiler Collection".
+GCC can compile programs written in C, C++, Objective C, or Fortran.
+The Fortran compiler is described in a separate manual.
+
+</P>
+<P>
+<A NAME="IDX3"></A>
+"GCC" is a common shorthand term for the GNU Compiler Collection.  This is both
+the most general name for the compiler, and the name used when the
+emphasis is on compiling C programs (as the abbreviation formerly
+stood for "GNU C Compiler").
+
+</P>
+<P>
+<A NAME="IDX4"></A>
+<A NAME="IDX5"></A>
+When referring to C++ compilation, it is usual to call the compiler
+"G++".  Since there is only one compiler, it is also accurate to call
+it "GCC" no matter what the language context; however, the term
+"G++" is more useful when the emphasis is on compiling C++ programs.
+
+</P>
+<P>
+We use the name "GCC" to refer to the compilation system as a
+whole, and more specifically to the language-independent part of the
+compiler.  For example, we refer to the optimization options as
+affecting the behavior of "GCC" or sometimes just "the compiler".
+
+</P>
+<P>
+Front ends for other languages, such as Ada 9X, Fortran, Modula-3, and
+Pascal, are under development.  These front-ends, like that for C++, are
+built in subdirectories of GCC and link to it.  The result is an
+integrated compiler that can compile programs written in C, C++,
+Objective C, or any of the languages for which you have installed front
+ends.
+
+</P>
+<P>
+In this manual, we only discuss the options for the C, Objective-C, and
+C++ compilers and those of the GCC core.  Consult the documentation
+of the other front ends for the options to use when compiling programs
+written in other languages.
+
+</P>
+<P>
+<A NAME="IDX6"></A>
+<A NAME="IDX7"></A>
+<A NAME="IDX8"></A>
+G++ is a <EM>compiler</EM>, not merely a preprocessor.  G++ builds object
+code directly from your C++ program source.  There is no intermediate C
+version of the program.  (By contrast, for example, some other
+implementations use a program that generates a C program from your C++
+source.)  Avoiding an intermediate C representation of the program means
+that you get better object code, and better debugging information.  The
+GNU debugger, GDB, works with this information in the object code to
+give you comprehensive C++ source-level editing capabilities
+(see section `C and C++' in <CITE>Debugging with GDB</CITE>).
+
+</P>
+
+<P><HR><P>
+<p>Go to the first, previous, <A HREF="gcc_2.html">next</A>, <A HREF="gcc_24.html">last</A> section, <A HREF="gcc_toc.html">table of contents</A>.
+</BODY>
+</HTML>

@@ -1,0 +1,51 @@
+<TITLE>Out of Environment Space</TITLE>
+<H2>Out of Environment Space</H2>
+<BR>
+<B>How To Fix This Problem</B>
+<P>
+Running or installing DOS or Windows tools can sometimes result in the
+message "Out of Environment Space." This page describes two ways to
+usually solve the problem.
+<P>
+<B>Method 1: Changing the DOS Session Properties</B>
+<P>
+This method will work if you don't need too much extra space and
+you are running the tools from a DOS Session.
+<UL>
+<LI> Start the DOS session and make sure that it is a window rather
+than full-screen. If it is full-screen, then press Alt-Enter to change
+it to a window.
+<LI> Click on the MS-DOS icon in the top left corner of the window.
+<LI> Select Properties from the pop-up menu.
+<LI> Select the Memory tab from the command box.
+<LI> Click the arrow on the Initial Environment box. Move down in the
+box as far as possible (by clicking the downward arrow). Click on the
+biggest number that you see in this box.
+<LI> Click OK in the command box.
+<LI> Click OK in the MS-DOS Prompt information box.
+<LI> Stop the DOS Session by clicking the X in the top-right or by
+typing the command "exit".
+<LI> Restart a new DOS session and try running your commands again.
+</UL>
+If you still receive error messages, then you can try Method 2, listed
+below.
+<P>
+<B>Method 2: Changing the config.sys file</B>
+<P>
+This method works for Windows 95. I'm not certain whether it also
+works for later versions of Windows.
+<UL>
+<LI>From a DOS prompt, use the edit command to open the file
+C:\config.sys.
+<LI>Find a line that begins: shell=...
+<LI>Within this line, find a parameter that starts /e:... and increase
+the size of the number after the /e:. For example, I increased mine to
+/e:4096.
+<LI>
+If there was no /e:... on your line, then you can add /e:4096 at the
+end of the line. If there was no shell= line, then you can add this
+one:
+<PRE>
+    shell=C:\command.com /e:4096 /p
+</PRE>
+</UL>

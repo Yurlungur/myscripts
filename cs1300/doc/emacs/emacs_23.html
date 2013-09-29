@@ -1,0 +1,121 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Major Modes</TITLE>
+<P>Go to the <A HREF="emacs_22.html">previous</A>, <A HREF="emacs_24.html">next</A> section.<P>
+<A NAME="IDX687"></A>
+<A NAME="IDX688"></A>
+<A NAME="IDX689"></A>
+<A NAME="IDX690"></A>
+<A NAME="IDX691"></A>
+<H1><A NAME="SEC149" HREF="emacs_toc.html#SEC149">Major Modes</A></H1>
+<P>
+  Emacs provides many alternative <DFN>major modes</DFN>, each of which
+customizes Emacs for editing text of a particular sort.  The major modes
+are mutually exclusive, and each buffer has one major mode at any time.
+The mode line normally shows the name of the current major mode, in
+parentheses (see section <A HREF="emacs_5.html#SEC11">The Mode Line</A>).
+<P>
+  The least specialized major mode is called <DFN>Fundamental mode</DFN>.  This
+mode has no mode-specific redefinitions or variable settings, so that each
+Emacs command behaves in its most general manner, and each option is in its
+default state.  For editing any specific type of text, such as Lisp code or
+English text, you should switch to the appropriate major mode, such as Lisp
+mode or Text mode.
+<P>
+  Selecting a major mode changes the meanings of a few keys to become more
+specifically adapted to the language being edited.  The ones which are
+changed frequently are <KBD>TAB</KBD>, <KBD>DEL</KBD>, and <KBD>LFD</KBD>.  In addition,
+the commands which handle comments use the mode to determine how comments
+are to be delimited.  Many major modes redefine the syntactical properties
+of characters appearing in the buffer.  See section <A HREF="emacs_35.html#SEC355">The Syntax Table</A>.
+<P>
+  The major modes fall into three major groups.  Lisp mode (which has
+several variants), C mode, Fortran mode and others are for specific
+programming languages.  Text mode, Nroff mode, TeX mode and Outline
+mode are for editing English text.  The remaining major modes are not
+intended for use on users' files; they are used in buffers created for
+specific purposes by Emacs, such as Dired mode for buffers made by Dired
+(see section <A HREF="emacs_32.html#SEC269">Dired, the Directory Editor</A>), and Mail mode for buffers made by <KBD>C-x m</KBD>
+(see section <A HREF="emacs_30.html#SEC247">Sending Mail</A>), and Shell mode for buffers used for
+communicating with an inferior shell process (see section <A HREF="emacs_34.html#SEC316">Interactive Inferior Shell</A>).
+<P>
+  Most programming language major modes specify that only blank lines
+separate paragraphs.  This is so that the paragraph commands remain useful.
+(See section <A HREF="emacs_25.html#SEC158">Paragraphs</A>.)  They also cause Auto Fill mode to use the definition of
+<KBD>TAB</KBD> to indent the new lines it creates.  This is because most lines
+in a program are usually indented.  (See section <A HREF="emacs_24.html#SEC151">Indentation</A>.)
+<P>
+<H2><A NAME="SEC150" HREF="emacs_toc.html#SEC150">How Major Modes are Chosen</A></H2>
+<A NAME="IDX692"></A>
+<P>
+  You can select a major mode explicitly for the current buffer, but
+most of the time Emacs determines which mode to use based on the file
+name or on special text in the file.
+<P>
+  Explicit selection of a new major mode is done with a <KBD>M-x</KBD> command.
+From the name of a major mode, add <CODE>-mode</CODE> to get the name of a
+command to select that mode.  Thus, you can enter Lisp mode by executing
+<KBD>M-x lisp-mode</KBD>.
+<A NAME="IDX693"></A>
+<P>
+  When you visit a file, Emacs usually chooses the right major mode based
+on the file's name.  For example, files whose names end in <SAMP>`.c'</SAMP> are
+edited in C mode.  The correspondence between file names and major mode is
+controlled by the variable <CODE>auto-mode-alist</CODE>.  Its value is a list in
+which each element has the form
+<P>
+<PRE>
+(<VAR>regexp</VAR> . <VAR>mode-function</VAR>)
+</PRE>
+<P>
+For example, one element normally found in the list has the form
+<CODE>(<TT>"\\.c$"</TT> . c-mode)</CODE>, and it is responsible for selecting C mode
+for files whose names end in <TT>`.c'</TT>.  (Note that <SAMP>`\\'</SAMP> is needed in
+Lisp syntax to include a <SAMP>`\'</SAMP> in the string, which is needed to
+suppress the special meaning of <SAMP>`.'</SAMP> in regexps.)  The only practical
+way to change this variable is with Lisp code.
+<P>
+  You can specify which major mode should be used for editing a certain
+file by a special sort of text in the first nonblank line of the file.  The
+mode name should appear in this line both preceded and followed by
+<SAMP>`-*-'</SAMP>.  Other text may appear on the line as well.  For example,
+<P>
+<PRE>
+;-*-Lisp-*-
+</PRE>
+<P>
+tells Emacs to use Lisp mode.  Such an explicit specification overrides
+any defaulting based on the file name.  Note how the semicolon is used
+to make Lisp treat this line as a comment.
+<P>
+  Another format of mode specification is
+<P>
+<PRE>
+-*-Mode: <VAR>modename</VAR>;-*-
+</PRE>
+<P>
+which allows you to specify local variables as well, like this:
+<P>
+<PRE>
+-*- mode: <VAR>modename</VAR>; <VAR>var</VAR>: <VAR>value</VAR>; ... -*-
+</PRE>
+<P>
+See section <A HREF="emacs_35.html#SEC339">Local Variables in Files</A>, for more information about this.
+<A NAME="IDX694"></A>
+<P>
+  When you visit a file that does not specify a major mode to use, or
+when you create a new buffer with <KBD>C-x b</KBD>, the variable
+<CODE>default-major-mode</CODE> specifies which major mode to use.  Normally
+its value is the symbol <CODE>fundamental-mode</CODE>, which specifies
+Fundamental mode.  If <CODE>default-major-mode</CODE> is <CODE>nil</CODE>, the major
+mode is taken from the previously selected buffer.
+<A NAME="IDX695"></A>
+<P>
+  If you change the major mode of a buffer, you can go back to the major
+mode Emacs would choose automatically: use the command <KBD>M-x
+normal-mode</KBD> to do this.  This is the same function that
+<CODE>find-file</CODE> calls to choose the major mode.  It also processes
+the file's local variables list if any.
+<P>
+<P>Go to the <A HREF="emacs_22.html">previous</A>, <A HREF="emacs_24.html">next</A> section.<P>

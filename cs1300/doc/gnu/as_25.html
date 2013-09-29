@@ -1,0 +1,400 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from ../../../gas/doc/as.texinfo on 16 March 1999 -->
+
+<TITLE>Using as - v850 Dependent Features</TITLE>
+<link href="as_26.html" rel=Next>
+<link href="as_24.html" rel=Previous>
+<link href="as_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="as_1.html">first</A>, <A HREF="as_24.html">previous</A>, <A HREF="as_26.html">next</A>, <A HREF="as_28.html">last</A> section, <A HREF="as_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC280" HREF="as_toc.html#TOC280">v850 Dependent Features</A></H1>
+
+<P>
+<A NAME="IDX906"></A>
+
+<UL>
+<LI><A HREF="as_25.html#SEC281">V850 Options</A>: Options
+<LI><A HREF="as_25.html#SEC282">V850 Syntax</A>: Syntax
+<LI><A HREF="as_25.html#SEC285">V850 Floating Point</A>: Floating Point
+<LI><A HREF="as_25.html#SEC286">V850 Directives</A>: V850 Machine Directives
+<LI><A HREF="as_25.html#SEC287">V850 Opcodes</A>: Opcodes
+</UL>
+
+
+
+<H2><A NAME="SEC281" HREF="as_toc.html#TOC281">Options</A></H2>
+<P>
+<A NAME="IDX907"></A>
+<A NAME="IDX908"></A>
+<CODE>as</CODE> supports the following additional command-line options
+for the V850 processor family:
+
+</P>
+<P>
+<A NAME="IDX909"></A>
+<A NAME="IDX910"></A>
+<DL COMPACT>
+
+<DT><CODE>-wsigned_overflow</CODE>
+<DD>
+<A NAME="IDX911"></A>
+ 
+Causes warnings to be produced when signed immediate values overflow the
+space available for then within their opcodes.  By default this option
+is disabled as it is possible to receive spurious warnings due to using
+exact bit patterns as immediate constants.
+
+<A NAME="IDX912"></A>
+<DT><CODE>-wunsigned_overflow</CODE>
+<DD>
+Causes warnings to be produced when unsigned immediate values overflow
+the space available for then within their opcodes.  By default this
+option is disabled as it is possible to receive spurious warnings due to
+using exact bit patterns as immediate constants.
+
+<A NAME="IDX913"></A>
+<DT><CODE>-mv850</CODE>
+<DD>
+Specifies that the assembled code should be marked as being targeted at
+the V850 processor.  This allows the linker to detect attempts to link
+such code with code assembled for other processors.
+
+</DL>
+
+
+
+<H2><A NAME="SEC282" HREF="as_toc.html#TOC282">Syntax</A></H2>
+
+<UL>
+<LI><A HREF="as_25.html#SEC283">V850-Chars</A>: Special Characters
+<LI><A HREF="as_25.html#SEC284">V850-Regs</A>: Register Names
+</UL>
+
+
+
+<H3><A NAME="SEC283" HREF="as_toc.html#TOC283">Special Characters</A></H3>
+
+<P>
+<A NAME="IDX914"></A>
+<A NAME="IDX915"></A>
+<SAMP>`#'</SAMP> is the line comment character.
+
+
+<H3><A NAME="SEC284" HREF="as_toc.html#TOC284">Register Names</A></H3>
+
+<P>
+<A NAME="IDX916"></A>
+<A NAME="IDX917"></A>
+<CODE>as</CODE> supports the following names for registers:
+<DL COMPACT>
+
+<DT><CODE>general register 0</CODE>
+<DD>
+<A NAME="IDX918"></A>
+ 
+r0, zero
+<DT><CODE>general register 1</CODE>
+<DD>
+r1
+<DT><CODE>general register 2</CODE>
+<DD>
+r2, hp
+<A NAME="IDX919"></A>
+<DT><CODE>general register 3</CODE>
+<DD>
+r3, sp
+<A NAME="IDX920"></A>
+<DT><CODE>general register 4</CODE>
+<DD>
+r4, gp
+<A NAME="IDX921"></A>
+<DT><CODE>general register 5</CODE>
+<DD>
+r5, tp
+<DT><CODE>general register 6</CODE>
+<DD>
+r6
+<DT><CODE>general register 7</CODE>
+<DD>
+r7
+<DT><CODE>general register 8</CODE>
+<DD>
+r8
+<DT><CODE>general register 9</CODE>
+<DD>
+r9
+<DT><CODE>general register 10</CODE>
+<DD>
+r10
+<DT><CODE>general register 11</CODE>
+<DD>
+r11
+<DT><CODE>general register 12</CODE>
+<DD>
+r12
+<DT><CODE>general register 13</CODE>
+<DD>
+r13
+<DT><CODE>general register 14</CODE>
+<DD>
+r14
+<DT><CODE>general register 15</CODE>
+<DD>
+r15
+<DT><CODE>general register 16</CODE>
+<DD>
+r16
+<DT><CODE>general register 17</CODE>
+<DD>
+r17
+<DT><CODE>general register 18</CODE>
+<DD>
+r18
+<DT><CODE>general register 19</CODE>
+<DD>
+r19
+<DT><CODE>general register 20</CODE>
+<DD>
+r20
+<DT><CODE>general register 21</CODE>
+<DD>
+r21
+<DT><CODE>general register 22</CODE>
+<DD>
+r22
+<DT><CODE>general register 23</CODE>
+<DD>
+r23
+<DT><CODE>general register 24</CODE>
+<DD>
+r24
+<DT><CODE>general register 25</CODE>
+<DD>
+r25
+<DT><CODE>general register 26</CODE>
+<DD>
+r26
+<DT><CODE>general register 27</CODE>
+<DD>
+r27
+<DT><CODE>general register 28</CODE>
+<DD>
+r28
+<DT><CODE>general register 29</CODE>
+<DD>
+r29
+<A NAME="IDX922"></A>
+<DT><CODE>general register 30</CODE>
+<DD>
+r30, ep
+<A NAME="IDX923"></A>
+<DT><CODE>general register 31</CODE>
+<DD>
+r31, lp
+<A NAME="IDX924"></A>
+<DT><CODE>system register 0</CODE>
+<DD>
+eipc
+<A NAME="IDX925"></A>
+<DT><CODE>system register 1</CODE>
+<DD>
+eipsw
+<A NAME="IDX926"></A>
+<DT><CODE>system register 2</CODE>
+<DD>
+fepc
+<A NAME="IDX927"></A>
+<DT><CODE>system register 3</CODE>
+<DD>
+fepsw
+<A NAME="IDX928"></A>
+<DT><CODE>system register 4</CODE>
+<DD>
+ecr
+<A NAME="IDX929"></A>
+<DT><CODE>system register 5</CODE>
+<DD>
+psw
+</DL>
+
+
+
+<H2><A NAME="SEC285" HREF="as_toc.html#TOC285">Floating Point</A></H2>
+
+<P>
+<A NAME="IDX930"></A>
+<A NAME="IDX931"></A>
+The V850 family uses IEEE floating-point numbers.
+
+</P>
+
+
+<H2><A NAME="SEC286" HREF="as_toc.html#TOC286">V850 Machine Directives</A></H2>
+
+<P>
+<A NAME="IDX932"></A>
+<A NAME="IDX933"></A>
+<DL COMPACT>
+
+<DT><CODE>.offset <VAR>&#60;expression&#62;</VAR></CODE>
+<DD>
+<A NAME="IDX934"></A>
+ 
+Moves the offset into the current section to the specified amount. 
+
+<A NAME="IDX935"></A>
+<DT><CODE>.section "name", &#60;type&#62;</CODE>
+<DD>
+This is an extension to the standard .section directive.  It sets the
+current section to be &#60;type&#62; and creates an alias for this section
+called "name". 
+
+<A NAME="IDX936"></A>
+<DT><CODE>.v850</CODE>
+<DD>
+Specifies that the assembled code should be marked as being targeted at
+the V850 processor.  This allows the linker to detect attempts to link
+such code with code assembled for other processors.
+
+</DL>
+
+
+
+<H2><A NAME="SEC287" HREF="as_toc.html#TOC287">Opcodes</A></H2>
+
+<P>
+<A NAME="IDX937"></A>
+<A NAME="IDX938"></A>
+<CODE>as</CODE> implements all the standard V850 opcodes.
+
+</P>
+<P>
+<CODE>as</CODE> also implements the following pseudo ops:
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>hi0()</CODE>
+<DD>
+<A NAME="IDX939"></A>
+ 
+Computes the higher 16 bits of the given expression and stores it into
+the immediate operand field of the given instruction.  For example:
+
+    <SAMP>`mulhi hi0(here - there), r5, r6'</SAMP>
+
+computes the difference between the address of labels 'here' and
+'there', takes the upper 16 bits of this difference, shifts it down 16
+bits and then mutliplies it by the lower 16 bits in register 5, putting
+the result into register 6. 
+
+<A NAME="IDX940"></A>
+<DT><CODE>lo()</CODE>
+<DD>
+Computes the lower 16 bits of the given expression and stores it into
+the immediate operand field of the given instruction.  For example:
+
+    <SAMP>`addi lo(here - there), r5, r6'</SAMP>
+
+computes the difference between the address of labels 'here' and
+'there', takes the lower 16 bits of this difference and adds it to
+register 5, putting the result into register 6.
+
+<A NAME="IDX941"></A>
+<DT><CODE>hi()</CODE>
+<DD>
+Computes the higher 16 bits of the given expression and then adds the
+value of the most significant bit of the lower 16 bits of the expression
+and stores the result into the immediate operand field of the given
+instruction.  For example the following code can be used to compute the
+address of the label 'here' and store it into register 6:
+
+    <SAMP>`movhi hi(here), r0, r6'</SAMP>
+    <SAMP>`movea lo(here), r6, r6'</SAMP>
+
+The reason for this special behaviour is that movea performs a sign
+extention on its immediate operand.  So for example if the address of
+'here' was 0xFFFFFFFF then without the special behaviour of the hi()
+pseudo-op the movhi instruction would put 0xFFFF0000 into r6, then the
+movea instruction would takes its immediate operand, 0xFFFF, sign extend
+it to 32 bits, 0xFFFFFFFF, and then add it into r6 giving 0xFFFEFFFF
+which is wrong (the fifth nibble is E).  With the hi() pseudo op adding
+in the top bit of the lo() pseudo op, the movhi instruction actually
+stores 0 into r6 (0xFFFF + 1 = 0x0000), so that the movea instruction
+stores 0xFFFFFFFF into r6 - the right value.
+
+<A NAME="IDX942"></A>
+<DT><CODE>sdaoff()</CODE>
+<DD>
+Computes the offset of the named variable from the start of the Small
+Data Area (whoes address is held in register 4, the GP register) and
+stores the result as a 16 bit signed value in the immediate operand
+field of the given instruction.  For example: 
+
+      <SAMP>`ld.w sdaoff(_a_variable)[gp],r6'</SAMP>
+
+loads the contents of the location pointed to by the label '_a_variable'
+into register 6, provided that the label is located somewhere within +/-
+32K of the address held in the GP register.  [Note the linker assumes
+that the GP register contains a fixed address set to the address of the
+label called '__gp'.  This can either be set up automatically by the
+linker, or specifically set by using the <SAMP>`--defsym __gp=&#60;value&#62;'</SAMP>
+command line option].
+
+<A NAME="IDX943"></A>
+<DT><CODE>tdaoff()</CODE>
+<DD>
+Computes the offset of the named variable from the start of the Tiny
+Data Area (whoes address is held in register 30, the EP register) and
+stores the result as a
+7 or 8 bit unsigned value in the immediate
+operand field of the given instruction.  For example:
+
+      <SAMP>`sld.w tdaoff(_a_variable)[ep],r6'</SAMP>
+
+loads the contents of the location pointed to by the label '_a_variable'
+into register 6, provided that the label is located somewhere within +256
+bytes of the address held in the EP register.  [Note the linker assumes
+that the EP register contains a fixed address set to the address of the
+label called '__ep'.  This can either be set up automatically by the
+linker, or specifically set by using the <SAMP>`--defsym __ep=&#60;value&#62;'</SAMP>
+command line option].
+
+<A NAME="IDX944"></A>
+<DT><CODE>zdaoff()</CODE>
+<DD>
+Computes the offset of the named variable from address 0 and stores the
+result as a 16 bit signed value in the immediate operand field of the
+given instruction.  For example:
+
+      <SAMP>`movea zdaoff(_a_variable),zero,r6'</SAMP>
+
+puts the address of the label '_a_variable' into register 6, assuming
+that the label is somewhere within the first 32K of memory.  (Strictly
+speaking it also possible to access the last 32K of memory as well, as
+the offsets are signed).
+
+</DL>
+
+<P>
+For information on the V850 instruction set, see <CITE>V850
+Family 32-/16-Bit single-Chip Microcontroller Architecture Manual</CITE> from NEC.
+Ltd.
+
+</P>
+
+<P>
+@raisesections
+
+</P>
+<P><HR><P>
+<p>Go to the <A HREF="as_1.html">first</A>, <A HREF="as_24.html">previous</A>, <A HREF="as_26.html">next</A>, <A HREF="as_28.html">last</A> section, <A HREF="as_toc.html">table of contents</A>.
+</BODY>
+</HTML>

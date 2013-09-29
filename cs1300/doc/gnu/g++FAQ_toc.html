@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from g++FAQ.texi on 30 July 1999 -->
+
+<TITLE>Frequently asked questions about the GNU C++ compiler - Table of Contents</TITLE>
+
+</HEAD>
+<BODY>
+<H1>G++ FAQ</H1>
+<H2>Frequently asked questions about the GNU C++ compiler</H2>
+<H2>June 8, 1998</H2>
+<ADDRESS>Joe Buck</ADDRESS>
+<P>
+<P><HR><P>
+
+
+<H1><A NAME="SEC1" HREF="g++FAQ_toc.html#TOC1">FAQ for g++ and libg++, by Joe Buck (jbuck@synopsys.com)</A></H1>
+
+<P>
+<A NAME="IDX1"></A>
+<A NAME="IDX2"></A>
+<A NAME="IDX3"></A>
+<A NAME="IDX4"></A>
+<A NAME="IDX5"></A>
+
+</P>
+<P>
+This is a list of frequently asked questions (FAQ) for g++ users; thanks to
+all those who sent suggestions for improvements.  Thanks to Marcus Speh
+for doing the index.  A hypertext version is available on the World Wide
+Web at <TT>`http://www.cygnus.com/misc/g++FAQ_toc.html'</TT>.
+
+</P>
+<P>
+Please send updates and corrections to the FAQ to
+<CODE>jbuck@synopsys.com</CODE>.  Please do <EM>not</EM> use me as a resource
+to get your questions answered; that's what <TT>`gnu.g++.help'</TT> is for and I
+don't have the time to support the net's use of g++.  If you ignore this
+request your message to me may be deleted without a reply.  Sorry.
+
+</P>
+<P>
+Many FAQs, including this one, are available on the archive site
+"rtfm.mit.edu"; see <BR>
+<TT>`ftp://rtfm.mit.edu/pub/usenet/news.answers'</TT>.
+This FAQ may be found in the subdirectory g++-FAQ.
+
+</P>
+<P>
+<A NAME="IDX6"></A>
+<A NAME="IDX7"></A>
+<A NAME="IDX8"></A>
+This FAQ is intended to supplement, not replace, Marshall Cline's
+excellent FAQ for the C++ language and for the newsgroup
+<TT>`comp.lang.c++'</TT>.  Especially if g++ is the first C++
+compiler you've ever used, the question "How do I do &#60;X&#62; with g++?"
+is probably really "How do I do &#60;X&#62; in C++?".
+You can find this FAQ at
+<TT>`ftp://rtfm.mit.edu/pub/usenet/comp.lang.c++'</TT>,
+or in HTML form at <TT>`http://www.cerfnet.com/~mpcline/On-Line-C++-FAQs/'</TT>.
+
+</P>
+
+<UL>
+<LI><A HREF="g++FAQ_2.html#SEC2">basics</A>: What is g++?  How do I get it?
+<LI><A HREF="g++FAQ_3.html#SEC10">egcs and 2.8.x</A>: The next generation(s) of g++
+<LI><A HREF="g++FAQ_4.html#SEC19">installation</A>: How to install, installation problems
+<LI><A HREF="g++FAQ_5.html#SEC36">evolution</A>: The Evolution of g++
+<LI><A HREF="g++FAQ_6.html#SEC39">User Problems</A>: Commonly reported problems and bugs
+<LI><A HREF="g++FAQ_7.html#SEC66">legalities</A>: Lawyer stuff, GPL, LGPL, etc.
+<LI><A HREF="g++FAQ_8.html#SEC67">index</A>: Index of terms
+
+ -- The Detailed Node Listing ---
+
+The basics: what is g++?
+
+<LI><A HREF="g++FAQ_2.html#SEC3">latest versions</A>: What are the latest versions of g++ and libraries?
+<LI><A HREF="g++FAQ_2.html#SEC4">g++ for Unix</A>: How do I get g++ for Unix?
+<LI><A HREF="g++FAQ_2.html#SEC5">getting-egcs</A>: How do I get egcs?
+<LI><A HREF="g++FAQ_2.html#SEC6">g++ for HP</A>
+<LI><A HREF="g++FAQ_2.html#SEC7">g++ for Solaris 2.x</A>
+<LI><A HREF="g++FAQ_2.html#SEC8">g++ for other platforms</A>
+<LI><A HREF="g++FAQ_2.html#SEC9">1.x vs 2.x versions</A>
+
+The Next Generation(s) of g++
+
+<LI><A HREF="g++FAQ_3.html#SEC11">new-in-2.8.x</A>: What's new in gcc 2.8.x?    
+<LI><A HREF="g++FAQ_3.html#SEC12">egcs-intro</A>: What is egcs?
+<LI><A HREF="g++FAQ_3.html#SEC13">egcs-whats-new</A>: What's new in egcs vs 2.7.2?
+<LI><A HREF="g++FAQ_3.html#SEC14">egcs-bug-fixes</A>: What was fixed in the latest egcs releases?
+<LI><A HREF="g++FAQ_3.html#SEC15">egcs-linux</A>: If I install on Linux, will it overwrite my libraries?
+<LI><A HREF="g++FAQ_3.html#SEC16">egcs-run-both</A>: How can I run both egcs and an FSF release?
+<LI><A HREF="g++FAQ_3.html#SEC17">egcs-vs-2.8.x</A>: How will egcs affect 2.8.x?
+<LI><A HREF="g++FAQ_3.html#SEC18">egcs-robustness</A>: How robust is egcs?
+
+Installation Issues and Problems
+
+<LI><A HREF="g++FAQ_4.html#SEC20">gcc-2 + g++-1</A>
+<LI><A HREF="g++FAQ_4.html#SEC21">what else do I need?</A>
+<LI><A HREF="g++FAQ_4.html#SEC22">use GNU linker?</A>
+<LI><A HREF="g++FAQ_4.html#SEC23">Use GNU assembler?</A>
+<LI><A HREF="g++FAQ_4.html#SEC24">shared libraries</A>
+<LI><A HREF="g++FAQ_4.html#SEC25">repository</A>
+<LI><A HREF="g++FAQ_4.html#SEC26">repo bugs</A>
+<LI><A HREF="g++FAQ_4.html#SEC27">Use GNU C library?</A>
+<LI><A HREF="g++FAQ_4.html#SEC28">Global constructor problems</A>
+<LI><A HREF="g++FAQ_4.html#SEC29">Strange assembler errors</A>
+<LI><A HREF="g++FAQ_4.html#SEC30">Other problems building libg++</A>
+<LI><A HREF="g++FAQ_4.html#SEC31">More size_t problems</A>
+<LI><A HREF="g++FAQ_4.html#SEC32">Rebuild libg++?</A>
+<LI><A HREF="g++FAQ_4.html#SEC33">co-existing versions</A>
+<LI><A HREF="g++FAQ_4.html#SEC34">Installing on Linux</A>
+<LI><A HREF="g++FAQ_4.html#SEC35">Linux Slackware 3.0</A>
+
+The Evolution of g++
+
+<LI><A HREF="g++FAQ_5.html#SEC37">version 2.7.x</A>: What's changed in 2.7.x from earlier versions
+<LI><A HREF="g++FAQ_5.html#SEC38">libstdc++</A>
+
+User Problems
+
+<LI><A HREF="g++FAQ_6.html#SEC40">missing virtual table</A>
+<LI><A HREF="g++FAQ_6.html#SEC41">for scope</A>
+<LI><A HREF="g++FAQ_6.html#SEC42">const constructor</A>
+<LI><A HREF="g++FAQ_6.html#SEC43">unused parameter warnings</A>
+<LI><A HREF="g++FAQ_6.html#SEC44">jump crosses initialization</A>
+<LI><A HREF="g++FAQ_6.html#SEC45">Demangler</A>
+<LI><A HREF="g++FAQ_6.html#SEC46">static data members</A>
+<LI><A HREF="g++FAQ_6.html#SEC47">internal compiler error</A>
+<LI><A HREF="g++FAQ_6.html#SEC48">bug reports</A>
+<LI><A HREF="g++FAQ_6.html#SEC49">porting to g++</A>
+<LI><A HREF="g++FAQ_6.html#SEC50">name mangling</A>
+<LI><A HREF="g++FAQ_6.html#SEC51">problems linking with other libraries</A>
+<LI><A HREF="g++FAQ_6.html#SEC52">documentation</A>
+<LI><A HREF="g++FAQ_6.html#SEC53">templates</A>
+<LI><A HREF="g++FAQ_6.html#SEC54">undefined templates</A>
+<LI><A HREF="g++FAQ_6.html#SEC55">redundant templates</A>
+<LI><A HREF="g++FAQ_6.html#SEC56">Standard Template Library</A>
+<LI><A HREF="g++FAQ_6.html#SEC57">STL and string</A>
+<LI><A HREF="g++FAQ_6.html#SEC58">exceptions</A>
+<LI><A HREF="g++FAQ_6.html#SEC59">namespaces</A>
+<LI><A HREF="g++FAQ_6.html#SEC60">agreement with standards</A>
+<LI><A HREF="g++FAQ_6.html#SEC61">compiling standard libraries</A>
+<LI><A HREF="g++FAQ_6.html#SEC62">debugging on SVR4 systems</A>
+<LI><A HREF="g++FAQ_6.html#SEC63">debugging problems on Solaris</A>
+<LI><A HREF="g++FAQ_6.html#SEC64">X11 conflicts with libg++</A>
+<LI><A HREF="g++FAQ_6.html#SEC65">assignment to streams</A>
+</UL>
+
+<P><HR><P>
+This document was generated on 30 July 1999 using the
+<A HREF="http://wwwcn.cern.ch/dci/texi2html/">texi2html</A>
+translator version 1.51a.</P>
+</BODY>
+</HTML>

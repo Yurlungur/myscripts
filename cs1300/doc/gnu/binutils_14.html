@@ -1,0 +1,334 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from ../../binutils/binutils.texi on 16 March 1999 -->
+
+<TITLE>gnu Binary Utilities - Create files needed to build and use DLLs</TITLE>
+<link href="binutils_15.html" rel=Next>
+<link href="binutils_13.html" rel=Previous>
+<link href="binutils_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="binutils_1.html">first</A>, <A HREF="binutils_13.html">previous</A>, <A HREF="binutils_15.html">next</A>, <A HREF="binutils_18.html">last</A> section, <A HREF="binutils_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC16" HREF="binutils_toc.html#TOC16">Create files needed to build and use DLLs</A></H1>
+<P>
+<A NAME="IDX117"></A>
+<A NAME="IDX118"></A>
+
+</P>
+<P>
+<CODE>dlltool</CODE> may be used to create the files needed to build and use
+dynamic link libraries (DLLs).
+
+</P>
+
+<BLOCKQUOTE>
+<P>
+<EM>Warning:</EM> <CODE>dlltool</CODE> is not always built as part of the binary
+utilities, since it is only useful for those targets which support DLLs.
+</BLOCKQUOTE>
+
+
+<PRE>
+dlltool [-d|--input-def <VAR>def-file-name</VAR>]
+        [-b|--base-file <VAR>base-file-name</VAR>]
+        [-e|--output-exp <VAR>exports-file-name</VAR>]
+        [-z|--output-def <VAR>def-file-name</VAR>]
+        [-l|--output-lib <VAR>library-file-name</VAR>]        
+        [--export-all-symbols] [--no-export-all-symbols]
+        [--exclude-symbols <VAR>list</VAR>]
+        [--no-default-excludes]
+        [-S|--as <VAR>path-to-assembler</VAR>] [-f|--as-flags <VAR>options</VAR>]
+        [-D|--dllname <VAR>name</VAR>] [-m|--machine <VAR>machine</VAR>]
+        [-a|--add-indirect] [-U|--add-underscore] [-k|--kill-at]
+        [-A|--add-stdcall-alias]
+        [-x|--no-idata4] [-c|--no-idata5] [-i|--interwork]
+        [-n|--nodelete] [-v|--verbose] [-h|--help] [-V|--version]
+        [object-file ...]
+</PRE>
+
+<P>
+<CODE>dlltool</CODE> reads its inputs, which can come from the <SAMP>`-d'</SAMP> and
+<SAMP>`-b'</SAMP> options as well as object files specified on the command
+line.  It then processes these inputs and if the <SAMP>`-e'</SAMP> option has
+been specified it creates a exports file.  If the <SAMP>`-l'</SAMP> option
+has been specified it creates a library file and if the <SAMP>`-z'</SAMP> option
+has been specified it creates a def file.  Any or all of the -e, -l
+and -z options can be present in one invocation of dlltool.
+
+</P>
+<P>
+When creating a DLL, along with the source for the DLL, it is necessary
+to have three other files.  <CODE>dlltool</CODE> can help with the creation of
+these files.
+
+</P>
+<P>
+The first file is a <SAMP>`.def'</SAMP> file which specifies which functions are
+exported from the DLL, which functions the DLL imports, and so on.  This
+is a text file and can be created by hand, or <CODE>dlltool</CODE> can be used
+to create it using the <SAMP>`-z'</SAMP> option.  In this case <CODE>dlltool</CODE>
+will scan the object files specified on its command line looking for
+those functions which have been specially marked as being exported and
+put entries for them in the .def file it creates.
+
+</P>
+<P>
+In order to mark a function as being exported from a DLL, it needs to
+have an <SAMP>`-export:&#60;name_of_function&#62;'</SAMP> entry in the <SAMP>`.drectve'</SAMP>
+section of the object file.  This can be done in C by using the
+asm() operator:
+
+</P>
+
+<PRE>
+  asm (".section .drectve");  
+  asm (".ascii \"-export:my_func\"");
+
+  int my_func (void) { ... }
+</PRE>
+
+<P>
+The second file needed for DLL creation is an exports file.  This file
+is linked with the object files that make up the body of the DLL and it
+handles the interface between the DLL and the outside world.  This is a
+binary file and it can be created by giving the <SAMP>`-e'</SAMP> option to
+<CODE>dlltool</CODE> when it is creating or reading in a .def file. 
+
+</P>
+<P>
+The third file needed for DLL creation is the library file that programs
+will link with in order to access the functions in the DLL.  This file
+can be created by giving the <SAMP>`-l'</SAMP> option to dlltool when it
+is creating or reading in a .def file.
+
+</P>
+<P>
+<CODE>dlltool</CODE> builds the library file by hand, but it builds the
+exports file by creating temporary files containing assembler statements
+and then assembling these.  The <SAMP>`-S'</SAMP> command line option can be
+used to specify the path to the assembler that dlltool will use,
+and the <SAMP>`-f'</SAMP> option can be used to pass specific flags to that
+assembler.  The <SAMP>`-n'</SAMP> can be used to prevent dlltool from deleting
+these temporary assembler files when it is done, and if <SAMP>`-n'</SAMP> is
+specified twice then this will prevent dlltool from deleting the
+temporary object files it used to build the library.
+
+</P>
+<P>
+Here is an example of creating a DLL from a source file <SAMP>`dll.c'</SAMP> and
+also creating a program (from an object file called <SAMP>`program.o'</SAMP>)
+that uses that DLL:
+
+</P>
+
+<PRE>
+  gcc -c dll.c
+  dlltool -e exports.o -l dll.lib dll.o
+  gcc dll.o exports.o -o dll.dll
+  gcc program.o dll.lib -o program
+</PRE>
+
+<P>
+The command line options have the following meanings:
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>-d <VAR>filename</VAR></CODE>
+<DD>
+<DT><CODE>--input-def <VAR>filename</VAR></CODE>
+<DD>
+<A NAME="IDX119"></A>
+Specifies the name of a .def file to be read in and processed.
+
+<DT><CODE>-b <VAR>filename</VAR></CODE>
+<DD>
+<DT><CODE>--base-file <VAR>filename</VAR></CODE>
+<DD>
+<A NAME="IDX120"></A>
+Specifies the name of a base file to be read in and processed.  The
+contents of this file will be added to the relocation section in the
+exports file generated by dlltool.
+
+<DT><CODE>-e <VAR>filename</VAR></CODE>
+<DD>
+<DT><CODE>--output-exp <VAR>filename</VAR></CODE>
+<DD>
+Specifies the name of the export file to be created by dlltool.
+
+<DT><CODE>-z <VAR>filename</VAR></CODE>
+<DD>
+<DT><CODE>--output-def <VAR>filename</VAR></CODE>
+<DD>
+Specifies the name of the .def file to be created by dlltool.
+
+<DT><CODE>-l <VAR>filename</VAR></CODE>
+<DD>
+<DT><CODE>--output-lib <VAR>filename</VAR></CODE>
+<DD>
+Specifies the name of the library file to be created by dlltool.
+
+<DT><CODE>--export-all-symbols</CODE>
+<DD>
+Treat all global and weak defined symbols found in the input object
+files as symbols to be exported.  There is a small list of symbols which
+are not exported by default; see the <CODE>--no-default-excludes</CODE>
+option.  You may add to the list of symbols to not export by using the
+<CODE>--exclude-symbols</CODE> option.
+
+<DT><CODE>--no-export-all-symbols</CODE>
+<DD>
+Only export symbols explicitly listed in an input .def file or in
+<SAMP>`.drectve'</SAMP> sections in the input object files.  This is the default
+behaviour.  The <SAMP>`.drectve'</SAMP> sections are created by <SAMP>`dllexport'</SAMP>
+attributes in the source code.
+
+<DT><CODE>--exclude-symbols <VAR>list</VAR></CODE>
+<DD>
+Do not export the symbols in <VAR>list</VAR>.  This is a list of symbol names
+separated by comma or colon characters.  The symbol names should not
+contain a leading underscore.  This is only meaningful when
+<CODE>--export-all-symbols</CODE> is used.
+
+<DT><CODE>--no-default-excludes</CODE>
+<DD>
+When <CODE>--export-all-symbols</CODE> is used, it will by default avoid
+exporting certain special symbols.  The current list of symbols to avoid
+exporting is <SAMP>`DllMain@12'</SAMP>, <SAMP>`DllEntryPoint@0'</SAMP>,
+<SAMP>`impure_ptr'</SAMP>.  You may use the <CODE>--no-default-excludes</CODE> option
+to go ahead and export these special symbols.  This is only meaningful
+when <CODE>--export-all-symbols</CODE> is used.
+
+<DT><CODE>-S <VAR>path</VAR></CODE>
+<DD>
+<DT><CODE>--as <VAR>path</VAR></CODE>
+<DD>
+Specifies the path, including the filename, of the assembler to be used
+to create the exports file.
+
+<DT><CODE>-f <VAR>switches</VAR></CODE>
+<DD>
+<DT><CODE>--as-flags <VAR>switches</VAR></CODE>
+<DD>
+Specifies any specific command line switches to be passed to the
+assembler when building the exports file.  This option will work even if
+the <SAMP>`-S'</SAMP> option is not used.  This option only takes one argument,
+and if it occurs more than once on the command line, then later
+occurrences will override earlier occurrences.  So if it is necessary to
+pass multiple switches to the assembler they should be enclosed in
+double quotes.
+
+<DT><CODE>-D <VAR>name</VAR></CODE>
+<DD>
+<DT><CODE>--dll-name <VAR>name</VAR></CODE>
+<DD>
+Specifies the name to be stored in the .def file as the name of the DLL
+when the <SAMP>`-e'</SAMP> option is used.  If this option is not present, then
+the filename given to the <SAMP>`-e'</SAMP> option will be used as the name of
+the DLL.
+
+<DT><CODE>-m <VAR>machine</VAR></CODE>
+<DD>
+<DT><CODE>-machine <VAR>machine</VAR></CODE>
+<DD>
+Specifies the type of machine for which the library file should be
+built.  <CODE>dlltool</CODE> has a built in default type, depending upon how
+it was created, but this option can be used to override that.  This is
+normally only useful when creating DLLs for an ARM processor, when the
+contents of the DLL are actually encode using THUMB instructions.
+
+<DT><CODE>-a</CODE>
+<DD>
+<DT><CODE>--add-indirect</CODE>
+<DD>
+Specifies that when <CODE>dlltool</CODE> is creating the exports file it
+should add a section which allows the exported functions to be
+referenced without using the import library.  Whatever the hell that
+means! 
+
+<DT><CODE>-U</CODE>
+<DD>
+<DT><CODE>--add-underscore</CODE>
+<DD>
+Specifies that when <CODE>dlltool</CODE> is creating the exports file it
+should prepend an underscore to the names of the exported functions. 
+
+<DT><CODE>-k</CODE>
+<DD>
+<DT><CODE>--kill-at</CODE>
+<DD>
+Specifies that when <CODE>dlltool</CODE> is creating the exports file it
+should not append the string <SAMP>`@ &#60;number&#62;'</SAMP>.  These numbers are
+called ordinal numbers and they represent another way of accessing the
+function in a DLL, other than by name.
+
+<DT><CODE>-A</CODE>
+<DD>
+<DT><CODE>--add-stdcall-alias</CODE>
+<DD>
+Specifies that when <CODE>dlltool</CODE> is creating the exports file it
+should add aliases for stdcall symbols without <SAMP>`@ &#60;number&#62;'</SAMP>
+in addition to the symbols with <SAMP>`@ &#60;number&#62;'</SAMP>.
+
+<DT><CODE>-x</CODE>
+<DD>
+<DT><CODE>--no-idata4</CODE>
+<DD>
+Specifies that when <CODE>dlltool</CODE> is creating the exports and library
+files it should omit the .idata4 section.  This is for compatibility
+with certain operating systems.
+
+<DT><CODE>-c</CODE>
+<DD>
+<DT><CODE>--no-idata5</CODE>
+<DD>
+Specifies that when <CODE>dlltool</CODE> is creating the exports and library
+files it should omit the .idata5 section.  This is for compatibility
+with certain operating systems.
+
+<DT><CODE>-i</CODE>
+<DD>
+<DT><CODE>--interwork</CODE>
+<DD>
+Specifies that <CODE>dlltool</CODE> should mark the objects in the library
+file and exports file that it produces as supporting interworking
+between ARM and THUMB code.
+
+<DT><CODE>-n</CODE>
+<DD>
+<DT><CODE>--nodelete</CODE>
+<DD>
+Makes <CODE>dlltool</CODE> preserve the temporary assembler files it used to
+create the exports file.  If this option is repeated then dlltool will
+also preserve the temporary object files it uses to create the library
+file. 
+
+<DT><CODE>-v</CODE>
+<DD>
+<DT><CODE>--verbose</CODE>
+<DD>
+Make dlltool describe what it is doing.
+
+<DT><CODE>-h</CODE>
+<DD>
+<DT><CODE>--help</CODE>
+<DD>
+Displays a list of command line options and then exits.
+
+<DT><CODE>-V</CODE>
+<DD>
+<DT><CODE>--version</CODE>
+<DD>
+Displays dlltool's version number and then exits.
+
+</DL>
+
+<P><HR><P>
+<p>Go to the <A HREF="binutils_1.html">first</A>, <A HREF="binutils_13.html">previous</A>, <A HREF="binutils_15.html">next</A>, <A HREF="binutils_18.html">last</A> section, <A HREF="binutils_toc.html">table of contents</A>.
+</BODY>
+</HTML>

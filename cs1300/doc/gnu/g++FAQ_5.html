@@ -1,0 +1,224 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from g++FAQ.texi on 30 July 1999 -->
+
+<TITLE>Frequently asked questions about the GNU C++ compiler - The Evolution of g++</TITLE>
+<link href="g++FAQ_6.html" rel=Next>
+<link href="g++FAQ_4.html" rel=Previous>
+<link href="g++FAQ_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="g++FAQ_1.html">first</A>, <A HREF="g++FAQ_4.html">previous</A>, <A HREF="g++FAQ_6.html">next</A>, <A HREF="g++FAQ_8.html">last</A> section, <A HREF="g++FAQ_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC36" HREF="g++FAQ_toc.html#TOC36">The Evolution of g++</A></H1>
+
+<P>
+This chapter discusses the evolution of g++ and describes what can be expected
+in the future.
+
+</P>
+
+<UL>
+<LI><A HREF="g++FAQ_5.html#SEC37">version 2.7.x</A>: What's changed in 2.7.x from earlier versions
+<LI><A HREF="g++FAQ_5.html#SEC38">libstdc++</A>
+</UL>
+
+
+
+<H2><A NAME="SEC37" HREF="g++FAQ_toc.html#TOC37">What's new in version 2.7.x of gcc/g++</A></H2>
+
+<P>
+[ This section is old now, since 2.8.x/egcs is the new stuff ] The
+latest 2.7.x version was 2.7.2.2, released February 10, 1997.  The only
+change between 2.7.2.1 and 2.7.2.2 is that support was added for using
+the GNU C library, version 2, on Linux; users not interested in that
+functionality have no reason to upgrade.  The previous version of
+gcc/g++ was 2.7.2.1, released August 14, 1996.  The libg++ version that
+should be used with any 2.7.x gcc/g++ is 2.7.2, released July 4, 1996.
+
+</P>
+<P>
+Note that gcc 2.7.2.1 just consists of several small patches to
+gcc-2.7.2.  The release is mainly
+intended to fix platform-specific bugs and does not affect the C++
+"front end" of the compiler (the part that parses your C++ code).
+
+</P>
+<P>
+The 2.7.x releases represent a great deal of work on the part of the g++
+maintainers to fix outstanding bugs and move the compiler closer to the
+current ANSI/ISO standards committee's working paper, including
+supporting many of the new features that have been added to the
+language.  I recommend that everyone read the NEWS file contained in the
+distribution (and that system administrators make the file available to
+their users).  I've borrowed liberally from this file here.
+
+</P>
+<P>
+<A NAME="IDX106"></A>
+If any features seem unfamiliar, you will probably want to
+look at the recently-released public review copy of the C++ Working
+Paper.  A new draft, dated 2 December 1996, has been released for
+public comment.  You can find it on the web at
+<TT>`http://www.cygnus.com/misc/wp/'</TT> or
+<TT>`http://www.maths.warwick.ac.uk/c++/pub/wp/html/cd2/'</TT>.
+See
+<TT>`http://www.setech.com/x3.html'</TT>
+or
+<TT>`http://www.maths.warwick.ac.uk/c++/pub/'</TT> to download the
+document in PostScript, PDF (Adobe Acrobat), HTML, or ASCII
+form.
+
+</P>
+<P>
+Here are the main points:
+
+</P>
+
+<UL>
+<LI>
+
+<A NAME="IDX107"></A>
+As described above, the scope of variables declared in the
+initialization part of a for statement has been changed; such variables
+are now visible only in the loop body.  Use <CODE>-fno-for-scope</CODE> to get
+the old behavior.  You'll need this flag to build groff version 1.09,
+Ptolemy, and many other free software packages.
+
+<LI>
+
+<A NAME="IDX108"></A>
+Code that does not use #pragma interface/implementation will most
+likely shrink dramatically, as g++ now only emits the vtable for a
+class in the translation unit where its first non-inline, non-abstract
+virtual function is defined.
+
+<LI>
+
+<A NAME="IDX109"></A>
+Support for automatic template instantiation has <EM>not</EM> been enabled
+in the official distribution, due to a disagreement over design philosophies.
+But you can get a patch from Cygnus to turn it on; retrieve the patch
+from <TT>`ftp://ftp.cygnus.com/pub/g++/gcc-2.7.2-repo.gz'</TT> to patch
+gcc-2.7.2 (there are also patches for earlier gcc versions).
+
+<LI>
+
+<A NAME="IDX110"></A>
+
+See section <A HREF="g++FAQ_6.html#SEC58">Problems and limitations with exceptions</A>
+
+<LI>
+
+<A NAME="IDX111"></A>
+Support for Run-Time Type Identification has been added with <CODE>-frtti</CODE>.
+This support is still in alpha; one major restriction is that any file
+compiled with <CODE>-frtti</CODE> must include <CODE>&#60;typeinfo&#62;</CODE> (<EM>not</EM>
+<CODE>typeinfo.h</CODE> as the NEWS file says).
+Also, all C++ code you link with (including libg++) has to be built with
+<CODE>-frtti</CODE>, so it's still tricky to use.
+
+<LI>
+
+<A NAME="IDX112"></A>
+Synthesis of compiler-generated constructors, destructors and
+assignment operators is now deferred until the functions are used.
+
+<LI>
+
+<A NAME="IDX113"></A>
+The parsing of expressions such as <CODE>a ? b : c = 1</CODE>
+has changed from
+<CODE>(a ? b : c) = 1</CODE> to <CODE>a ? b : (c = 1)</CODE>.  This is a new C/C++
+incompatibility brought to you by the ANSI/ISO standards committee.
+
+<LI>
+
+<A NAME="IDX114"></A>
+The operator keywords and, and_eq, bitand, bitor, compl, not, not_eq,
+or, or_eq, xor and xor_eq are now supported.  Use <CODE>-ansi</CODE> or
+<CODE>-foperator-names</CODE> to enable them.
+
+<LI>
+
+<A NAME="IDX115"></A>
+The <CODE>explicit</CODE> keyword is now supported.  <CODE>explicit</CODE> is used to mark
+constructors and type conversion operators that should not be used
+implicitly.
+
+<LI>
+
+<A NAME="IDX116"></A>
+Handling of user-defined type conversion has been improved.
+
+<LI>
+
+<A NAME="IDX117"></A>
+Explicit instantiation of template methods is now supported.  Also,
+<CODE>inline template class foo&#60;int&#62;;</CODE>
+can be used to emit only the vtable
+for a template class.
+
+<LI>
+
+<A NAME="IDX118"></A>
+With -fcheck-new, g++ will check the return value of all calls to
+operator new, and not attempt to modify a returned null pointer.
+
+<LI>
+
+collect2 now demangles linker output, and c++filt has become part of
+the gcc distribution.
+
+<LI>
+
+Improvements to template instantiation: only members actually used
+are instantiated.  (Actually this is not quite true: some inline
+templates that are not successfully inlined may be expanded even
+though they are not needed).
+
+</UL>
+
+
+
+<H2><A NAME="SEC38" HREF="g++FAQ_toc.html#TOC38">The GNU Standard C++ Library</A></H2>
+
+<P>
+The GNU Standard C++ Library (also called the "GNU ANSI C++ Library"
+in places in the code) is not libg++, though it is included in the
+libg++ distribution.  Rather, it contains classes and functions
+required by the ANSI/ISO standard.  The copyright conditions are the
+same as those for for the iostreams classes; the LGPL is not used
+(see section <A HREF="g++FAQ_7.html#SEC66">What are the rules for shipping code built with g++ and libg++?</A>).
+
+</P>
+<P>
+This library, libstdc++, is in the libg++ distribution in versions 2.6.2
+and later.  It requires at least gcc 2.6.3 to build the libg++-2.6.2
+version; use at least gcc 2.7.0 to build the libg++ 2.7.0 version.  It
+contains a hacked-up version of HP's implementation of the Standard
+Template Library (see section <A HREF="g++FAQ_6.html#SEC56">Does g++ support the Standard Template Library?</A>).  I've
+successfully used this Standard Template Library version to build
+a number of the demos you'll see on various web pages.
+
+</P>
+<P>
+As of version 2.7.0, the streams classes are now in libstdc++ instead of
+libg++, and libiostream is being phased out (don't use it).  The g++
+program searches this library.
+
+</P>
+<P>
+The maintainers of libg++ have de-emphasized work on the older libg++ classes
+in favor of enhancing libstdc++ to cover the full language, so while libg++
+will always be available, enhancements to it should not be expected.
+
+</P>
+<P><HR><P>
+<p>Go to the <A HREF="g++FAQ_1.html">first</A>, <A HREF="g++FAQ_4.html">previous</A>, <A HREF="g++FAQ_6.html">next</A>, <A HREF="g++FAQ_8.html">last</A> section, <A HREF="g++FAQ_toc.html">table of contents</A>.
+</BODY>
+</HTML>

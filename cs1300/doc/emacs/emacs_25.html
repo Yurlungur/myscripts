@@ -1,0 +1,1226 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Commands for Human Languages</TITLE>
+<P>Go to the <A HREF="emacs_24.html">previous</A>, <A HREF="emacs_26.html">next</A> section.<P>
+<A NAME="IDX723"></A>
+<A NAME="IDX724"></A>
+<H1><A NAME="SEC155" HREF="emacs_toc.html#SEC155">Commands for Human Languages</A></H1>
+<P>
+  The term <DFN>text</DFN> has two widespread meanings in our area of the
+computer field.  One is data that is a sequence of characters.  Any file
+that you edit with Emacs is text, in this sense of the word.  The other
+meaning is more restrictive: a sequence of characters in a human language
+for humans to read (possibly after processing by a text formatter), as
+opposed to a program or commands for a program.
+<P>
+  Human languages have syntactic/stylistic conventions that can be
+supported or used to advantage by editor commands: conventions involving
+words, sentences, paragraphs, and capital letters.  This chapter
+describes Emacs commands for all of these things.  There are also
+commands for <DFN>filling</DFN>, which means rearranging the lines of a
+paragraph to be approximately equal in length.  The commands for moving
+over and killing words, sentences and paragraphs, while intended
+primarily for editing text, are also often useful for editing programs.
+<P>
+  Emacs has several major modes for editing human language text.
+If the file contains text pure and simple, use Text mode, which customizes
+Emacs in small ways for the syntactic conventions of text.  For text which
+contains embedded commands for text formatters, Emacs has other major modes,
+each for a particular text formatter.  Thus, for input to TeX, you would
+use TeX mode; for input to nroff, Nroff mode.
+<P>
+<A NAME="IDX725"></A>
+<A NAME="IDX726"></A>
+<H2><A NAME="SEC156" HREF="emacs_toc.html#SEC156">Words</A></H2>
+<P>
+  Emacs has commands for moving over or operating on words.  By convention,
+the keys for them are all Meta characters.
+<P>
+<DL COMPACT>
+<DT><KBD>M-f</KBD>
+<DD>Move forward over a word (<CODE>forward-word</CODE>).
+<DT><KBD>M-b</KBD>
+<DD>Move backward over a word (<CODE>backward-word</CODE>).
+<DT><KBD>M-d</KBD>
+<DD>Kill up to the end of a word (<CODE>kill-word</CODE>).
+<DT><KBD>M-<KBD>DEL</KBD></KBD>
+<DD>Kill back to the beginning of a word (<CODE>backward-kill-word</CODE>).
+<DT><KBD>M-@</KBD>
+<DD>Mark the end of the next word (<CODE>mark-word</CODE>).
+<DT><KBD>M-t</KBD>
+<DD>Transpose two words or drag a word across other words
+(<CODE>transpose-words</CODE>).
+</DL>
+<P>
+  Notice how these keys form a series that parallels the
+character-based <KBD>C-f</KBD>, <KBD>C-b</KBD>, <KBD>C-d</KBD>, <KBD>C-t</KBD> and
+<KBD>DEL</KBD>.  <KBD>M-@</KBD> is related to <KBD>C-@</KBD>, which is an alias for
+<KBD>C-<KBD>SPC</KBD></KBD>.<A NAME="IDX727"></A>
+<A NAME="IDX728"></A>
+<A NAME="IDX729"></A>
+<A NAME="IDX730"></A>
+<P>
+  The commands <KBD>M-f</KBD> (<CODE>forward-word</CODE>) and <KBD>M-b</KBD>
+(<CODE>backward-word</CODE>) move forward and backward over words.  These
+Meta characters are thus analogous to the corresponding control
+characters, <KBD>C-f</KBD> and <KBD>C-b</KBD>, which move over single characters
+in the text.  The analogy extends to numeric arguments, which serve as
+repeat counts.  <KBD>M-f</KBD> with a negative argument moves backward, and
+<KBD>M-b</KBD> with a negative argument moves forward.  Forward motion
+stops right after the last letter of the word, while backward motion
+stops right before the first letter.<A NAME="IDX731"></A>
+<A NAME="IDX732"></A>
+<P>
+  <KBD>M-d</KBD> (<CODE>kill-word</CODE>) kills the word after point.  To be
+precise, it kills everything from point to the place <KBD>M-f</KBD> would
+move to.  Thus, if point is in the middle of a word, <KBD>M-d</KBD> kills
+just the part after point.  If some punctuation comes between point and the
+next word, it is killed along with the word.  (If you wish to kill only the
+next word but not the punctuation before it, simply do <KBD>M-f</KBD> to get
+the end, and kill the word backwards with <KBD>M-<KBD>DEL</KBD></KBD>.)
+<KBD>M-d</KBD> takes arguments just like <KBD>M-f</KBD>.
+<A NAME="IDX733"></A>
+<A NAME="IDX734"></A>
+<P>
+  <KBD>M-<KBD>DEL</KBD></KBD> (<CODE>backward-kill-word</CODE>) kills the word before
+point.  It kills everything from point back to where <KBD>M-b</KBD> would
+move to.  If point is after the space in <SAMP>`FOO, BAR'</SAMP>, then
+<SAMP>`FOO, '</SAMP> is killed.  (If you wish to kill just <SAMP>`FOO'</SAMP>, do
+<KBD>M-b M-d</KBD> instead of <KBD>M-<KBD>DEL</KBD></KBD>.)
+<A NAME="IDX735"></A>
+<A NAME="IDX736"></A>
+<P>
+  <KBD>M-t</KBD> (<CODE>transpose-words</CODE>) exchanges the word before or
+containing point with the following word.  The delimiter characters between
+the words do not move.  For example, <SAMP>`FOO, BAR'</SAMP> transposes into
+<SAMP>`BAR, FOO'</SAMP> rather than <SAMP>`BAR FOO,'</SAMP>.  See section <A HREF="emacs_18.html#SEC93">Transposing Text</A>, for
+more on transposition and on arguments to transposition commands.
+<A NAME="IDX737"></A>
+<A NAME="IDX738"></A>
+<P>
+  To operate on the next <VAR>n</VAR> words with an operation which applies
+between point and mark, you can either set the mark at point and then move
+over the words, or you can use the command <KBD>M-@</KBD> (<CODE>mark-word</CODE>)
+which does not move point, but sets the mark where <KBD>M-f</KBD> would move
+to.  <KBD>M-@</KBD> accepts a numeric argument that says how many words to
+scan for the place to put the mark.
+<P>
+  The word commands' understanding of syntax is completely controlled by
+the syntax table.  Any character can, for example, be declared to be a word
+delimiter.  See section <A HREF="emacs_35.html#SEC355">The Syntax Table</A>.
+<P>
+<A NAME="IDX739"></A>
+<A NAME="IDX740"></A>
+<H2><A NAME="SEC157" HREF="emacs_toc.html#SEC157">Sentences</A></H2>
+<P>
+  The Emacs commands for manipulating sentences and paragraphs are mostly
+on Meta keys, so as to be like the word-handling commands.
+<P>
+<DL COMPACT>
+<DT><KBD>M-a</KBD>
+<DD>Move back to the beginning of the sentence (<CODE>backward-sentence</CODE>).
+<DT><KBD>M-e</KBD>
+<DD>Move forward to the end of the sentence (<CODE>forward-sentence</CODE>).
+<DT><KBD>M-k</KBD>
+<DD>Kill forward to the end of the sentence (<CODE>kill-sentence</CODE>).
+<DT><KBD>C-x <KBD>DEL</KBD></KBD>
+<DD>Kill back to the beginning of the sentence (<CODE>backward-kill-sentence</CODE>).
+</DL>
+<A NAME="IDX741"></A>
+<A NAME="IDX742"></A>
+<A NAME="IDX743"></A>
+<A NAME="IDX744"></A>
+<P>
+  The commands <KBD>M-a</KBD> and <KBD>M-e</KBD> (<CODE>backward-sentence</CODE> and
+<CODE>forward-sentence</CODE>) move to the beginning and end of the current
+sentence, respectively.  They were chosen to resemble <KBD>C-a</KBD> and
+<KBD>C-e</KBD>, which move to the beginning and end of a line.  Unlike them,
+<KBD>M-a</KBD> and <KBD>M-e</KBD> if repeated or given numeric arguments move over
+successive sentences.  Emacs assumes that the typist's convention is
+followed, and thus considers a sentence to end wherever there is a
+<SAMP>`.'</SAMP>, <SAMP>`?'</SAMP> or <SAMP>`!'</SAMP> followed by the end of a line or two spaces,
+with any number of <SAMP>`)'</SAMP>, <SAMP>`]'</SAMP>, <SAMP>`''</SAMP>, or <SAMP>`"'</SAMP> characters
+allowed in between.  A sentence also begins or ends wherever a paragraph
+begins or ends.<P>
+  Neither <KBD>M-a</KBD> nor <KBD>M-e</KBD> moves past the newline or spaces beyond
+the sentence edge at which it is stopping.
+<A NAME="IDX745"></A>
+<A NAME="IDX746"></A>
+<A NAME="IDX747"></A>
+<A NAME="IDX748"></A>
+<P>
+  Just as <KBD>C-a</KBD> and <KBD>C-e</KBD> have a kill command, <KBD>C-k</KBD>, to go
+with them, so <KBD>M-a</KBD> and <KBD>M-e</KBD> have a corresponding kill command
+<KBD>M-k</KBD> (<CODE>kill-sentence</CODE>) which kills from point to the end of the
+sentence.  With minus one as an argument it kills back to the beginning of
+the sentence.  Larger arguments serve as a repeat count.<P>
+  There is a special command, <KBD>C-x <KBD>DEL</KBD></KBD>
+(<CODE>backward-kill-sentence</CODE>) for killing back to the beginning of a
+sentence, because this is useful when you change your mind in the middle of
+composing text.<A NAME="IDX749"></A>
+<P>
+  The variable <CODE>sentence-end</CODE> controls recognition of the end of a
+sentence.  It is a regexp that matches the last few characters of a
+sentence, together with the whitespace following the sentence.  Its
+normal value is
+<P>
+<PRE>
+"[.?!][]\"')]*\\($\\|\t\\|  \\)[ \t\n]*"
+</PRE>
+<P>
+This example is explained in the section on regexps.  See section <A HREF="emacs_17.html#SEC83">Syntax of Regular Expressions</A>.
+<P>
+<A NAME="IDX750"></A>
+<A NAME="IDX751"></A>
+<A NAME="IDX752"></A>
+<A NAME="IDX753"></A>
+<A NAME="IDX754"></A>
+<A NAME="IDX755"></A>
+<H2><A NAME="SEC158" HREF="emacs_toc.html#SEC158">Paragraphs</A></H2>
+<P>
+  The Emacs commands for manipulating paragraphs are also Meta keys.
+<P>
+<DL COMPACT>
+<DT><KBD>M-{</KBD>
+<DD>Move back to previous paragraph beginning (<CODE>backward-paragraph</CODE>).
+<DT><KBD>M-}</KBD>
+<DD>Move forward to next paragraph end (<CODE>forward-paragraph</CODE>).
+<DT><KBD>M-h</KBD>
+<DD>Put point and mark around this or next paragraph (<CODE>mark-paragraph</CODE>).
+</DL>
+<P>
+  <KBD>M-{</KBD> moves to the beginning of the current or previous paragraph,
+while <KBD>M-}</KBD> moves to the end of the current or next paragraph.
+Blank lines and text formatter command lines separate paragraphs and are
+not part of any paragraph.  Also, an indented line starts a new
+paragraph.
+<P>
+  In major modes for programs (as opposed to Text mode), paragraphs begin
+and end only at blank lines.  This makes the paragraph commands continue to
+be useful even though there are no paragraphs per se.
+<P>
+  When there is a fill prefix, then paragraphs are delimited by all lines
+which don't start with the fill prefix.  See section <A HREF="emacs_25.html#SEC160">Filling Text</A>.
+<A NAME="IDX756"></A>
+<A NAME="IDX757"></A>
+<P>
+  When you wish to operate on a paragraph, you can use the command
+<KBD>M-h</KBD> (<CODE>mark-paragraph</CODE>) to set the region around it.  This
+command puts point at the beginning and mark at the end of the paragraph
+point was in.  If point is between paragraphs (in a run of blank lines, or
+at a boundary), the paragraph following point is surrounded by point and
+mark.  If there are blank lines preceding the first line of the paragraph,
+one of these blank lines is included in the region.  Thus, for example,
+<KBD>M-h C-w</KBD> kills the paragraph around or after point.
+<A NAME="IDX758"></A>
+<A NAME="IDX759"></A>
+<P>
+  The precise definition of a paragraph boundary is controlled by the
+variables <CODE>paragraph-separate</CODE> and <CODE>paragraph-start</CODE>.  The
+value of <CODE>paragraph-start</CODE> is a regexp that should match any line
+that either starts or separates paragraphs.  The value of
+<CODE>paragraph-separate</CODE> is another regexp that should match only lines
+that separate paragraphs without being part of any paragraph.  Lines
+that start a new paragraph and are contained in it must match only
+<CODE>paragraph-start</CODE>, not <CODE>paragraph-separate</CODE>.  For example,
+normally <CODE>paragraph-start</CODE> is <CODE>"^[ <TT>\</TT>t<TT>\</TT>n<TT>\</TT>f]"</CODE> and
+<CODE>paragraph-separate</CODE> is <CODE>"^[ <TT>\</TT>t<TT>\</TT>f]*$"</CODE>.<P>
+  Normally it is desirable for page boundaries to separate paragraphs.
+The default values of these variables recognize the usual separator for
+pages.
+<P>
+<H2><A NAME="SEC159" HREF="emacs_toc.html#SEC159">Pages</A></H2>
+<A NAME="IDX760"></A>
+<A NAME="IDX761"></A>
+<P>
+  Files are often thought of as divided into <DFN>pages</DFN> by the
+<DFN>formfeed</DFN> character (ASCII control-L, octal code 014).  For example,
+if a file is printed on a line printer, each page of the file, in this
+sense, will start on a new page of paper.  Emacs treats a page-separator
+character just like any other character.  You can insert it with <KBD>C-q
+C-l</KBD>, or delete it with <KBD>DEL</KBD>.  Thus, you are free to paginate your file
+or not.  However, since pages are often meaningful divisions of the file,
+Emacs provides commands to move over them and operate on them.
+<P>
+<DL COMPACT>
+<DT><KBD>C-x [</KBD>
+<DD>Move point to previous page boundary (<CODE>backward-page</CODE>).
+<DT><KBD>C-x ]</KBD>
+<DD>Move point to next page boundary (<CODE>forward-page</CODE>).
+<DT><KBD>C-x C-p</KBD>
+<DD>Put point and mark around this page (or another page) (<CODE>mark-page</CODE>).
+<DT><KBD>C-x l</KBD>
+<DD>Count the lines in this page (<CODE>count-lines-page</CODE>).
+</DL>
+<A NAME="IDX762"></A>
+<A NAME="IDX763"></A>
+<A NAME="IDX764"></A>
+<A NAME="IDX765"></A>
+<P>
+  The <KBD>C-x [</KBD> (<CODE>backward-page</CODE>) command moves point to immediately
+after the previous page delimiter.  If point is already right after a page
+delimiter, it skips that one and stops at the previous one.  A numeric
+argument serves as a repeat count.  The <KBD>C-x ]</KBD> (<CODE>forward-page</CODE>)
+command moves forward past the next page delimiter.
+<A NAME="IDX766"></A>
+<A NAME="IDX767"></A>
+<P>
+  The <KBD>C-x C-p</KBD> command (<CODE>mark-page</CODE>) puts point at the beginning
+of the current page and the mark at the end.  The page delimiter at the end
+is included (the mark follows it).  The page delimiter at the front is
+excluded (point follows it).  This command can be followed by <KBD>C-w</KBD> to
+kill a page which is to be moved elsewhere.  If it is inserted after a page
+delimiter, at a place where <KBD>C-x ]</KBD> or <KBD>C-x [</KBD> would take you, then
+the page will be properly delimited before and after once again.
+<P>
+  A numeric argument to <KBD>C-x C-p</KBD> is used to specify which page to go
+to, relative to the current one.  Zero means the current page.  One means
+the next page, and -1 means the previous one.
+<A NAME="IDX768"></A>
+<A NAME="IDX769"></A>
+<P>
+  The <KBD>C-x l</KBD> command (<CODE>count-lines-page</CODE>) is good for deciding
+where to break a page in two.  It prints in the echo area the total number
+of lines in the current page, and then divides it up into those preceding
+the current line and those following, as in
+<P>
+<PRE>
+Page has 96 (72+25) lines
+</PRE>
+<P>
+  Notice that the sum is off by one; this is correct if point is not at the
+beginning of a line.
+<A NAME="IDX770"></A>
+<P>
+  The variable <CODE>page-delimiter</CODE> controls where pages begin.  Its
+value is a regexp that matches the beginning of a line that separates
+pages.  The normal value of this variable is <CODE>"^<TT>\</TT>f"</CODE>, which
+matches a formfeed character at the beginning of a line.
+<P>
+<A NAME="IDX771"></A>
+<H2><A NAME="SEC160" HREF="emacs_toc.html#SEC160">Filling Text</A></H2>
+<P>
+  With Auto Fill mode, text can be <DFN>filled</DFN> (broken up into lines
+that fit in a specified width) as you insert it.  If you alter existing
+text it may no longer be properly filled; then you can use the explicit
+fill commands to fill the paragraph again.
+<P>
+<A NAME="IDX772"></A>
+<A NAME="IDX773"></A>
+<H3><A NAME="SEC161" HREF="emacs_toc.html#SEC161">Auto Fill Mode</A></H3>
+<P>
+  <DFN>Auto Fill</DFN> mode is a minor mode in which lines are broken
+automatically when they become too wide.  Breaking happens only when
+you type a <KBD>SPC</KBD> or <KBD>RET</KBD>.
+<P>
+<DL COMPACT>
+<DT><KBD>M-x auto-fill-mode</KBD>
+<DD>Enable or disable Auto Fill mode.
+<DT><KBD><KBD>SPC</KBD></KBD>
+<DD><DT><KBD><KBD>RET</KBD></KBD>
+<DD>In Auto Fill mode, break lines when appropriate.
+</DL>
+<A NAME="IDX774"></A>
+<P>
+  <KBD>M-x auto-fill-mode</KBD> turns Auto Fill mode on if it was off, or off if
+it was on.  With a positive numeric argument it always turns Auto Fill mode
+on, and with a negative argument always turns it off.  You can see when
+Auto Fill mode is in effect by the presence of the word <SAMP>`Fill'</SAMP> in the
+mode line, inside the parentheses.  Auto Fill mode is a minor mode, turned
+on or off for each buffer individually.  See section <A HREF="emacs_35.html#SEC333">Minor Modes</A>.
+<P>
+  In Auto Fill mode, lines are broken automatically at spaces when they get
+longer than the desired width.  Line breaking and rearrangement takes place
+only when you type <KBD>SPC</KBD> or <KBD>RET</KBD>.  If you wish to insert a space
+or newline without permitting line-breaking, type <KBD>C-q <KBD>SPC</KBD></KBD> or
+<KBD>C-q <KBD>LFD</KBD></KBD> (recall that a newline is really a linefeed).  Also,
+<KBD>C-o</KBD> inserts a newline without line breaking.
+<P>
+  Auto Fill mode works well with Lisp mode, because when it makes a new
+line in Lisp mode it indents that line with <KBD>TAB</KBD>.  If a line ending in
+a comment gets too long, the text of the comment is split into two
+comment lines.  Optionally new comment delimiters are inserted at the end of
+the first line and the beginning of the second so that each line is
+a separate comment; the variable <CODE>comment-multi-line</CODE> controls the
+choice (see section <A HREF="emacs_26.html#SEC187">Manipulating Comments</A>).
+<P>
+  Auto Fill mode does not refill entire paragraphs.  It can break lines but
+cannot merge lines.  So editing in the middle of a paragraph can result in
+a paragraph that is not correctly filled.  The easiest way to make the
+paragraph properly filled again is usually with the explicit fill commands.
+<P>
+  Many users like Auto Fill mode and want to use it in all text files.
+The section on init files says how to arrange this permanently for yourself.
+See section <A HREF="emacs_35.html#SEC356">The Init File, <TT>`~/.emacs'</TT></A>.
+<P>
+<H3><A NAME="SEC162" HREF="emacs_toc.html#SEC162">Explicit Fill Commands</A></H3>
+<P>
+<DL COMPACT>
+<DT><KBD>M-q</KBD>
+<DD>Fill current paragraph (<CODE>fill-paragraph</CODE>).
+<DT><KBD>C-x f</KBD>
+<DD>Set the fill column (<CODE>set-fill-column</CODE>).
+<DT><KBD>M-x fill-region</KBD>
+<DD>Fill each paragraph in the region (<CODE>fill-region</CODE>).
+<DT><KBD>M-x fill-region-as-paragraph.</KBD>
+<DD>Fill the region, considering it as one paragraph.
+<DT><KBD>M-s</KBD>
+<DD>Center a line.
+</DL>
+<A NAME="IDX775"></A>
+<A NAME="IDX776"></A>
+<P>
+  To refill a paragraph, use the command <KBD>M-q</KBD>
+(<CODE>fill-paragraph</CODE>).  This operates on the paragraph that point is
+inside, or the one after point if point is between paragraphs.
+Refilling works by removing all the line-breaks, then inserting new ones
+where necessary.
+<A NAME="IDX777"></A>
+<A NAME="IDX778"></A>
+<A NAME="IDX779"></A>
+<P>
+  The command <KBD>M-s</KBD> (<CODE>center-line</CODE>) centers the current line
+within the current fill column.  With an argument, it centers several lines
+individually and moves past them.
+<A NAME="IDX780"></A>
+<P>
+  To refill many paragraphs, use <KBD>M-x fill-region</KBD>, which
+divides the region into paragraphs and fills each of them.
+<A NAME="IDX781"></A>
+<P>
+  <KBD>M-q</KBD> and <CODE>fill-region</CODE> use the same criteria as <KBD>M-h</KBD>
+for finding paragraph boundaries (see section <A HREF="emacs_25.html#SEC158">Paragraphs</A>).  For more
+control, you can use <KBD>M-x fill-region-as-paragraph</KBD>, which refills
+everything between point and mark.  This command deletes any blank lines
+within the region, so separate blocks of text end up combined into one
+block.<A NAME="IDX782"></A>
+<P>
+  A numeric argument to <KBD>M-q</KBD> causes it to <DFN>justify</DFN> the text as
+well as filling it.  This means that extra spaces are inserted to make
+the right margin line up exactly at the fill column.  To remove the
+extra spaces, use <KBD>M-q</KBD> with no argument.  (Likewise for
+<CODE>fill-region</CODE>.)
+<A NAME="IDX783"></A>
+<A NAME="IDX784"></A>
+<P>
+  When <CODE>adaptive-fill-mode</CODE> is non-<CODE>nil</CODE> (which is normally
+the case), if you use <CODE>fill-region-as-paragraph</CODE> on an indented
+paragraph and you don't have a fill prefix, it uses the indentation of
+the second line of the paragraph as the fill prefix.  The effect of
+adaptive filling is not noticeable in Text mode, because an indented
+line counts as a paragraph starter and thus each line of an indented
+paragraph is considered a paragraph of its own.  But you do notice the
+effect in Indented Text mode and some other major modes.
+<A NAME="IDX785"></A>
+<P>
+  The maximum line width for filling is in the variable <CODE>fill-column</CODE>.
+Altering the value of <CODE>fill-column</CODE> makes it local to the current
+buffer; until that time, the default value is in effect.  The default is
+initially 70.  See section <A HREF="emacs_35.html#SEC338">Local Variables</A>.
+<A NAME="IDX786"></A>
+<A NAME="IDX787"></A>
+<P>
+  The easiest way to set <CODE>fill-column</CODE> is to use the command <KBD>C-x
+f</KBD> (<CODE>set-fill-column</CODE>).  With no argument, it sets <CODE>fill-column</CODE>
+to the current horizontal position of point.  With a numeric argument, it
+uses that as the new fill column.
+<P>
+<H3><A NAME="SEC163" HREF="emacs_toc.html#SEC163">The Fill Prefix</A></H3>
+<A NAME="IDX788"></A>
+<P>
+  To fill a paragraph in which each line starts with a special marker
+(which might be a few spaces, giving an indented paragraph), use the
+<DFN>fill prefix</DFN> feature.  The fill prefix is a string which Emacs expects
+every line to start with, and which is not included in filling.
+<P>
+<DL COMPACT>
+<DT><KBD>C-x .</KBD>
+<DD>Set the fill prefix (<CODE>set-fill-prefix</CODE>).
+<DT><KBD>M-q</KBD>
+<DD>Fill a paragraph using current fill prefix (<CODE>fill-paragraph</CODE>).
+<DT><KBD>M-x fill-individual-paragraphs</KBD>
+<DD>Fill the region, considering each change of indentation as starting a
+new paragraph.
+<DT><KBD>M-x fill-nonuniform-paragraphs</KBD>
+<DD>Fill the region, considering only paragraph-separator lines as starting
+a new paragraph.
+</DL>
+<A NAME="IDX789"></A>
+<A NAME="IDX790"></A>
+<P>
+  To specify a fill prefix, move to a line that starts with the desired
+prefix, put point at the end of the prefix, and give the command
+<KBD>C-x .</KBD> (<CODE>set-fill-prefix</CODE>).  That's a period after the
+<KBD>C-x</KBD>.  To turn off the fill prefix, specify an empty prefix: type
+<KBD>C-x .</KBD> with point at the beginning of a line.<P>
+  When a fill prefix is in effect, the fill commands remove the fill prefix
+from each line before filling and insert it on each line after filling.
+The fill prefix is also inserted on new lines made automatically by Auto
+Fill mode.  Lines that do not start with the fill prefix are considered to
+start paragraphs, both in <KBD>M-q</KBD> and the paragraph commands; this is
+just right if you are using paragraphs with hanging indentation (every line
+indented except the first one).  Lines which are blank or indented once the
+prefix is removed also separate or start paragraphs; this is what you want
+if you are writing multi-paragraph comments with a comment delimiter on
+each line.
+<P>
+  For example, if <CODE>fill-column</CODE> is 40 and you set the fill prefix
+to <SAMP>`;; '</SAMP>, then <KBD>M-q</KBD> in the following text
+<P>
+<PRE>
+;; This is an
+;; example of a paragraph
+;; inside a Lisp-style comment.
+</PRE>
+<P>
+produces this:
+<P>
+<PRE>
+;; This is an example of a paragraph
+;; inside a Lisp-style comment.
+</PRE>
+<P>
+  The <KBD>C-o</KBD> command inserts the fill prefix on new lines it creates,
+when you use it at the beginning of a line (see section <A HREF="emacs_8.html#SEC25">Blank Lines</A>).
+Conversely, the command <KBD>M-^</KBD> deletes the prefix (if it occurs)
+after the newline that it deletes (see section <A HREF="emacs_24.html#SEC151">Indentation</A>).
+<A NAME="IDX791"></A>
+<P>
+  You can use <KBD>M-x fill-individual-paragraphs</KBD> to set the fill
+prefix for each paragraph automatically.  This command divides the
+region into paragraphs, treating every change in the amount of
+indentation as the start of a new paragraph, and fills each of these
+paragraphs.  Thus, all the lines in one "paragraph" have the same
+amount of indentation.  That indentation serves as the fill prefix for
+that paragraph.
+<A NAME="IDX792"></A>
+<P>
+  <KBD>M-x fill-nonuniform-paragraphs</KBD> is a similar command that divides
+the region into paragraphs in a different way.  It considers only
+paragraph-separating lines (as defined by <CODE>paragraph-separate</CODE>) as
+starting a new paragraph.  Since this means that the lines of one
+paragraph may have different amounts of indentation, the fill prefix
+used is the smallest amount of indentation of any of the lines of the
+paragraph.
+<A NAME="IDX793"></A>
+<P>
+  The fill prefix is stored in the variable <CODE>fill-prefix</CODE>.  Its value
+is a string, or <CODE>nil</CODE> when there is no fill prefix.  This is a
+per-buffer variable; altering the variable affects only the current buffer,
+but there is a default value which you can change as well.  See section <A HREF="emacs_35.html#SEC338">Local Variables</A>.
+<P>
+<A NAME="IDX794"></A>
+<H2><A NAME="SEC164" HREF="emacs_toc.html#SEC164">Case Conversion Commands</A></H2>
+<P>
+  Emacs has commands for converting either a single word or any arbitrary
+range of text to upper case or to lower case.
+<P>
+<DL COMPACT>
+<DT><KBD>M-l</KBD>
+<DD>Convert following word to lower case (<CODE>downcase-word</CODE>).
+<DT><KBD>M-u</KBD>
+<DD>Convert following word to upper case (<CODE>upcase-word</CODE>).
+<DT><KBD>M-c</KBD>
+<DD>Capitalize the following word (<CODE>capitalize-word</CODE>).
+<DT><KBD>C-x C-l</KBD>
+<DD>Convert region to lower case (<CODE>downcase-region</CODE>).
+<DT><KBD>C-x C-u</KBD>
+<DD>Convert region to upper case (<CODE>upcase-region</CODE>).
+</DL>
+<A NAME="IDX795"></A>
+<A NAME="IDX796"></A>
+<A NAME="IDX797"></A>
+<A NAME="IDX798"></A>
+<A NAME="IDX799"></A>
+<A NAME="IDX800"></A>
+<A NAME="IDX801"></A>
+<A NAME="IDX802"></A>
+<A NAME="IDX803"></A>
+<P>
+  The word conversion commands are the most useful.  <KBD>M-l</KBD>
+(<CODE>downcase-word</CODE>) converts the word after point to lower case, moving
+past it.  Thus, repeating <KBD>M-l</KBD> converts successive words.
+<KBD>M-u</KBD> (<CODE>upcase-word</CODE>) converts to all capitals instead, while
+<KBD>M-c</KBD> (<CODE>capitalize-word</CODE>) puts the first letter of the word
+into upper case and the rest into lower case.  All these commands convert
+several words at once if given an argument.  They are especially convenient
+for converting a large amount of text from all upper case to mixed case,
+because you can move through the text using <KBD>M-l</KBD>, <KBD>M-u</KBD> or
+<KBD>M-c</KBD> on each word as appropriate, occasionally using <KBD>M-f</KBD> instead
+to skip a word.
+<P>
+  When given a negative argument, the word case conversion commands apply
+to the appropriate number of words before point, but do not move point.
+This is convenient when you have just typed a word in the wrong case: you
+can give the case conversion command and continue typing.
+<P>
+  If a word case conversion command is given in the middle of a word, it
+applies only to the part of the word which follows point.  This is just
+like what <KBD>M-d</KBD> (<CODE>kill-word</CODE>) does.  With a negative argument,
+case conversion applies only to the part of the word before point.
+<A NAME="IDX804"></A>
+<A NAME="IDX805"></A>
+<A NAME="IDX806"></A>
+<A NAME="IDX807"></A>
+<P>
+  The other case conversion commands are <KBD>C-x C-u</KBD>
+(<CODE>upcase-region</CODE>) and <KBD>C-x C-l</KBD> (<CODE>downcase-region</CODE>), which
+convert everything between point and mark to the specified case.  Point and
+mark do not move.
+<P>
+  The region case conversion commands <CODE>upcase-region</CODE> and
+<CODE>downcase-region</CODE> are normally disabled.  This means that they ask
+for confirmation if you try to use them.  When you confirm, you may
+enable the command, which means it will not ask for confirmation again.
+See section <A HREF="emacs_35.html#SEC353">Disabling Commands</A>.
+<P>
+<A NAME="IDX808"></A>
+<A NAME="IDX809"></A>
+<A NAME="IDX810"></A>
+<H2><A NAME="SEC165" HREF="emacs_toc.html#SEC165">Text Mode</A></H2>
+<P>
+  When you edit files of text in a human language, it's more convenient
+to use Text mode rather than Fundamental mode.  Invoke <KBD>M-x
+text-mode</KBD> to enter Text mode.  In Text mode, <KBD>TAB</KBD> runs the
+function <CODE>tab-to-tab-stop</CODE>, which allows you to use arbitrary tab
+stops set with <KBD>M-x edit-tab-stops</KBD> (see section <A HREF="emacs_24.html#SEC153">Tab Stops</A>).  Features
+concerned with comments in programs are turned off except when
+explicitly invoked.  The syntax table is changed so that periods are not
+considered part of a word, while apostrophes, backspaces and underlines
+are.
+<A NAME="IDX811"></A>
+<A NAME="IDX812"></A>
+<A NAME="IDX813"></A>
+<A NAME="IDX814"></A>
+<P>
+  A similar variant mode is Indented Text mode, intended for editing
+text in which most lines are indented.  This mode defines <KBD>TAB</KBD> to
+run <CODE>indent-relative</CODE> (see section <A HREF="emacs_24.html#SEC151">Indentation</A>), and makes Auto Fill
+indent the lines it creates.  The result is that normally a line made by
+Auto Filling, or by <KBD>LFD</KBD>, is indented just like the previous line.
+In Indented Text mode, only blank lines separate paragraphs--indented
+lines continue the current paragraph.  Use <KBD>M-x indented-text-mode</KBD>
+to select this mode.
+<A NAME="IDX815"></A>
+<P>
+  Text mode, and all the modes based on it, define <KBD>M-<KBD>TAB</KBD></KBD> as
+the command <CODE>ispell-complete-word</CODE>, which performs completion of
+the partial word in the buffer before point, using the spelling
+dictionary as the space of possible words.  See section <A HREF="emacs_18.html#SEC95">Checking and Correcting Spelling</A>.
+<A NAME="IDX816"></A>
+<P>
+  Entering Text mode or Indented Text mode runs the hook
+<CODE>text-mode-hook</CODE>.  Other major modes related to Text mode also run
+this hook, followed by hooks of their own; this includes Nroff mode,
+TeX mode, Outline mode and Mail mode.  Hook functions on
+<CODE>text-mode-hook</CODE> can look at the value of <CODE>major-mode</CODE> to see
+which of these modes is actually being entered.  See section <A HREF="emacs_35.html#SEC337">Hooks</A>.
+<P>
+<A NAME="IDX817"></A>
+<A NAME="IDX818"></A>
+<A NAME="IDX819"></A>
+<A NAME="IDX820"></A>
+<H2><A NAME="SEC166" HREF="emacs_toc.html#SEC166">Outline Mode</A></H2>
+<A NAME="IDX821"></A>
+<A NAME="IDX822"></A>
+<P>
+  Outline mode is a major mode much like Text mode but intended for
+editing outlines.  It allows you to make parts of the text temporarily
+invisible so that you can see just the overall structure of the
+outline.  Type <KBD>M-x outline-mode</KBD> to switch to Outline mode as the
+major mode of the current buffer.  Type <KBD>M-x outline-minor-mode</KBD>
+to enable Outline mode as a minor mode in the current buffer.
+When Outline minor mode is enabled, the <KBD>C-c</KBD> commands of Outline
+mode replace those of the major mode.
+<P>
+  When a line is invisible in outline mode, it does not appear on the
+screen.  The screen appears exactly as if the invisible line
+were deleted, except that an ellipsis (three periods in a row) appears
+at the end of the previous visible line (only one ellipsis no matter
+how many invisible lines follow).
+<P>
+  All editing commands treat the text of the invisible line as part of the
+previous visible line.  For example, <KBD>C-n</KBD> moves onto the next visible
+line.  Killing an entire visible line, including its terminating newline,
+really kills all the following invisible lines along with it; yanking it
+all back yanks the invisible lines and they remain invisible.
+<A NAME="IDX823"></A>
+<P>
+  Entering Outline mode runs the hook <CODE>text-mode-hook</CODE> followed by
+the hook <CODE>outline-mode-hook</CODE> (see section <A HREF="emacs_35.html#SEC337">Hooks</A>).
+<P>
+<H3><A NAME="SEC167" HREF="emacs_toc.html#SEC167">Format of Outlines</A></H3>
+<A NAME="IDX824"></A>
+<A NAME="IDX825"></A>
+<P>
+  Outline mode assumes that the lines in the buffer are of two types:
+<DFN>heading lines</DFN> and <DFN>body lines</DFN>.  A heading line represents a topic in the
+outline.  Heading lines start with one or more stars; the number of stars
+determines the depth of the heading in the outline structure.  Thus, a
+heading line with one star is a major topic; all the heading lines with
+two stars between it and the next one-star heading are its subtopics; and
+so on.  Any line that is not a heading line is a body line.  Body lines
+belong with the preceding heading line.  Here is an example:
+<P>
+<PRE>
+* Food
+
+This is the body,
+which says something about the topic of food.
+
+** Delicious Food
+
+This is the body of the second-level header.
+
+** Distasteful Food
+
+This could have
+a body too, with
+several lines.
+
+*** Dormitory Food
+
+* Shelter
+
+A second first-level topic with its header line.
+</PRE>
+<P>
+  A heading line together with all following body lines is called
+collectively an <DFN>entry</DFN>.  A heading line together with all following
+deeper heading lines and their body lines is called a <DFN>subtree</DFN>.
+<A NAME="IDX826"></A>
+<P>
+  You can customize the criterion for distinguishing heading lines
+by setting the variable <CODE>outline-regexp</CODE>.  Any line whose
+beginning has a match for this regexp is considered a heading line.
+Matches that start within a line (not at the beginning) do not count.
+The length of the matching text determines the level of the heading;
+longer matches make a more deeply nested level.  Thus, for example,
+if a text formatter has commands <SAMP>`@chapter'</SAMP>, <SAMP>`@section'</SAMP>
+and <SAMP>`@subsection'</SAMP> to divide the document into chapters and
+sections, you could make those lines count as heading lines by
+setting <CODE>outline-regexp</CODE> to <SAMP>`"@chap\\|@\\(sub\\)*section"'</SAMP>.
+Note the trick: the two words <SAMP>`chapter'</SAMP> and <SAMP>`section'</SAMP> are equally
+long, but by defining the regexp to match only <SAMP>`chap'</SAMP> we ensure
+that the length of the text matched on a chapter heading is shorter,
+so that Outline mode will know that sections are contained in chapters.
+This works as long as no other command starts with <SAMP>`@chap'</SAMP>.
+<P>
+  Outline mode makes a line invisible by changing the newline before it
+into an ASCII control-M (code 015).  Most editing commands that work on
+lines treat an invisible line as part of the previous line because,
+strictly speaking, it <EM>is</EM> part of that line, since there is no longer a
+newline in between.  When you save the file in Outline mode, control-M
+characters are saved as newlines, so the invisible lines become ordinary
+lines in the file.  But saving does not change the visibility status of a
+line inside Emacs.
+<P>
+<H3><A NAME="SEC168" HREF="emacs_toc.html#SEC168">Outline Motion Commands</A></H3>
+<P>
+  There are some special motion commands in Outline mode that move
+backward and forward to heading lines.
+<P>
+<DL COMPACT>
+<DT><KBD>C-c C-n</KBD>
+<DD>Move point to the next visible heading line
+(<CODE>outline-next-visible-heading</CODE>).
+<DT><KBD>C-c C-p</KBD>
+<DD>Move point to the previous visible heading line <BR>
+(<CODE>outline-previous-visible-heading</CODE>).
+<DT><KBD>C-c C-f</KBD>
+<DD>Move point to the next visible heading line at the same level
+as the one point is on (<CODE>outline-forward-same-level</CODE>).
+<DT><KBD>C-c C-b</KBD>
+<DD>Move point to the previous visible heading line at the same level
+(<CODE>outline-backward-same-level</CODE>).
+<DT><KBD>C-c C-u</KBD>
+<DD>Move point up to a lower-level (more inclusive) visible heading line
+(<CODE>outline-up-heading</CODE>).
+</DL>
+<A NAME="IDX827"></A>
+<A NAME="IDX828"></A>
+<A NAME="IDX829"></A>
+<A NAME="IDX830"></A>
+<P>
+  <KBD>C-c C-n</KBD> (<CODE>next-visible-heading</CODE>) moves down to the next
+heading line.  <KBD>C-c C-p</KBD> (<CODE>previous-visible-heading</CODE>) moves
+similarly backward.  Both accept numeric arguments as repeat counts.  The
+names emphasize that invisible headings are skipped, but this is not really
+a special feature.  All editing commands that look for lines ignore the
+invisible lines automatically.<A NAME="IDX831"></A>
+<A NAME="IDX832"></A>
+<A NAME="IDX833"></A>
+<A NAME="IDX834"></A>
+<A NAME="IDX835"></A>
+<A NAME="IDX836"></A>
+<P>
+  More powerful motion commands understand the level structure of headings.
+<KBD>C-c C-f</KBD> (<CODE>outline-forward-same-level</CODE>) and
+<KBD>C-c C-b</KBD> (<CODE>outline-backward-same-level</CODE>) move from one
+heading line to another visible heading at the same depth in
+the outline.  <KBD>C-c C-u</KBD> (<CODE>outline-up-heading</CODE>) moves
+backward to another heading that is less deeply nested.
+<P>
+<H3><A NAME="SEC169" HREF="emacs_toc.html#SEC169">Outline Visibility Commands</A></H3>
+<P>
+  The other special commands of outline mode are used to make lines visible
+or invisible.  Their names all start with <CODE>hide</CODE> or <CODE>show</CODE>.
+Most of them fall into pairs of opposites.  They are not undoable; instead,
+you can undo right past them.  Making lines visible or invisible is simply
+not recorded by the undo mechanism.
+<P>
+<DL COMPACT>
+<DT><KBD>M-x hide-body</KBD>
+<DD>Make all body lines in the buffer invisible.
+<DT><KBD>M-x show-all</KBD>
+<DD>Make all lines in the buffer visible.
+<DT><KBD>C-c C-h</KBD>
+<DD>Make everything under this heading invisible, not including this
+heading itself<BR> (<CODE>hide-subtree</CODE>).
+<DT><KBD>C-c C-s</KBD>
+<DD>Make everything under this heading visible, including body,
+subheadings, and their bodies (<CODE>show-subtree</CODE>).
+<DT><KBD>M-x hide-leaves</KBD>
+<DD>Make the body of this heading line, and of all its subheadings,
+invisible.
+<DT><KBD>M-x show-branches</KBD>
+<DD>Make all subheadings of this heading line, at all levels, visible.
+<DT><KBD>C-c C-i</KBD>
+<DD>Make immediate subheadings (one level down) of this heading line
+visible (<CODE>show-children</CODE>).
+<DT><KBD>M-x hide-entry</KBD>
+<DD>Make this heading line's body invisible.
+<DT><KBD>M-x show-entry</KBD>
+<DD>Make this heading line's body visible.
+</DL>
+<A NAME="IDX837"></A>
+<A NAME="IDX838"></A>
+<P>
+  Two commands that are exact opposites are <KBD>M-x hide-entry</KBD> and
+<KBD>M-x show-entry</KBD>.  They are used with point on a heading line, and
+apply only to the body lines of that heading.  The subtopics and their
+bodies are not affected.
+<A NAME="IDX839"></A>
+<A NAME="IDX840"></A>
+<A NAME="IDX841"></A>
+<A NAME="IDX842"></A>
+<A NAME="IDX843"></A>
+<P>
+  Two more powerful opposites are <KBD>C-c C-h</KBD> (<CODE>hide-subtree</CODE>) and
+<KBD>C-c C-s</KBD> (<CODE>show-subtree</CODE>).  Both expect to be used when point is
+on a heading line, and both apply to all the lines of that heading's
+<DFN>subtree</DFN>: its body, all its subheadings, both direct and indirect, and
+all of their bodies.  In other words, the subtree contains everything
+following this heading line, up to and not including the next heading of
+the same or higher rank.<A NAME="IDX844"></A>
+<A NAME="IDX845"></A>
+<P>
+  Intermediate between a visible subtree and an invisible one is having
+all the subheadings visible but none of the body.  There are two commands
+for doing this, depending on whether you want to hide the bodies or
+make the subheadings visible.  They are <KBD>M-x hide-leaves</KBD> and
+<KBD>M-x show-branches</KBD>.
+<A NAME="IDX846"></A>
+<A NAME="IDX847"></A>
+<P>
+  A little weaker than <CODE>show-branches</CODE> is <KBD>C-c C-i</KBD>
+(<CODE>show-children</CODE>).  It makes just the direct subheadings
+visible--those one level down.  Deeper subheadings remain invisible, if
+they were invisible.<A NAME="IDX848"></A>
+<A NAME="IDX849"></A>
+<P>
+  Two commands have a blanket effect on the whole file.  <KBD>M-x hide-body</KBD>
+makes all body lines invisible, so that you see just the outline structure.
+<KBD>M-x show-all</KBD> makes all lines visible.  These commands can be thought
+of as a pair of opposites even though <KBD>M-x show-all</KBD> applies to more
+than just body lines.
+<P>
+  You can turn off the use of ellipses at the ends of visible lines by
+setting <CODE>selective-display-ellipses</CODE> to <CODE>nil</CODE>.  Then there is
+no visible indication of the presence of invisible lines.
+<P>
+<A NAME="IDX850"></A>
+<A NAME="IDX851"></A>
+<A NAME="IDX852"></A>
+<A NAME="IDX853"></A>
+<A NAME="IDX854"></A>
+<A NAME="IDX855"></A>
+<A NAME="IDX856"></A>
+<H2><A NAME="SEC170" HREF="emacs_toc.html#SEC170">TeX Mode</A></H2>
+<P>
+  TeX is a powerful text formatter written by Donald Knuth; it is also
+free, like GNU Emacs.  LaTeX is a simplified input format for TeX,
+implemented by TeX macros; it comes with TeX.  SliTeX is a special
+form of LaTeX.<P>
+  Emacs has a special TeX mode for editing TeX input files.
+It provides facilities for checking the balance of delimiters and for
+invoking TeX on all or part of the file.
+<A NAME="IDX857"></A>
+<P>
+  TeX mode has three variants, Plain TeX mode, LaTeX mode, and
+SliTeX mode (these three distinct major modes differ only slightly).
+They are designed for editing the three different formats.  The command
+<KBD>M-x tex-mode</KBD> looks at the contents of the buffer to determine
+whether the contents appear to be either LaTeX input or SliTeX
+input; it then selects the appropriate mode.  If it can't tell which is
+right (e.g., the buffer is empty), the variable <CODE>tex-default-mode</CODE>
+controls which mode is used.
+<P>
+  When <KBD>M-x tex-mode</KBD> does not guess right, you can use the commands
+<KBD>M-x plain-tex-mode</KBD>, <KBD>M-x latex-mode</KBD>, and <KBD>M-x
+slitex-mode</KBD> to select explicitly the particular variants of TeX
+mode.
+<P>
+<H3><A NAME="SEC171" HREF="emacs_toc.html#SEC171">TeX Editing Commands</A></H3>
+<P>
+  Here are the special commands provided in TeX mode for editing the
+text of the file.
+<P>
+<DL COMPACT>
+<DT><KBD>"</KBD>
+<DD>Insert, according to context, either <SAMP>`"'</SAMP> or <SAMP>`"'</SAMP> or
+<SAMP>`"'</SAMP> (<CODE>tex-insert-quote</CODE>).
+<DT><KBD><KBD>LFD</KBD></KBD>
+<DD>Insert a paragraph break (two newlines) and check the previous
+paragraph for unbalanced braces or dollar signs
+(<CODE>tex-terminate-paragraph</CODE>).
+<DT><KBD>M-x validate-tex-region</KBD>
+<DD>Check each paragraph in the region for unbalanced braces or dollar signs.
+<DT><KBD>C-c {</KBD>
+<DD>Insert <SAMP>`{}'</SAMP> and position point between them (<CODE>tex-insert-braces</CODE>).
+<DT><KBD>C-c }</KBD>
+<DD>Move forward past the next unmatched close brace (<CODE>up-list</CODE>).
+</DL>
+<A NAME="IDX858"></A>
+<A NAME="IDX859"></A>
+<P>
+  In TeX, the character <SAMP>`"'</SAMP> is not normally used; we use
+<SAMP>`"'</SAMP> to start a quotation and <SAMP>`"'</SAMP> to end one.  To make
+editing easier under this formatting convention, TeX mode overrides
+the normal meaning of the key <KBD>"</KBD> with a command that inserts a pair
+of single-quotes or backquotes (<CODE>tex-insert-quote</CODE>).  To be
+precise, this command inserts <SAMP>`"'</SAMP> after whitespace or an open
+brace, <SAMP>`"'</SAMP> after a backslash, and <SAMP>`"'</SAMP> after any other
+character.
+<P>
+  If you need the character <SAMP>`"'</SAMP> itself in unusual contexts, use
+<KBD>C-q</KBD> to insert it.  Also, <KBD>"</KBD> with a numeric argument always
+inserts that number of <SAMP>`"'</SAMP> characters.
+<P>
+  In TeX mode, <SAMP>`$'</SAMP> has a special syntax code which attempts to
+understand the way TeX math mode delimiters match.  When you insert a
+<SAMP>`$'</SAMP> that is meant to exit math mode, the position of the matching
+<SAMP>`$'</SAMP> that entered math mode is displayed for a second.  This is the
+same feature that displays the open brace that matches a close brace that
+is inserted.  However, there is no way to tell whether a <SAMP>`$'</SAMP> enters
+math mode or leaves it; so when you insert a <SAMP>`$'</SAMP> that enters math
+mode, the previous <SAMP>`$'</SAMP> position is shown as if it were a match, even
+though they are actually unrelated.
+<A NAME="IDX860"></A>
+<A NAME="IDX861"></A>
+<A NAME="IDX862"></A>
+<A NAME="IDX863"></A>
+<P>
+  TeX uses braces as delimiters that must match.  Some users prefer
+to keep braces balanced at all times, rather than inserting them
+singly.  Use <KBD>C-c {</KBD> (<CODE>tex-insert-braces</CODE>) to insert a pair of
+braces.  It leaves point between the two braces so you can insert the
+text that belongs inside.  Afterward, use the command <KBD>C-c }</KBD>
+(<CODE>up-list</CODE>) to move forward past the close brace.
+<A NAME="IDX864"></A>
+<A NAME="IDX865"></A>
+<A NAME="IDX866"></A>
+<P>
+  There are two commands for checking the matching of braces.  <KBD>LFD</KBD>
+(<CODE>tex-terminate-paragraph</CODE>) checks the paragraph before point, and
+inserts two newlines to start a new paragraph.  It prints a message in the
+echo area if any mismatch is found.  <KBD>M-x validate-tex-region</KBD> checks
+a region, paragraph by paragraph.  When it finds a paragraph that
+contains a mismatch, it displays point at the beginning of the paragraph
+for a few seconds and pushes a mark at that spot.  Scanning continues
+until the whole buffer has been checked or until you type another key.
+The positions of the last several paragraphs with mismatches can be
+found in the mark ring (see section <A HREF="emacs_13.html#SEC52">The Mark Ring</A>).
+<P>
+  Note that Emacs commands count square brackets and parentheses in
+TeX mode, not just braces.  This is not strictly correct for the
+purpose of checking TeX syntax.  However, parentheses and square
+brackets are likely to be used in text as matching delimiters and it is
+useful for the various motion commands and automatic match display to
+work with them.
+<P>
+<H3><A NAME="SEC172" HREF="emacs_toc.html#SEC172">LaTeX Editing Commands</A></H3>
+<P>
+  LaTeX mode provides a few extra features not applicable to plain
+TeX.
+<P>
+<DL COMPACT>
+<DT><KBD>C-c C-o</KBD>
+<DD>Insert <SAMP>`\begin'</SAMP> and <SAMP>`\end'</SAMP> for LaTeX block and position
+point on a line between them. (<CODE>tex-latex-block</CODE>).
+<DT><KBD>C-c C-e</KBD>
+<DD>Close the last unended block for LaTeX (<CODE>tex-close-latex-block</CODE>).
+</DL>
+<A NAME="IDX867"></A>
+<A NAME="IDX868"></A>
+<P>
+  In LaTeX input, <SAMP>`\begin'</SAMP> and <SAMP>`\end'</SAMP> commands are used to
+group blocks of text.  To insert a <SAMP>`\begin'</SAMP> and a matching
+<SAMP>`\end'</SAMP> (on a new line following the <SAMP>`\begin'</SAMP>), use <KBD>C-c
+C-o</KBD> (<CODE>tex-latex-block</CODE>).  A blank line is inserted between the
+two, and point is left there.<A NAME="IDX869"></A>
+<P>
+  Emacs knows all of the standard LaTeX block names and will
+permissively complete a partially entered block name
+(see section <A HREF="emacs_10.html#SEC33">Completion</A>).  You can add your own list of block names to those
+known by Emacs with the variable <CODE>latex-block-names</CODE>.  For example,
+to add <SAMP>`theorem'</SAMP>, <SAMP>`corollary'</SAMP>, and <SAMP>`proof'</SAMP>, include the line
+<P>
+<PRE>
+(setq latex-block-names '("theorem" "corollary" "proof"))
+</PRE>
+<P>
+to your <TT>`.emacs'</TT> file.
+<A NAME="IDX870"></A>
+<A NAME="IDX871"></A>
+<P>
+  In LaTeX input, <SAMP>`\begin'</SAMP> and <SAMP>`\end'</SAMP> commands must balance.
+You can use <KBD>C-c C-e</KBD> (<CODE>tex-close-latex-block</CODE>) to insert
+automatically a matching <SAMP>`\end'</SAMP> to match the last unmatched <SAMP>`\begin'</SAMP>.
+The <SAMP>`\end'</SAMP> will be indented to match the corresponding <SAMP>`\begin'</SAMP>.
+The <SAMP>`\end'</SAMP> will be followed by a newline if point is at the beginning
+of a line.<P>
+<H3><A NAME="SEC173" HREF="emacs_toc.html#SEC173">TeX Printing Commands</A></H3>
+<P>
+  You can invoke TeX as an inferior of Emacs on either the entire
+contents of the buffer or just a region at a time.  Running TeX in
+this way on just one chapter is a good way to see what your changes
+look like without taking the time to format the entire file.
+<P>
+<DL COMPACT>
+<DT><KBD>C-c C-r</KBD>
+<DD>Invoke TeX on the current region, together with the buffer's header
+(<CODE>tex-region</CODE>).
+<DT><KBD>C-c C-b</KBD>
+<DD>Invoke TeX on the entire current buffer (<CODE>tex-buffer</CODE>).
+<DT><KBD>C-c TAB</KBD>
+<DD>Invoke BibTeX on the current file (<CODE>tex-bibtex-file</CODE>).
+<DT><KBD>C-c C-f</KBD>
+<DD>Invoke TeX on the current file (<CODE>tex-file</CODE>).
+<DT><KBD>C-c C-l</KBD>
+<DD>Recenter the window showing output from the inferior TeX so that
+the last line can be seen (<CODE>tex-recenter-output-buffer</CODE>).
+<DT><KBD>C-c C-k</KBD>
+<DD>Kill the TeX subprocess (<CODE>tex-kill-job</CODE>).
+<DT><KBD>C-c C-p</KBD>
+<DD>Print the output from the last <KBD>C-c C-r</KBD>, <KBD>C-c C-b</KBD>, or <KBD>C-c
+C-f</KBD> command (<CODE>tex-print</CODE>).
+<DT><KBD>C-c C-v</KBD>
+<DD>Preview the output from the last <KBD>C-c C-r</KBD>, <KBD>C-c C-b</KBD>, or <KBD>C-c
+C-f</KBD> command (<CODE>tex-view</CODE>).
+<DT><KBD>C-c C-q</KBD>
+<DD>Show the printer queue (<CODE>tex-show-print-queue</CODE>).
+</DL>
+<A NAME="IDX872"></A>
+<A NAME="IDX873"></A>
+<A NAME="IDX874"></A>
+<A NAME="IDX875"></A>
+<A NAME="IDX876"></A>
+<A NAME="IDX877"></A>
+<A NAME="IDX878"></A>
+<A NAME="IDX879"></A>
+<P>
+  You can pass the current buffer through an inferior TeX by means of
+<KBD>C-c C-b</KBD> (<CODE>tex-buffer</CODE>).  The formatted output appears in a
+temporary; to print it, type <KBD>C-c C-p</KBD> (<CODE>tex-print</CODE>).
+Afterward use <KBD>C-c C-q</KBD> (<CODE>tex-show-print-queue</CODE>) to view the
+progress of your output towards being printed. If your terminal has the
+ability to display TeX output files, you can preview the output on
+the terminal with <KBD>C-c C-v</KBD> (<CODE>tex-view</CODE>).
+<A NAME="IDX880"></A>
+<A NAME="IDX881"></A>
+<P>
+  You can specify the directory to use for running TeX by setting the
+variable <CODE>tex-directory</CODE>.  <CODE>"."</CODE> is the default value.  If
+your environment variable <CODE>TEXINPUTS</CODE> contains relative directory
+names, or if your files contains <SAMP>`\input'</SAMP> commands with relative
+file names, then <CODE>tex-directory</CODE> <EM>must</EM> be <CODE>"."</CODE> or you
+will get the wrong results.  Otherwise, it is safe to specify some other
+directory, such as <TT>`/tmp'</TT>.
+<A NAME="IDX882"></A>
+<A NAME="IDX883"></A>
+<A NAME="IDX884"></A>
+<A NAME="IDX885"></A>
+<A NAME="IDX886"></A>
+<A NAME="IDX887"></A>
+<P>
+  If you want to specify which shell commands are used in the inferior TeX,
+you can do so by setting the values of the variables <CODE>tex-run-command</CODE>,
+<CODE>latex-run-command</CODE>, <CODE>slitex-run-command</CODE>,
+<CODE>tex-dvi-print-command</CODE>, <CODE>tex-dvi-view-command</CODE>, and
+<CODE>tex-show-queue-command</CODE>.  You <EM>must</EM> set the value of
+<CODE>tex-dvi-view-command</CODE> for your particular terminal; this variable
+has no default value.  The other variables have default values that may
+(or may not) be appropriate for your system.
+<P>
+  Normally, the file name given to these commands comes at the end of
+the command string; for example, <SAMP>`latex <VAR>filename</VAR>'</SAMP>.  In some
+cases, however, the file name needs to be embedded in the command; an
+example is when you need to provide the file name as an argument to one
+command whose output is piped to another.  You can specify where to put
+the file name with <SAMP>`*'</SAMP> in the command string.  For example,
+<P>
+<PRE>
+(setq tex-dvi-print-command "dvips -f * | lpr")
+</PRE>
+<A NAME="IDX888"></A>
+<A NAME="IDX889"></A>
+<A NAME="IDX890"></A>
+<A NAME="IDX891"></A>
+<P>
+  The terminal output from TeX, including any error messages, appears
+in a buffer called <SAMP>`*tex-shell*'</SAMP>.  If TeX gets an error, you can
+switch to this buffer and feed it input (this works as in Shell mode;
+see section <A HREF="emacs_34.html#SEC316">Interactive Inferior Shell</A>).  Without switching to this buffer you can
+scroll it so that its last line is visible by typing <KBD>C-c
+C-l</KBD>.
+<P>
+  Type <KBD>C-c C-k</KBD> (<CODE>tex-kill-job</CODE>) to kill the TeX process if
+you see that its output is no longer useful.  Using <KBD>C-c C-b</KBD> or
+<KBD>C-c C-r</KBD> also kills any TeX process still running.<A NAME="IDX892"></A>
+<A NAME="IDX893"></A>
+<P>
+  You can also pass an arbitrary region through an inferior TeX by typing
+<KBD>C-c C-r</KBD> (<CODE>tex-region</CODE>).  This is tricky, however, because most files
+of TeX input contain commands at the beginning to set parameters and
+define macros, without which no later part of the file will format
+correctly.  To solve this problem, <KBD>C-c C-r</KBD> allows you to designate a
+part of the file as containing essential commands; it is included before
+the specified region as part of the input to TeX.  The designated part
+of the file is called the <DFN>header</DFN>.
+<A NAME="IDX894"></A>
+<P>
+  To indicate the bounds of the header in Plain TeX mode, you insert two
+special strings in the file.  Insert <SAMP>`%**start of header'</SAMP> before the
+header, and <SAMP>`%**end of header'</SAMP> after it.  Each string must appear
+entirely on one line, but there may be other text on the line before or
+after.  The lines containing the two strings are included in the header.
+If <SAMP>`%**start of header'</SAMP> does not appear within the first 100 lines of
+the buffer, <KBD>C-c C-r</KBD> assumes that there is no header.
+<P>
+  In LaTeX mode, the header begins with <SAMP>`\documentstyle'</SAMP> and ends
+with <SAMP>`\begin{document}'</SAMP>.  These are commands that LaTeX requires
+you to use in any case, so nothing special needs to be done to identify the
+header.
+<A NAME="IDX895"></A>
+<A NAME="IDX896"></A>
+<P>
+  The commands (<CODE>tex-buffer</CODE>) and (<CODE>tex-region</CODE>) do all of their
+work in a temporary directory, and do not have available any of the auxiliary
+files needed by TeX for cross-references; these commands are generally
+not suitable for running the final copy in which all of the cross-references
+need to be correct.  When you want the auxiliary files, use <KBD>C-c C-f</KBD>
+(<CODE>tex-file</CODE>) which runs TeX on the current buffer's file, in that
+file's directory.  Before TeX runs, you will be asked about saving
+any modified buffers.  Generally, you need to use (<CODE>tex-file</CODE>)
+twice to get cross-references correct.
+<A NAME="IDX897"></A>
+<A NAME="IDX898"></A>
+<A NAME="IDX899"></A>
+<P>
+  For LaTeX files, you can use BibTeX to process the auxiliary
+file for the current buffer's file.  BibTeX looks up bibliographic
+citations in a data base and prepares the cited references for the
+bibliography section.  The command <KBD>C-c TAB</KBD>
+(<CODE>tex-bibtex-file</CODE>) runs the shell command
+(<CODE>tex-bibtex-command</CODE>) to produce a <SAMP>`.bbl'</SAMP> file for the
+current buffer's file.  Generally, you need to do <KBD>C-c C-f</KBD>
+(<CODE>tex-file</CODE>) once to generate the <SAMP>`.aux'</SAMP> file, then do
+<KBD>C-c TAB</KBD> (<CODE>tex-bibtex-file</CODE>), and then repeat <KBD>C-c C-f</KBD>
+(<CODE>tex-file</CODE>) twice more to get the cross-references correct.
+<A NAME="IDX900"></A>
+<A NAME="IDX901"></A>
+<A NAME="IDX902"></A>
+<A NAME="IDX903"></A>
+<A NAME="IDX904"></A>
+<P>
+  Entering any kind of TeX mode runs the hooks <CODE>text-mode-hook</CODE>
+and <CODE>tex-mode-hook</CODE>.  Then it runs either
+<CODE>plain-tex-mode-hook</CODE> or <CODE>latex-mode-hook</CODE>, whichever is
+appropriate.  For SliTeX files, it calls <CODE>slitex-mode-hook</CODE>.
+Starting the TeX shell runs the hook <CODE>tex-shell-hook</CODE>.
+See section <A HREF="emacs_35.html#SEC337">Hooks</A>.
+<P>
+<H3><A NAME="SEC174" HREF="emacs_toc.html#SEC174">Unix TeX Distribution</A></H3>
+<P>
+TeX for Unix systems can be obtained from the University of Washington
+for a distribution fee.
+<P>
+To order a full distribution, send $200.00 for a 1/2-inch 9-track 1600
+bpi (tar or cpio) tape reel, or $210.00 for a 1/4-inch 4-track QIC-24
+(tar or cpio) cartridge, payable to the University of Washington to:
+<P>
+<PRE>
+Northwest Computing Support Center
+DR-10, Thomson Hall 35
+University of Washington
+Seattle, Washington 98195
+</PRE>
+<P>
+Purchase orders are acceptable, but there is an extra charge of
+$10.00, to pay for processing charges.
+<P>
+For overseas orders please add $20.00 to the base cost for shipment via
+air parcel post, or $30.00 for shipment via courier.
+<P>
+  The normal distribution is a tar tape, blocked 20, 1600 bpi, on an
+industry standard 2400 foot half-inch reel.  The physical format for
+the 1/4 inch streamer cartridges uses QIC-11, 8000 bpi, 4-track
+serpentine recording for the SUN.  Also, System V tapes can be written
+in cpio format, blocked 5120 bytes, ASCII headers.
+<P>
+<H2><A NAME="SEC175" HREF="emacs_toc.html#SEC175">Nroff Mode</A></H2>
+<A NAME="IDX905"></A>
+<A NAME="IDX906"></A>
+<P>
+  Nroff mode is a mode like Text mode but modified to handle nroff commands
+present in the text.  Invoke <KBD>M-x nroff-mode</KBD> to enter this mode.  It
+differs from Text mode in only a few ways.  All nroff command lines are
+considered paragraph separators, so that filling will never garble the
+nroff commands.  Pages are separated by <SAMP>`.bp'</SAMP> commands.  Comments
+start with backslash-doublequote.  Also, three special commands are
+provided that are not in Text mode:
+<A NAME="IDX907"></A>
+<A NAME="IDX908"></A>
+<A NAME="IDX909"></A>
+<A NAME="IDX910"></A>
+<A NAME="IDX911"></A>
+<A NAME="IDX912"></A>
+<P>
+<DL COMPACT>
+<DT><KBD>M-n</KBD>
+<DD>Move to the beginning of the next line that isn't an nroff command
+(<CODE>forward-text-line</CODE>).  An argument is a repeat count.
+<DT><KBD>M-p</KBD>
+<DD>Like <KBD>M-n</KBD> but move up (<CODE>backward-text-line</CODE>).
+<DT><KBD>M-?</KBD>
+<DD>Prints in the echo area the number of text lines (lines that are not
+nroff commands) in the region (<CODE>count-text-lines</CODE>).
+</DL>
+<A NAME="IDX913"></A>
+<P>
+  The other feature of Nroff mode is that you can turn on Electric Nroff
+mode.  This is a minor mode that you can turn on or off with <KBD>M-x
+electric-nroff-mode</KBD> (see section <A HREF="emacs_35.html#SEC333">Minor Modes</A>).  When the mode is on, each
+time you use <KBD>RET</KBD> to end a line that contains an nroff command that
+opens a kind of grouping, the matching nroff command to close that
+grouping is automatically inserted on the following line.  For example,
+if you are at the beginning of a line and type <KBD>. ( b <KBD>RET</KBD></KBD>,
+this inserts the matching command <SAMP>`.)b'</SAMP> on a new line following
+point.
+<A NAME="IDX914"></A>
+<P>
+  Entering Nroff mode runs the hook <CODE>text-mode-hook</CODE>, followed by
+the hook <CODE>nroff-mode-hook</CODE> (see section <A HREF="emacs_35.html#SEC337">Hooks</A>).
+<P>Go to the <A HREF="emacs_24.html">previous</A>, <A HREF="emacs_26.html">next</A> section.<P>

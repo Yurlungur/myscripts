@@ -1,0 +1,734 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from g++FAQ.texi on 30 July 1999 -->
+
+<TITLE>Frequently asked questions about the GNU C++ compiler - Installation Issues and Problems</TITLE>
+<link href="g++FAQ_5.html" rel=Next>
+<link href="g++FAQ_3.html" rel=Previous>
+<link href="g++FAQ_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="g++FAQ_1.html">first</A>, <A HREF="g++FAQ_3.html">previous</A>, <A HREF="g++FAQ_5.html">next</A>, <A HREF="g++FAQ_8.html">last</A> section, <A HREF="g++FAQ_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC19" HREF="g++FAQ_toc.html#TOC19">Installation Issues and Problems</A></H1>
+
+
+<UL>
+<LI><A HREF="g++FAQ_4.html#SEC20">gcc-2 + g++-1</A>
+<LI><A HREF="g++FAQ_4.html#SEC21">what else do I need?</A>
+<LI><A HREF="g++FAQ_4.html#SEC22">use GNU linker?</A>
+<LI><A HREF="g++FAQ_4.html#SEC23">Use GNU assembler?</A>
+<LI><A HREF="g++FAQ_4.html#SEC24">shared libraries</A>
+<LI><A HREF="g++FAQ_4.html#SEC25">repository</A>
+<LI><A HREF="g++FAQ_4.html#SEC26">repo bugs</A>
+<LI><A HREF="g++FAQ_4.html#SEC27">Use GNU C library?</A>
+<LI><A HREF="g++FAQ_4.html#SEC28">Global constructor problems</A>
+<LI><A HREF="g++FAQ_4.html#SEC29">Strange assembler errors</A>
+<LI><A HREF="g++FAQ_4.html#SEC30">Other problems building libg++</A>
+<LI><A HREF="g++FAQ_4.html#SEC31">More size_t problems</A>
+<LI><A HREF="g++FAQ_4.html#SEC32">Rebuild libg++?</A>
+<LI><A HREF="g++FAQ_4.html#SEC33">co-existing versions</A>
+<LI><A HREF="g++FAQ_4.html#SEC34">Installing on Linux</A>
+<LI><A HREF="g++FAQ_4.html#SEC35">Linux Slackware 3.0</A>
+</UL>
+
+
+
+<H2><A NAME="SEC20" HREF="g++FAQ_toc.html#TOC20">I can't build g++ 1.x.y with gcc-2.x.y!</A></H2>
+
+<P>
+"I obtained gcc-2.x.y and g++ 1.x.y and I'm trying to build it, but
+I'm having major problems.  What's going on?"
+
+</P>
+<P>
+<A NAME="IDX57"></A>
+If you wish to build g++-1.42, you must obtain gcc-1.42 first.  The
+installation instructions for g++ version 1 leave a lot to be desired,
+unfortunately, and I would recommend that, unless you have a special
+reason for needing the 1.x compiler, that C++ users use the latest
+g++-2.x version, as it
+is the version that is being actively maintained.
+
+</P>
+<P>
+<A NAME="IDX58"></A>
+<A NAME="IDX59"></A>
+<A NAME="IDX60"></A>
+There is no template support in g++-1.x, and it is generally much further
+away from the ANSI draft standard than g++-2.x is.
+
+</P>
+
+
+<H2><A NAME="SEC21" HREF="g++FAQ_toc.html#TOC21">OK, I've obtained gcc; what else do I need?</A></H2>
+
+<P>
+<A NAME="IDX61"></A>
+First off, you'll want libg++ as you can do almost nothing without it
+(unless you replace it with some other class library).
+
+</P>
+<P>
+<A NAME="IDX62"></A>
+<A NAME="IDX63"></A>
+Second, depending on your platform, you may need "GAS", the GNU assembler,
+or the GNU linker (see next question).
+
+</P>
+<P>
+<A NAME="IDX64"></A>
+Finally, while it is not required, you'll almost certainly want the GNU
+debugger, gdb.  The latest version is
+4.17, released April 27, 1997.
+Other debuggers (like dbx, for example) will normally not be able to
+understand at least some of the debug information produced by g++.
+
+</P>
+
+
+<H2><A NAME="SEC22" HREF="g++FAQ_toc.html#TOC22">Should I use the GNU linker, or should I use "collect"?</A></H2>
+
+<P>
+<A NAME="IDX65"></A>
+<A NAME="IDX66"></A>
+<A NAME="IDX67"></A>
+First off, for novices: special measures must be taken with C++ to arrange
+for the calling of constructors for global or static objects before the
+execution of your program, and for the calling of destructors at the end.
+(Exception: System VR3 and System VR4 linkers, Linux/ELF, and some other
+systems support user-defined
+segments; g++ on these systems requires neither the GNU linker nor
+collect.  So if you have such a system, the answer is that you don't
+need either one, though using GNU ld does have some advantages over
+the native linker in some cases).
+
+</P>
+<P>
+<A NAME="IDX68"></A>
+<A NAME="IDX69"></A>
+<A NAME="IDX70"></A>
+<A NAME="IDX71"></A>
+<A NAME="IDX72"></A>
+If you have experience with AT&#38;T's "cfront", this function is performed
+there by programs named "patch" or "munch".  With GNU C++, it is performed
+either by the GNU linker or by a program known as "collect".  The collect
+program is part of the gcc-2.x distribution; you can obtain the GNU linker
+separately as part of the "binutils" package.  The latest version of
+binutils is 2.9.1, released May 1, 1998.
+
+</P>
+<P>
+Note that if you want to use exceptions on Intel-like platforms and use
+gas (e.g. you run Linux), you need binutils version 2.8.1 or newer for
+exceptions to work correctly!
+
+</P>
+<P>
+(To be technical, it's "collect2"; there were originally several
+alternative versions of collect, and this is the one that survived).
+
+</P>
+<P>
+There are advantages and disadvantages to either choice.
+
+</P>
+<P>
+Advantages of the GNU linker:
+<A NAME="IDX73"></A>
+<A NAME="IDX74"></A>
+<A NAME="IDX75"></A>
+
+</P>
+<P>
+It's faster than using collect -- collect basically runs the standard Unix
+linker on your program twice, inserting some extra code after the first
+pass to call the constructors.  This is a sizable time penalty for large
+programs.  The GNU linker does not require this extra pass.
+
+</P>
+<P>
+GNU ld reports undefined symbols using their true names, not the mangled
+names (but as of 2.7.0 so does collect).
+
+</P>
+<P>
+If there are undefined symbols, GNU ld reports which object file(s) refer to
+the undefined symbol(s).  On some OSes (e.g. SunOS, Solaris) the native
+linker does not do this, so you have to track down who's referring to
+the missing symbols yourself.
+
+</P>
+<P>
+As of binutils version 2.2, on systems that use the so-called "a.out"
+debug format (e.g. Suns running SunOS 4.x), the GNU linker compresses
+the debug symbol table considerably.  The 2.7 version adds some symbol
+table compression for ELF and Solaris targets.
+
+</P>
+<P>
+Users of egcs or 2.8.x on ELF systems should definitely
+use GNU ld (2.8 or later), as it will automatically remove duplicate
+instantiations of templates, virtual function tables, or "outlined"
+copies of inline functions.
+
+</P>
+<P>
+<A NAME="IDX76"></A>
+Advantages of collect:
+
+</P>
+<P>
+<A NAME="IDX77"></A>
+If your native linker supports shared libraries, you can use shared
+libraries with collect.  This used to be a strong reason <EM>not</EM>
+to use the GNU linker, but recent versions of GNU ld support linking
+with shared libraries on many platforms, and creating shared libraries
+on a few (such as Intel x86 systems that use ELF object format as well
+as SunOS and Solaris).
+
+</P>
+<P>
+See section <A HREF="g++FAQ_4.html#SEC24">How do I build shared libraries with g++?</A>
+
+</P>
+<P>
+<A NAME="IDX78"></A>
+The GNU linker has not been ported to as many platforms as g++ has, so you
+may be forced to use collect.
+
+</P>
+<P>
+If you use collect, you don't need to get something extra and figure out
+how to install it; the standard gcc installation procedure will do it for you.
+
+</P>
+<P>
+I used to say at this point that I don't see a clear win for either
+linking alternative, but with all the improvements in the GNU linker
+I think that it is now the better choice.  Take your pick.
+
+</P>
+<P>
+If you run Linux, the only available linker is the GNU linker.
+
+</P>
+
+
+<H2><A NAME="SEC23" HREF="g++FAQ_toc.html#TOC23">Should I use the GNU assembler, or my vendor's assembler?</A></H2>
+
+<P>
+<A NAME="IDX79"></A>
+<A NAME="IDX80"></A>
+This depends on your platform and your decision about the GNU linker.  For
+most platforms, you'll need to use GAS if you use the GNU linker.  For
+some platforms, you have no choice; check the gcc installation notes to
+see whether you must use GAS.  But you can usually use the vendor's
+assembler if you don't use the GNU linker.
+
+</P>
+<P>
+The GNU assembler assembles faster than many native assemblers; however,
+on many platforms it cannot support the local debugging format.
+
+</P>
+<P>
+It used to be that the GNU assembler couldn't handle
+position-independent code on SunOS.  This is no longer true if you
+have version 2.6 or newer.
+
+</P>
+<P>
+On HPUX or IRIX, you must use GAS (and configure gcc with the
+<CODE>--with-gnu-as</CODE> option) to debug your programs.  GAS is
+strongly recommended particularly on the HP platform because of
+limitations in the HP assembler.
+
+</P>
+<P>
+The GNU assembler has been merged with the binutils
+distribution, so the GNU assembler and linker are now together in
+this package (as of binutils version 2.5.1).
+
+</P>
+<P>
+On Linux the assembler is the GNU assembler.
+
+</P>
+
+
+<H2><A NAME="SEC24" HREF="g++FAQ_toc.html#TOC24">How do I build shared libraries with g++?</A></H2>
+
+<P>
+For gcc-2.7.0 and later, building C++ shared libraries should work fine
+on supported platforms (HPUX 9+, IRIX 5+, DEC UNIX (formerly OSF/1),
+SGI/IRIX, AIX, SunOS 4, Linux/ELF and all targets using SVR4-style ELF shared
+libraries).  There are two separate issues: building libg++ as a shared
+library, and making your own shared libraries.  For libg++ it is simply
+a matter of giving the <CODE>--enable-shared</CODE> option to the configure
+program.  When compiling your own code for shared libraries you
+generally
+must use the <CODE>-fPIC</CODE> flag to get position-independent code.
+
+</P>
+<P>
+<A NAME="IDX81"></A>
+
+</P>
+<P>
+If your shared library contains global or static objects with
+constructors, then make sure to use <CODE>gcc -shared</CODE>, not
+<CODE>ld</CODE>, to create the shared library.  This will make sure
+that any processor-specific magic needed to execute the constructors
+is included.
+
+</P>
+<P>
+In theory, constructors for objects in your shared library should be
+called when the library is opened (by dlopen or equivalent).  This
+does not work on some platforms (e.g. SunOS4; it does work on Solaris
+and ELF systems such as Linux): on the broken platforms, the
+constructors are not called correctly.
+
+</P>
+<P>
+David Nilsen has suggested the following workaround:
+
+</P>
+<P>
+The thing to realize is that if you link your dynamic module with the
+<CODE>-shared</CODE> flag, the collect program nicely groups all the static
+ctors/dtors for you into a list and sets up a function that will call
+them (Note: this means that this trick won't work if you use the GNU
+linker without collect (see section <A HREF="g++FAQ_4.html#SEC22">Should I use the GNU linker, or should I use "collect"?</A>).
+
+</P>
+<P>
+The magic is knowing these function names.  Currently, they're called:
+
+</P>
+
+<PRE>
+_GLOBAL__DI   &#60;-- calls all module constructors
+_GLOBAL__DD   &#60;-- calls all module destructors
+</PRE>
+
+<P>
+[ possibly the leading underscore will differ between platforms: jbuck ]
+
+</P>
+<P>
+Therefore, if you make a wrapper around dlopen that looks up the
+symbol <CODE>_GLOBAL__DI</CODE> (or <CODE>__GLOBAL__DI</CODE> on SunOS4 machines), and
+calls it, you'll simulate getting the constructors called.
+
+</P>
+<P>
+You also need to set up the destructors to be called as well, so you
+need to put a wrapper around dlclose, which will call the
+<CODE>_GLOBAL__DD</CODE> function in the module when/if it's unloaded.
+
+</P>
+<P>
+Lastly, to get things 100% correct, you need to set up the destructors
+to also be called if the module is not unloaded, but the main program
+exits.  I do this by registering a single function with <CODE>atexit()</CODE> that
+calls all the destructors left in dynamically loaded modules.
+
+</P>
+<P>
+<A NAME="IDX82"></A>
+Check the file <TT>`README.SHLIB'</TT> from the libg++ distribution for more
+about making and using shared libraries.
+
+</P>
+<P>
+<A NAME="IDX83"></A>
+
+</P>
+<P>
+A patch is needed to build shared versions of version 2.7.2 of libg++
+and libstdc++ on the HP-PA architecture.  You can find the patch at
+<TT>`ftp://ftp.cygnus.com/pub/g++/libg++-2.7.2-hppa-gcc-fix'</TT>.
+
+</P>
+
+
+<H2><A NAME="SEC25" HREF="g++FAQ_toc.html#TOC25">How do I use the new repository code?</A></H2>
+
+<P>
+<A NAME="IDX84"></A>
+Because there is some disagreement about the details of the template
+repository mechanism, you'll need to obtain a patch from Cygnus Support
+to enable the 2.7.2 repository code.  You can obtain the patch by
+anonymous FTP: <TT>`ftp://ftp.cygnus.com/pub/g++/gcc-2.7.2-repo.gz'</TT>.
+
+</P>
+<P>
+There are patches for 2.7.0 and 2.7.1 in the same directory, though
+if you're going to rebuild the compiler you should use the latest one.
+
+</P>
+<P>
+<A NAME="IDX85"></A>
+If you're running NetBSD or BSDI, the Cygnus repo patch is not quite
+correct.  Tim Liddelow has made an alternate version available at
+<TT>`ftp://ftp.cst.com.au/pub/gcc-2.7.2-repo-bsd.gz'</TT>.
+
+</P>
+<P>
+After you've applied the patch, the <CODE>-frepo</CODE> flag will enable the
+repository mechanism.  The flag works much like the existing
+<CODE>-fno-implicit-templates</CODE> flag, except that auxiliary files, with
+an <TT>`.rpo'</TT> extension, are built that specify what template
+expansions are needed.  At link time, the (patched) collect program
+detects missing templates and recompiles some of the object files
+so that the required templates are expanded.
+
+</P>
+<P>
+Note that the mechanism differs from that of cfront in that template
+definitions still must be visible at the point where they are to be
+expanded.  No assumption is made that <TT>`foo.C'</TT> contains template
+definitions corresponding to template declarations in <TT>`foo.h'</TT>.
+
+</P>
+<P>
+<A NAME="IDX86"></A>
+<A NAME="IDX87"></A>
+Jason Merrill writes: "To perform closure on a set of objects, just try
+to link them together.  It will fail, but as a side effect all needed
+instances will be generated in the objects."
+
+</P>
+
+
+<H2><A NAME="SEC26" HREF="g++FAQ_toc.html#TOC26">Known bugs and problems with the repo patch</A></H2>
+
+<P>
+"The <CODE>-frepo</CODE> won't expand templated friend functions!"
+
+</P>
+<P>
+This is a known bug; currently you'll have to explicitly instantiate
+friend functions when using <CODE>-frepo</CODE> due to this bug (in 2.7.0
+through 2.7.2 at least).
+
+</P>
+<P>
+With earlier versions of the repo patch, there was a bug that happens
+when you have given a quoted command line switch, something like
+
+</P>
+
+<PRE>
+-D'MESSAGE="hello there"'
+</PRE>
+
+<P>
+The repo code tries to recompile files using the same flags you
+originally specified, but doesn't quote arguments that need quoting,
+resulting in failures in some cases.  This is no longer a problem
+with the 2.7.2 patch.
+
+</P>
+
+
+<H2><A NAME="SEC27" HREF="g++FAQ_toc.html#TOC27">Should I use the GNU C library?</A></H2>
+
+<P>
+<A NAME="IDX88"></A>
+<A NAME="IDX89"></A>
+At this point in time, no (unless you are running Linux or the GNU Hurd
+system).  The GNU C library is still very young, and
+libg++ still conflicts with it in some places.  Use your native C library
+unless you know a lot about the gory details of libg++ and gnu-libc.  This
+will probably change in the future.
+
+</P>
+
+
+<H2><A NAME="SEC28" HREF="g++FAQ_toc.html#TOC28">Global constructors aren't being called</A></H2>
+
+<P>
+<A NAME="IDX90"></A>
+"I've installed gcc and it almost works, but constructors and
+destructors for global objects and objects at file scope aren't being
+called.  What did I do wrong?"
+
+</P>
+<P>
+<A NAME="IDX91"></A>
+It appears that you are running on a platform that requires you to
+install either "collect2" or the GNU linker, and you have done neither.
+For more information, see the section discussing the GNU linker
+(see section <A HREF="g++FAQ_4.html#SEC22">Should I use the GNU linker, or should I use "collect"?</A>).
+
+</P>
+<P>
+<A NAME="IDX92"></A>
+<A NAME="IDX93"></A>
+On Solaris 2.x, you shouldn't need a collect program and GNU ld doesn't run.
+If your global constructors aren't being called, you may need to install
+a patch, available from Sun, to fix your linker.  The number of the
+"jumbo patch" that applies is 101409-03.  Thanks to Russell Street
+(r.street@auckland.ac.nz) for this info.
+
+</P>
+<P>
+<A NAME="IDX94"></A>
+It appears that on IRIX, the collect2 program is not being installed
+by default during the installation process, though it is required;
+you can install it manually by executing
+
+</P>
+
+<PRE>
+make install-collect2
+</PRE>
+
+<P>
+from the gcc source directory after installing the compiler.  (I'm
+not certain for which versions of gcc this problem occurs, and whether
+it is still present).
+
+</P>
+
+
+<H2><A NAME="SEC29" HREF="g++FAQ_toc.html#TOC29">Strange assembler errors when linking C++ programs</A></H2>
+
+<P>
+"I've installed gcc and it seemed to go OK, but when I attempt to link
+any C++ program, I'm getting strange errors from the assembler!  How
+can that be?"
+
+</P>
+<P>
+The messages in question might look something like
+
+</P>
+
+<PRE>
+as: "/usr/tmp/cca14605.s", line 8: error: statement syntax
+as: "/usr/tmp/cca14605.s", line 14: error: statement syntax
+</PRE>
+
+<P>
+(on a Sun, different on other platforms).  The important thing is that
+the errors come out at the link step, <EM>not</EM> when a C++ file is
+being compiled.
+
+</P>
+<P>
+<A NAME="IDX95"></A>
+<A NAME="IDX96"></A>
+Here's what's going on: the collect2 program uses the Unix "nm"
+program to obtain a list of symbols for the global constructors and
+destructors, and it builds a little assembly language module that
+will permit them all to be called.  If you're seeing this symptom,
+you have an old version of GNU nm somewhere on your path.  This old
+version prints out symbol names in a format that the collect2 program
+does not expect, so bad assembly code is generated.
+
+</P>
+<P>
+The solution is either to remove the old version of GNU nm from your
+path (and that of everyone else who uses g++), or to install a newer
+version (it is part of the GNU "binutils" package).  Recent versions
+of GNU nm do not have this problem.
+
+</P>
+
+
+<H2><A NAME="SEC30" HREF="g++FAQ_toc.html#TOC30">Other problems building libg++</A></H2>
+<P>
+<A NAME="IDX97"></A>
+<A NAME="IDX98"></A>
+
+</P>
+<P>
+"I am having trouble building libg++.  Help!"
+
+</P>
+<P>
+On some platforms (for example, Ultrix), you may see errors complaining
+about being unable to open dummy.o.  On other platforms (for example,
+SunOS), you may see problems having to do with the type of size_t.
+The fix for these problems is to make libg++ by saying "make CC=gcc".
+According to Per Bothner, it should no longer be necessary to specify
+"CC=gcc" for libg++-2.3.1 or later.
+
+</P>
+<P>
+"I built and installed libg++, but g++ can't find it.  Help!"
+
+</P>
+<P>
+The string given to <TT>`configure'</TT> that identifies your system must
+be the same when you install libg++ as it was when you installed gcc.
+Also, if you used the <CODE>--prefix</CODE> option to install gcc somewhere
+other than <TT>`/usr/local'</TT>, you must use the same value for
+<CODE>--prefix</CODE> when installing libg++, or else g++ will not be able
+to find libg++.
+
+</P>
+<P>
+<A NAME="IDX99"></A>
+
+</P>
+<P>
+The toplevel Makefile in the libg++ 2.6.2 distribution is broken, which
+along with a bug in g++ 2.6.3 causes problems linking programs that use the
+libstdc++ complex classes.  A patch for this is available from
+<TT>`ftp://ftp.cygnus.com//pub/g++/libg++-2.6.2-fix.gz'</TT>.
+
+</P>
+
+
+<H2><A NAME="SEC31" HREF="g++FAQ_toc.html#TOC31">But I'm <EM>still</EM> having problems with <CODE>size_t</CODE>!</A></H2>
+
+<P>
+<A NAME="IDX100"></A>
+"I did all that, and I'm <EM>still</EM> having problems with disagreeing
+definitions of size_t, SIZE_TYPE, and the type of functions like
+<CODE>strlen</CODE>."
+
+</P>
+<P>
+<A NAME="IDX101"></A>
+The problem may be that you have an old version of <TT>`_G_config.h'</TT>
+lying around.  As of libg++ version 2.4, <TT>`_G_config.h'</TT>, since it is
+platform-specific, is inserted into a different directory; most include
+files are in <TT>`$prefix/lib/g++-include'</TT>, but this file now lives in
+<TT>`$prefix/$arch/include'</TT>.  If, after upgrading your libg++, you find that
+there is an old copy of <TT>`_G_config.h'</TT> left around, remove it,
+otherwise g++ will find the old one first.
+
+</P>
+
+
+<H2><A NAME="SEC32" HREF="g++FAQ_toc.html#TOC32">Do I need to rebuild libg++ to go with my new g++?</A></H2>
+
+<P>
+"After I upgraded g++ to the latest version, I'm seeing undefined
+symbols."
+
+</P>
+<P>
+or
+
+</P>
+<P>
+"If I upgrade to a new version of g++, do I need to reinstall libg++?"
+
+</P>
+<P>
+<A NAME="IDX102"></A>
+
+</P>
+<P>
+As a rule, the first two digits of your g++ and libg++ should be the
+same.  Normally when you do an upgrade in the "minor version number"
+(2.5.7 to 2.5.8, say) there isn't a need to rebuild libg++, but there
+have been a couple of exceptions in the past.
+
+</P>
+
+
+<H2><A NAME="SEC33" HREF="g++FAQ_toc.html#TOC33">I want several versions of g++ and libg++ to co-exist.</A></H2>
+
+<P>
+I recommend against using the <CODE>-V</CODE> flag to make multiple versions
+of gcc/g++ co-exist, unless they are different minor releases that can use
+the same compiled version of libg++.  The reason is that all these
+versions will try to use the same libg++ version, which usually will
+not work.
+
+</P>
+<P>
+Instead, use the <CODE>--prefix</CODE> flag when configuring gcc.  Use a
+different value of <CODE>--prefix</CODE> for each gcc version.  Use the
+same value of <CODE>--prefix</CODE> when configuring libg++.  You can then
+have any number of co-existing gcc/libg++ pairs.  Symbolic links can
+be used so that users don't need to put all these different directories
+on their paths.
+
+</P>
+<P>
+One possible system to use is to set <CODE>--prefix</CODE> to
+<TT>`/usr/local/gcc-2.x.y'</TT> for version 2.x.y of gcc, and to link
+whichever version of gcc you wish to be the default into
+<TT>`/usr/local/bin/gcc'</TT> and <TT>`/usr/local/bin/g++'</TT>.
+
+</P>
+
+
+<H2><A NAME="SEC34" HREF="g++FAQ_toc.html#TOC34">Trouble installing g++ and libg++ on Linux</A></H2>
+
+<P>
+"I've downloaded the latest g++ and libg++ and I'm trying to install
+them on Linux, and I'm having lots of problems."
+
+</P>
+<P>
+<A NAME="IDX103"></A>
+FSF releases of libg++ won't install on Linux unchanged, since Linux
+uses are part of the libio library from libg++ for its standard C
+library, only this is changed in a way that it clashes with libg++.
+This means that you'll need a patched version of libg++ for it to
+work.
+
+</P>
+<P>
+If you want to upgrade to a new gcc/libg++ combination, the easiest
+thing to do is to grab the prebuilt versions of gcc and libg++ for Linux
+from <TT>`ftp://tsx-11.mit.edu/pub/linux/packages/GCC'</TT>.  Follow the
+directions carefully.  If you want to build from source, you'll need
+a patch for libg++; the Linux developers have named the patched libg++
+version libg++-2.7.1.3 and there is a patch file in the above-named
+directory.
+
+</P>
+<P>
+See <TT>`http://sunsite.unc.edu/LDP/HOWTO/GCC-HOWTO.html'</TT>,
+the Linux GCC HOWTO, for more on gcc/g++ and Linux.
+
+</P>
+<P>
+Linux is in the process of switching over to the GNU C library, version
+2, which will become Linux libc version 6.  Once this process is
+complete, there's a good chance that the installation process on Linux
+will be smoother, but only experts should try making this new library
+work at this point.
+
+</P>
+
+
+<H2><A NAME="SEC35" HREF="g++FAQ_toc.html#TOC35">Problems with g++ on Linux Slackware 3.0</A></H2>
+
+<P>
+<A NAME="IDX104"></A>
+<A NAME="IDX105"></A>
+"When I try to compile the traditional Hello, world program on Linux,
+the compiler can't find <TT>`iostream.h'</TT>.  What's the deal?"
+
+</P>
+<P>
+You probably have the Slackware 3.0 release.  There's an error in the
+setup.  It's easy to fix, though; log in as root, and make a symbolic
+link:
+
+</P>
+
+<PRE>
+ln -s /usr/lib/g++-include /usr/include/g++
+</PRE>
+
+<P><HR><P>
+<p>Go to the <A HREF="g++FAQ_1.html">first</A>, <A HREF="g++FAQ_3.html">previous</A>, <A HREF="g++FAQ_5.html">next</A>, <A HREF="g++FAQ_8.html">last</A> section, <A HREF="g++FAQ_toc.html">table of contents</A>.
+</BODY>
+</HTML>

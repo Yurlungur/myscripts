@@ -1,0 +1,508 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from g++FAQ.texi on 30 July 1999 -->
+
+<TITLE>Frequently asked questions about the GNU C++ compiler - The basics: what is g++?</TITLE>
+<link href="g++FAQ_3.html" rel=Next>
+<link href="g++FAQ_1.html" rel=Previous>
+<link href="g++FAQ_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="g++FAQ_1.html">first</A>, <A HREF="g++FAQ_1.html">previous</A>, <A HREF="g++FAQ_3.html">next</A>, <A HREF="g++FAQ_8.html">last</A> section, <A HREF="g++FAQ_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC2" HREF="g++FAQ_toc.html#TOC2">The basics: what is g++?</A></H1>
+
+<P>
+<A NAME="IDX9"></A>
+<A NAME="IDX10"></A>
+<A NAME="IDX11"></A>
+
+</P>
+<P>
+g++ is the traditional nickname of GNU C++, a freely redistributable
+C++ compiler produced by the Free Software Foundation plus dozens of
+skilled volunteers.  I say "traditional nickname" because the GNU
+compiler suite, gcc, bundles together compilers for C, Objective-C,
+and C++ in one package.
+
+</P>
+<P>
+While the source code to gcc/g++ can be downloaded for free,
+it is not public domain, but is protected by the GNU Public License,
+or GPL (see section <A HREF="g++FAQ_7.html#SEC66">What are the rules for shipping code built with g++ and libg++?</A>).
+
+</P>
+
+<UL>
+<LI><A HREF="g++FAQ_2.html#SEC3">latest versions</A>: What is the latest version of gcc/g++/libg++?
+<LI><A HREF="g++FAQ_2.html#SEC4">g++ for Unix</A>: How do I get a copy of g++ for Unix?
+<LI><A HREF="g++FAQ_2.html#SEC5">getting-egcs</A>: How do I get egcs?
+<LI><A HREF="g++FAQ_2.html#SEC6">g++ for HP</A>: Getting g++ for the HP precision architecture
+<LI><A HREF="g++FAQ_2.html#SEC7">g++ for Solaris 2.x</A>: Getting g++ for Solaris
+<LI><A HREF="g++FAQ_2.html#SEC8">g++ for other platforms</A>
+<LI><A HREF="g++FAQ_2.html#SEC9">1.x vs 2.x versions</A>
+</UL>
+
+
+
+<H2><A NAME="SEC3" HREF="g++FAQ_toc.html#TOC3">What is the latest version of gcc, g++, and libg++?</A></H2>
+
+<P>
+<A NAME="IDX12"></A>
+
+</P>
+<P>
+The newest release from the egcs project (on the Web:
+<TT>`http://www.cygnus.com/egcs/'</TT>) is egcs-1.0.3, released May 15,
+1998.
+
+</P>
+<P>
+<A NAME="IDX13"></A>
+The current version of gcc/g++ is 2.8.1, released March 4, 1998.
+This release fixes some bugs in the 2.8.x release from January.
+It is a huge improvement over the 2.7.x releases.
+
+</P>
+<P>
+libg++ has now been deprecated (that is, it is no longer really
+supported), so gcc2.8.1 users need to grab libstdc++-2.8.1 from
+their favorite GNU site (egcs users don't need to get this separately
+as it is bundled with egcs).  However, there is an 'add-on' libg++ 2.8.1
+mini-release.  If you want to use it, you need to combine it with
+libstdc++ 2.8.1.
+
+</P>
+<P>
+I would strongly recommend that anyone using a g++ version earlier
+than 2.7.2 should upgrade if at all possible (see section <A HREF="g++FAQ_5.html#SEC37">What's new in version 2.7.x of gcc/g++</A>).
+Folks who need modern C++ features should upgrade to 2.8.1 or egcs. 
+
+</P>
+<P>
+For some non-Unix platforms, the latest port of gcc may be an earlier
+version (2.7.2, say).  You'll need to use a version of libg++ that
+has the same first two digits as the compiler version, e.g. use libg++
+2.7.x (for the latest x you can find) with gcc version 2.7.2.1.
+
+</P>
+<P>
+From version 2.8.0 on, you don't need libg++, you only need libstdc++
+(again, the latest version with the same two leading digits as the
+version of g++ you use).
+
+</P>
+<P>
+The latest "1.x" version of gcc is 1.42, and the latest "1.x" version of
+g++ is 1.42.0.
+While gcc 1.42 is quite usable for C programs, g++ 1.x is only of
+historical interest (since the C++ language has changed so much).
+
+</P>
+
+
+<H2><A NAME="SEC4" HREF="g++FAQ_toc.html#TOC4">How do I get a copy of g++ for Unix?</A></H2>
+
+<P>
+First, you may already have it if you have gcc for your platform;
+g++ and gcc are combined now (as of gcc version 2.0).
+<A NAME="IDX14"></A>
+<A NAME="IDX15"></A>
+
+</P>
+<P>
+You can get g++ from a friend who has a copy, by anonymous FTP or
+UUCP, or by ordering a tape or CD-ROM from the Free Software
+Foundation.
+<A NAME="IDX16"></A>
+<A NAME="IDX17"></A>
+
+</P>
+<P>
+The Free Software Foundation is a nonprofit organization that
+distributes software and manuals to raise funds for more GNU
+development.  Getting your copy from the FSF contributes directly to
+paying staff to develop GNU software.  CD-ROMs cost $400 if an
+organization is buying, or $100 if an individual is buying.  Tapes
+cost around $200 depending on media type.  I recommend asking for
+version 2, not version 1, of g++.
+<A NAME="IDX18"></A>
+<A NAME="IDX19"></A>
+
+</P>
+<P>
+For more information about ordering from the FSF, contact
+gnu@prep.ai.mit.edu, phone (617) 542-5942 or anonymous ftp file
+<TT>`ftp://prep.ai.mit.edu/pub/gnu/GNUinfo/ORDERS'</TT> (you can
+also use one of the sites listed below if you can't get into "prep").
+
+</P>
+<P>
+<A NAME="IDX20"></A>
+
+</P>
+<P>
+Here is a list of anonymous FTP archive sites for GNU software.
+If no directory is given, look in <TT>`/pub/gnu'</TT>.
+
+</P>
+<P>
+<A NAME="IDX21"></A>
+
+</P>
+
+<PRE>
+ASIA: ftp.cs.titech.ac.jp, tron.um.u-tokyo.ac.jp:/pub/GNU/prep
+cair-archive.kaist.ac.kr, ftp.nectec.or.th:/pub/mirrors/gnu
+
+AUSTRALIA: archie.au:/gnu (archie.oz or archie.oz.au for ACSnet)
+
+AFRICA: ftp.sun.ac.za
+
+MIDDLE-EAST: ftp.technion.ac.il:/pub/unsupported/gnu
+
+EUROPE: irisa.irisa.fr, ftp.univ-lyon1.fr,
+ftp.mcc.ac.uk, unix.hensa.ac.uk:/mirrors/uunet/systems/gnu,
+src.doc.ic.ac.uk:/gnu, ftp.ieunet.ie, ftp.eunet.ch,
+nic.switch.ch:/mirror/gnu, ftp.informatik.rwth-aachen.de,
+ftp.informatik.tu-muenchen.de, ftp.win.tue.nl, ftp.nl.net,
+ftp.etsimo.uniovi.es, ftp.funet.fi, ftp.denet.dk,
+ftp.stacken.kth.se, isy.liu.se, ftp.luth.se:/pub/unix/gnu,
+ftp.sunet.se, archive.eu.net
+
+SOUTH AMERICA: ftp.inf.utfsm.cl, ftp.unicamp.br
+
+WESTERN CANADA: ftp.cs.ubc.ca:/mirror2/gnu
+
+USA: wuarchive.wustl.edu:/systems/gnu, labrea.stanford.edu,
+ftp.digex.net, ftp.kpc.com:/pub/mirror/gnu, f.ms.uky.edu:/pub3/gnu,
+jaguar.utah.edu:/gnustuff, ftp.hawaii.edu:/mirrors/gnu,
+uiarchive.cso.uiuc.edu, ftp.cs.columbia.edu:/archives/gnu/prep,
+gatekeeper.dec.com:/pub/GNU, ftp.uu.net:/systems/gnu
+</PRE>
+
+<P>
+The "official site" is prep.ai.mit.edu, but your transfer will probably
+go faster if you use one of the above machines.
+
+</P>
+<P>
+<A NAME="IDX22"></A>
+Most GNU utilities are compressed with "gzip", the GNU compression
+utility.  All GNU archive sites should have a copy of this program,
+which you will need to uncompress the distributions.
+
+</P>
+<P>
+<A NAME="IDX23"></A>
+Don't forget to retrieve libstdc++ as well!
+
+</P>
+
+
+<H2><A NAME="SEC5" HREF="g++FAQ_toc.html#TOC5">How do I get egcs?</A></H2>
+
+<P>
+See See section <A HREF="g++FAQ_3.html#SEC12">What is egcs?</A> to find out what egcs is.
+
+</P>
+<P>
+You can obtain egcs either by FTP or with a Web browser.  To do the
+latter, start from <TT>`http://egcs.cygnus.com/'</TT>.  The master
+FTP site is <TT>`ftp://ftp.cygnus.com/pub/egcs/releases'</TT>, however
+you'll probably get a faster download if you use a mirror site.
+Mirror sites also have egcs snapshots unless otherwise noted.
+
+<UL>
+<LI>
+
+US (west coast): <TT>`ftp://go.cygnus.com/pub/ftp.cygnus.com/egcs/'</TT>
+<LI>
+
+US (east coast): <TT>`ftp://ftp.goof.com/pub/pcg/egcs/'</TT>
+or (for releases only): <TT>`ftp://cambridge.cygnus.com/pub/egcs/'</TT>
+<LI>
+
+US (Arizona): <TT>`ftp://ftp.ninemoons.com/pub/mirrors/egcs/'</TT>
+<LI>
+
+UK: <TT>`ftp://sunsite.doc.ic.ac.uk/Mirrors/egcs.cygnus.com/pub/egcs/'</TT>
+<LI>
+
+Austria: <TT>`ftp://gd.tuwien.ac.at/gnu/egcs'</TT>
+<LI>
+
+France: <TT>`ftp://ftp.ilog.fr/pub/mirrors/egcs/'</TT> or
+<TT>`ftp://ftp.lip6.fr/pub/egcs'</TT>
+<LI>
+
+Czech Republic: <TT>`ftp://sunsite.mff.cuni.cz/pub/GNU/egcs/'</TT>
+<LI>
+
+Denmark: <TT>`ftp://sunsite.auc.dk/pub/egcs/'</TT>
+<LI>
+
+Germany <TT>`ftp://ftp.fu-berlin.de/unix/languages/egcs/'</TT> or
+<TT>`ftp://ftp.gwdg.de/pub/cygnus/egcs/'</TT>
+<LI>
+
+Poland: <TT>`ftp://sunsite.icm.edu.pl/pub/programming/egcs/'</TT>
+<LI>
+
+Sweden: <TT>`ftp://ftp.sunet.se/pub/gnu/egcs/'</TT>
+<LI>
+
+Brasil (releases only, no snapshots):
+<TT>`ftp://ftp.unicamp.br/pub/gnu/=EXTRA=/cygnus/egcs/'</TT>
+<LI>
+
+Portugal: <TT>`ftp://ftp.lca.uevora.pt/pub/egcs/'</TT>
+<LI>
+
+Romania: <TT>`ftp://ftp.lbi.ro/pub/egcs/'</TT>
+<LI>
+
+Australia/NZ (release only): <TT>`ftp://moshpit.cygnus.com/pub/egcs/'</TT>
+</UL>
+
+
+
+<H2><A NAME="SEC6" HREF="g++FAQ_toc.html#TOC6">Getting gcc/g++ for the HP Precision Architecture</A></H2>
+
+<P>
+<A NAME="IDX24"></A>
+<A NAME="IDX25"></A>
+<A NAME="IDX26"></A>
+<A NAME="IDX27"></A>
+
+</P>
+<P>
+If you use the HP Precision Architecture (HP-9000/7xx and HP-9000/8xx)
+and you want to use debugging, you'll need to use the GNU assembler, GAS
+(version 2.3 or later).  If you build from source, you must tell the
+configure program that you are using GAS or you won't get debugging
+support.  A non-standard debug format is used, since until recently HP
+considered their debug format a trade secret.  Thanks to the work of
+lots of good folks both inside and outside HP, the company has seen the
+error of its ways and has now released the required information.  The
+team at the University of Utah that did the gcc port now has code that
+understands the native HP format.
+
+</P>
+<P>
+There are binaries for GNU tools in
+<TT>`ftp://jaguar.cs.utah.edu/dist/'</TT>,
+but these are older versions.
+
+</P>
+<P>
+Jeff Law has left the University of Utah, so the Utah prebuilt
+binaries may be discontinued.
+
+</P>
+
+
+<H2><A NAME="SEC7" HREF="g++FAQ_toc.html#TOC7">Getting gcc/g++ binaries for Solaris 2.x</A></H2>
+
+<P>
+"Sun took the C compiler out of Solaris 2.x.  Am I stuck?"
+
+</P>
+<P>
+<A NAME="IDX28"></A>
+<A NAME="IDX29"></A>
+
+</P>
+<P>
+You can obtain and install prebuilt binaries of gcc.
+
+</P>
+
+<P>
+<A NAME="IDX30"></A>
+The WWW site <TT>`http://smc.vnet.net/'</TT>
+contains various
+GNU and freeware programs for Solaris 2.5 or 2.6, for either the Sparc
+or Intel platforms.  These are
+packaged to enable easy installation using the Solaris "pkgadd" utility.
+These include GNU emacs, gcc, gdb, perl, and others.
+
+</P>
+<P>
+You can find also find prebuilt binaries of many GNU tools, including the
+compiler, at <TT>`http://sunsite.unc.edu/pub/solaris/'</TT>.
+
+</P>
+
+
+<H2><A NAME="SEC8" HREF="g++FAQ_toc.html#TOC8">How do I get a copy of g++ for (some other platform)?</A></H2>
+
+<P>
+<A NAME="IDX31"></A>
+As of gcc-2.7.x, there is Windows NT support in gcc.  Some special
+utilities are required.  See the INSTALL file from the distribution.
+If you're interested in GNU tools on Windows NT, see
+<TT>`http://www.cygnus.com/misc/gnu-win32/'</TT> on the WWW, or the
+anonymous FTP directory
+<TT>`ftp://ftp.cygnus.com/pub/gnu-win32/'</TT>.
+
+</P>
+<P>
+<A NAME="IDX32"></A>
+<A NAME="IDX33"></A>
+<A NAME="IDX34"></A>
+
+</P>
+<P>
+The standard gcc/g++ distribution includes VMS support for the Vax.
+Since the FSF people don't use VMS, it's likely to be somewhat less
+solid than the Unix version.  Precompiled copies of g++ and libg++ in
+VMS-installable form for the Vax are available by FTP from
+<TT>`ftp://mango.rsmas.miami.edu/pub/VMS-gcc/'</TT>.
+
+</P>
+<P>
+<A NAME="IDX35"></A>
+Klaus Kaempf (kkaempf@progis.de)
+has done a port to OpenVMS for the Alpha; this is not yet a
+part of the official gcc/g++.
+The port includes g++ and all libraries from the libg++ distribution.  See
+<TT>`http://www.progis.de'</TT> for more details.
+
+</P>
+<P>
+<A NAME="IDX36"></A>
+<A NAME="IDX37"></A>
+<A NAME="IDX38"></A>
+<A NAME="IDX39"></A>
+There are two different versions of gcc/g++ for MS-DOS: EMX and DJGPP.
+EMX also works for OS/2 and is described later.
+DJGPP is DJ Delorie's port.  It can be found on many FTP archive
+sites; try
+<TT>`ftp://ftp.coast.net/SimTel/vendors/djgpp/'</TT>
+or, for a complete list, see
+<TT>`http://www.delorie.com/djgpp/getting.html'</TT>.
+
+</P>
+
+<P>
+The latest version of DJGPP is 2.00.  See
+<TT>`http://www.delorie.com/djgpp/v2/'</TT> for information on this version.
+
+</P>
+<P>
+FSF sells floppies with DJGPP on them; see above for ordering software
+from the FSF.
+
+</P>
+<P>
+DJGPP has its own newsgroup: <TT>`comp.os.msdos.djgpp'</TT>.
+
+</P>
+<P>
+<A NAME="IDX40"></A>
+Development and porting efforts for GNU tools, including gcc/g++, for
+the Amiga are maintained by an initiative named ADE (Amiga Developers
+Environment.  More information about ADE is available at
+<TT>`http://www.ninemoons.com/'</TT>.
+
+</P>
+<P>
+For more information on Amiga ports of gcc/g++, retrieve the file
+<TT>`ftp://prep.ai.mit.edu/pub/gnu/MicrosPorts/Amiga'</TT>.
+
+</P>
+<P>
+<A NAME="IDX41"></A>
+A port of gcc to the Atari ST can be found at <BR>
+<TT>`ftp://atari.archive.umich.edu/atari/Gnustuff/Tos'</TT>
+along with many
+other GNU programs.  This version is usually the same as the latest FSF
+release.  See the "Software FAQ" for the Usenet group
+<TT>`comp.sys.atari.st'</TT> for more information.
+
+</P>
+<P>
+<A NAME="IDX42"></A>
+<A NAME="IDX43"></A>
+
+</P>
+<P>
+EMX is a port of gcc to OS/2; it can also be used on MS-DOS.  In addition to
+the compiler port, the EMX port's C library attempts to provide a
+Unix-like environment.  For more information ask around on
+<TT>`comp.os.os2.programmer.porting'</TT>.  Version 0.9c, based on gcc-2.7.2.1,
+was released in
+November 1996.  It is available by FTP and the WWW from, among other
+places
+
+</P>
+
+<PRE>
+<TT>`http://www.os2ss.com/unix/emx09c/'</TT>
+<TT>`ftp://ftp.cdrom.com/pub/os2/emx09c/'</TT> (US)
+<TT>`ftp://ftp.leo.org/pub/comp/os/os2/leo/devtools/emx+gcc/'</TT> (Germany)
+</PRE>
+
+<P>
+Eberhard Mattes did the EMX port.  His address is
+mattes@azu.informatik.uni-stuttgart.de.
+Read the FAQ file included with the distribution before harrassing the author.
+
+</P>
+<P>
+<A NAME="IDX44"></A>
+<A NAME="IDX45"></A>
+
+</P>
+<P>
+I'm looking for more information on gcc/g++ support on the Apple
+Macintosh.  Until recently, this FAQ did not provide such information,
+but FSF is no longer boycotting Apple as the League for Programming
+Freedom boycott has been dropped.
+
+</P>
+<P>
+Versions 1.37.1 and 2.3.3 of gcc were ported by Stan Shebs and are available
+at <BR>
+<TT>`ftp://ftp.cygnus.com/pub/mac'</TT>
+
+</P>
+<P>
+They are both interfaced to MPW.
+Stan is working on a version using the current (post-2.7) sources, contact
+him directly (shebs@cygnus.com) for more information.
+
+</P>
+
+
+<H2><A NAME="SEC9" HREF="g++FAQ_toc.html#TOC9">But I can only find g++-1.42!</A></H2>
+
+<P>
+"I keep hearing people talking about g++ 2.8.1 (or some other number
+starting with 2), but the latest version I can find is g++ 1.42.  Where
+is it?"
+
+</P>
+<P>
+<A NAME="IDX46"></A>
+<A NAME="IDX47"></A>
+As of gcc 2.0, C, C++, and Objective-C as well are all combined into a
+single distribution called gcc.  If you get gcc you already have g++.  The
+standard installation procedure for any gcc version 2 compiler will
+install the C++ compiler as well.
+
+</P>
+<P>
+One could argue that we shouldn't even refer to "g++-2.x.y" but it's a
+convention.  It means "the C++ compiler included with gcc-2.x.y."
+
+</P>
+<P><HR><P>
+<p>Go to the <A HREF="g++FAQ_1.html">first</A>, <A HREF="g++FAQ_1.html">previous</A>, <A HREF="g++FAQ_3.html">next</A>, <A HREF="g++FAQ_8.html">last</A> section, <A HREF="g++FAQ_toc.html">table of contents</A>.
+</BODY>
+</HTML>

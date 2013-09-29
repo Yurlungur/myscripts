@@ -1,0 +1,277 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from gcc.texi on 7 November 1999 -->
+
+<TITLE>Using and Porting the GNU Compiler Collection (GCC) - The Configuration File</TITLE>
+<link href="gcc_19.html" rel=Next>
+<link href="gcc_17.html" rel=Previous>
+<link href="gcc_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="gcc_1.html">first</A>, <A HREF="gcc_17.html">previous</A>, <A HREF="gcc_19.html">next</A>, <A HREF="gcc_24.html">last</A> section, <A HREF="gcc_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC251" HREF="gcc_toc.html#TOC251">The Configuration File</A></H1>
+<P>
+<A NAME="IDX2177"></A>
+<A NAME="IDX2178"></A>
+
+</P>
+<P>
+The configuration file <TT>`xm-<VAR>machine</VAR>.h'</TT> contains macro
+definitions that describe the machine and system on which the compiler
+is running, unlike the definitions in <TT>`<VAR>machine</VAR>.h'</TT>, which
+describe the machine for which the compiler is producing output.  Most
+of the values in <TT>`xm-<VAR>machine</VAR>.h'</TT> are actually the same on all
+machines that GCC runs on, so large parts of all configuration files
+are identical.  But there are some macros that vary:
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>USG</CODE>
+<DD>
+<A NAME="IDX2179"></A>
+ 
+Define this macro if the host system is System V.
+
+<A NAME="IDX2180"></A>
+<DT><CODE>VMS</CODE>
+<DD>
+Define this macro if the host system is VMS.
+
+<A NAME="IDX2181"></A>
+<DT><CODE>FATAL_EXIT_CODE</CODE>
+<DD>
+A C expression for the status code to be returned when the compiler
+exits after serious errors.
+
+<A NAME="IDX2182"></A>
+<DT><CODE>SUCCESS_EXIT_CODE</CODE>
+<DD>
+A C expression for the status code to be returned when the compiler
+exits without serious errors.
+
+<A NAME="IDX2183"></A>
+<DT><CODE>HOST_WORDS_BIG_ENDIAN</CODE>
+<DD>
+Defined if the host machine stores words of multi-word values in
+big-endian order.  (GCC does not depend on the host byte ordering
+within a word.)
+
+<A NAME="IDX2184"></A>
+<DT><CODE>HOST_FLOAT_WORDS_BIG_ENDIAN</CODE>
+<DD>
+Define this macro to be 1 if the host machine stores <CODE>DFmode</CODE>,
+<CODE>XFmode</CODE> or <CODE>TFmode</CODE> floating point numbers in memory with the
+word containing the sign bit at the lowest address; otherwise, define it
+to be zero.
+
+This macro need not be defined if the ordering is the same as for
+multi-word integers.
+
+<A NAME="IDX2185"></A>
+<DT><CODE>HOST_FLOAT_FORMAT</CODE>
+<DD>
+A numeric code distinguishing the floating point format for the host
+machine.  See <CODE>TARGET_FLOAT_FORMAT</CODE> in section <A HREF="gcc_17.html#SEC202">Storage Layout</A> for the
+alternatives and default.
+
+<A NAME="IDX2186"></A>
+<DT><CODE>HOST_BITS_PER_CHAR</CODE>
+<DD>
+A C expression for the number of bits in <CODE>char</CODE> on the host
+machine.
+
+<A NAME="IDX2187"></A>
+<DT><CODE>HOST_BITS_PER_SHORT</CODE>
+<DD>
+A C expression for the number of bits in <CODE>short</CODE> on the host
+machine.
+
+<A NAME="IDX2188"></A>
+<DT><CODE>HOST_BITS_PER_INT</CODE>
+<DD>
+A C expression for the number of bits in <CODE>int</CODE> on the host
+machine.
+
+<A NAME="IDX2189"></A>
+<DT><CODE>HOST_BITS_PER_LONG</CODE>
+<DD>
+A C expression for the number of bits in <CODE>long</CODE> on the host
+machine.
+
+<A NAME="IDX2190"></A>
+<DT><CODE>ONLY_INT_FIELDS</CODE>
+<DD>
+Define this macro to indicate that the host compiler only supports
+<CODE>int</CODE> bit fields, rather than other integral types, including
+<CODE>enum</CODE>, as do most C compilers.
+
+<A NAME="IDX2191"></A>
+<DT><CODE>OBSTACK_CHUNK_SIZE</CODE>
+<DD>
+A C expression for the size of ordinary obstack chunks.
+If you don't define this, a usually-reasonable default is used.
+
+<A NAME="IDX2192"></A>
+<DT><CODE>OBSTACK_CHUNK_ALLOC</CODE>
+<DD>
+The function used to allocate obstack chunks.
+If you don't define this, <CODE>xmalloc</CODE> is used.
+
+<A NAME="IDX2193"></A>
+<DT><CODE>OBSTACK_CHUNK_FREE</CODE>
+<DD>
+The function used to free obstack chunks.
+If you don't define this, <CODE>free</CODE> is used.
+
+<A NAME="IDX2194"></A>
+<DT><CODE>USE_C_ALLOCA</CODE>
+<DD>
+Define this macro to indicate that the compiler is running with the
+<CODE>alloca</CODE> implemented in C.  This version of <CODE>alloca</CODE> can be
+found in the file <TT>`alloca.c'</TT>; to use it, you must also alter the
+<TT>`Makefile'</TT> variable <CODE>ALLOCA</CODE>.  (This is done automatically
+for the systems on which we know it is needed.)
+
+If you do define this macro, you should probably do it as follows:
+
+
+<PRE>
+#ifndef __GNUC__
+#define USE_C_ALLOCA
+#else
+#define alloca __builtin_alloca
+#endif
+</PRE>
+
+so that when the compiler is compiled with GCC it uses the more
+efficient built-in <CODE>alloca</CODE> function.
+
+<DT><CODE>FUNCTION_CONVERSION_BUG</CODE>
+<DD>
+<A NAME="IDX2195"></A>
+Define this macro to indicate that the host compiler does not properly
+handle converting a function value to a pointer-to-function when it is
+used in an expression.
+
+<A NAME="IDX2196"></A>
+<DT><CODE>MULTIBYTE_CHARS</CODE>
+<DD>
+Define this macro to enable support for multibyte characters in the
+input to GCC.  This requires that the host system support the ANSI C
+library functions for converting multibyte characters to wide
+characters.
+
+<A NAME="IDX2197"></A>
+<DT><CODE>POSIX</CODE>
+<DD>
+Define this if your system is POSIX.1 compliant.
+
+<A NAME="IDX2198"></A>
+<DT><CODE>NO_SYS_SIGLIST</CODE>
+<DD>
+Define this if your system <EM>does not</EM> provide the variable
+<CODE>sys_siglist</CODE>.
+
+<A NAME="IDX2199"></A>
+Some systems do provide this variable, but with a different name such
+as <CODE>_sys_siglist</CODE>.  On these systems, you can define
+<CODE>sys_siglist</CODE> as a macro which expands into the name actually
+provided.
+
+Autoconf normally defines <CODE>SYS_SIGLIST_DECLARED</CODE> when it finds a
+declaration of <CODE>sys_siglist</CODE> in the system header files.
+However, when you define <CODE>sys_siglist</CODE> to a different name
+autoconf will not automatically define <CODE>SYS_SIGLIST_DECLARED</CODE>.
+Therefore, if you define <CODE>sys_siglist</CODE>, you should also define
+<CODE>SYS_SIGLIST_DECLARED</CODE>.
+
+<A NAME="IDX2200"></A>
+<DT><CODE>USE_PROTOTYPES</CODE>
+<DD>
+Define this to be 1 if you know that the host compiler supports
+prototypes, even if it doesn't define __STDC__, or define
+it to be 0 if you do not want any prototypes used in compiling
+GCC.  If <SAMP>`USE_PROTOTYPES'</SAMP> is not defined, it will be
+determined automatically whether your compiler supports
+prototypes by checking if <SAMP>`__STDC__'</SAMP> is defined.
+
+<A NAME="IDX2201"></A>
+<DT><CODE>NO_MD_PROTOTYPES</CODE>
+<DD>
+Define this if you wish suppression of prototypes generated from
+the machine description file, but to use other prototypes within
+GCC.  If <SAMP>`USE_PROTOTYPES'</SAMP> is defined to be 0, or the
+host compiler does not support prototypes, this macro has no
+effect.
+
+<A NAME="IDX2202"></A>
+<DT><CODE>MD_CALL_PROTOTYPES</CODE>
+<DD>
+Define this if you wish to generate prototypes for the
+<CODE>gen_call</CODE> or <CODE>gen_call_value</CODE> functions generated from
+the machine description file.  If <SAMP>`USE_PROTOTYPES'</SAMP> is
+defined to be 0, or the host compiler does not support
+prototypes, or <SAMP>`NO_MD_PROTOTYPES'</SAMP> is defined, this macro has
+no effect.  As soon as all of the machine descriptions are
+modified to have the appropriate number of arguments, this macro
+will be removed.
+
+<A NAME="IDX2203"></A>
+<DT><CODE>PATH_SEPARATOR</CODE>
+<DD>
+Define this macro to be a C character constant representing the
+character used to separate components in paths.  The default value is
+the colon character
+
+<A NAME="IDX2204"></A>
+<DT><CODE>DIR_SEPARATOR</CODE>
+<DD>
+If your system uses some character other than slash to separate
+directory names within a file specification, define this macro to be a C
+character constant specifying that character.  When GCC displays file
+names, the character you specify will be used.  GCC will test for
+both slash and the character you specify when parsing filenames.
+
+<A NAME="IDX2205"></A>
+<DT><CODE>OBJECT_SUFFIX</CODE>
+<DD>
+Define this macro to be a C string representing the suffix for object
+files on your machine.  If you do not define this macro, GCC will use
+<SAMP>`.o'</SAMP> as the suffix for object files.
+
+<A NAME="IDX2206"></A>
+<DT><CODE>EXECUTABLE_SUFFIX</CODE>
+<DD>
+Define this macro to be a C string representing the suffix for executable
+files on your machine.  If you do not define this macro, GCC will use
+the null string as the suffix for object files.
+
+<A NAME="IDX2207"></A>
+<DT><CODE>COLLECT_EXPORT_LIST</CODE>
+<DD>
+If defined, <CODE>collect2</CODE> will scan the individual object files
+specified on its command line and create an export list for the linker.
+Define this macro for systems like AIX, where the linker discards
+object files that are not referenced from <CODE>main</CODE> and uses export
+lists.
+</DL>
+
+<P>
+<A NAME="IDX2208"></A>
+<A NAME="IDX2209"></A>
+In addition, configuration files for system V define <CODE>bcopy</CODE>,
+<CODE>bzero</CODE> and <CODE>bcmp</CODE> as aliases.  Some files define <CODE>alloca</CODE>
+as a macro when compiled with GCC, in order to take advantage of the
+benefit of GCC's built-in <CODE>alloca</CODE>.
+
+</P>
+<P><HR><P>
+<p>Go to the <A HREF="gcc_1.html">first</A>, <A HREF="gcc_17.html">previous</A>, <A HREF="gcc_19.html">next</A>, <A HREF="gcc_24.html">last</A> section, <A HREF="gcc_toc.html">table of contents</A>.
+</BODY>
+</HTML>

@@ -1,0 +1,403 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from ../../../gas/doc/as.texinfo on 16 March 1999 -->
+
+<TITLE>Using as - D30V Dependent Features</TITLE>
+<link href="as_14.html" rel=Next>
+<link href="as_12.html" rel=Previous>
+<link href="as_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="as_1.html">first</A>, <A HREF="as_12.html">previous</A>, <A HREF="as_14.html">next</A>, <A HREF="as_28.html">last</A> section, <A HREF="as_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC178" HREF="as_toc.html#TOC178">D30V Dependent Features</A></H1>
+
+<P>
+<A NAME="IDX535"></A>
+
+<UL>
+<LI><A HREF="as_13.html#SEC179">D30V-Opts</A>: D30V Options
+<LI><A HREF="as_13.html#SEC180">D30V-Syntax</A>: Syntax
+<LI><A HREF="as_13.html#SEC187">D30V-Float</A>: Floating Point
+<LI><A HREF="as_13.html#SEC188">D30V-Opcodes</A>: Opcodes
+</UL>
+
+
+
+<H2><A NAME="SEC179" HREF="as_toc.html#TOC179">D30V Options</A></H2>
+<P>
+<A NAME="IDX536"></A>
+<A NAME="IDX537"></A>
+The Mitsubishi D30V version of <CODE>as</CODE> has a few machine
+dependent options.
+
+</P>
+<DL COMPACT>
+
+<DT><SAMP>`-O'</SAMP>
+<DD>
+The D30V can often execute two sub-instructions in parallel. When this option
+is used, <CODE>as</CODE> will attempt to optimize its output by detecting when
+instructions can be executed in parallel.
+
+<DT><SAMP>`-n'</SAMP>
+<DD>
+When this option is used, <CODE>as</CODE> will issue a warning every
+time it adds a nop instruction.
+
+<DT><SAMP>`-N'</SAMP>
+<DD>
+When this option is used, <CODE>as</CODE> will issue a warning if it
+needs to insert a nop after a 32-bit multiply before a load or 16-bit
+multiply instruction.
+</DL>
+
+
+
+<H2><A NAME="SEC180" HREF="as_toc.html#TOC180">Syntax</A></H2>
+<P>
+<A NAME="IDX538"></A>
+<A NAME="IDX539"></A>
+
+</P>
+<P>
+The D30V syntax is based on the syntax in Mitsubishi's D30V architecture manual.
+The differences are detailed below.
+
+</P>
+
+<UL>
+<LI><A HREF="as_13.html#SEC181">D30V-Size</A>: Size Modifiers
+<LI><A HREF="as_13.html#SEC182">D30V-Subs</A>: Sub-Instructions
+<LI><A HREF="as_13.html#SEC183">D30V-Chars</A>: Special Characters
+<LI><A HREF="as_13.html#SEC184">D30V-Guarded</A>: Guarded Execution
+<LI><A HREF="as_13.html#SEC185">D30V-Regs</A>: Register Names
+<LI><A HREF="as_13.html#SEC186">D30V-Addressing</A>: Addressing Modes
+</UL>
+
+
+
+<H3><A NAME="SEC181" HREF="as_toc.html#TOC181">Size Modifiers</A></H3>
+<P>
+<A NAME="IDX540"></A>
+<A NAME="IDX541"></A>
+The D30V version of <CODE>as</CODE> uses the instruction names in the D30V
+Architecture Manual.  However, the names in the manual are sometimes ambiguous.
+There are instruction names that can assemble to a short or long form opcode.
+How does the assembler pick the correct form?  <CODE>as</CODE> will always pick the
+smallest form if it can.  When dealing with a symbol that is not defined yet when a
+line is being assembled, it will always use the long form.  If you need to force the 
+assembler to use either the short or long form of the instruction, you can append
+either <SAMP>`.s'</SAMP> (short) or <SAMP>`.l'</SAMP> (long) to it.  For example, if you are writing 
+an assembly program and you want to do a branch to a symbol that is defined later
+in your program, you can write <SAMP>`bra.s foo'</SAMP>. 
+Objdump and GDB will always append <SAMP>`.s'</SAMP> or <SAMP>`.l'</SAMP> to instructions which
+have both short and long forms.
+
+</P>
+
+
+<H3><A NAME="SEC182" HREF="as_toc.html#TOC182">Sub-Instructions</A></H3>
+<P>
+<A NAME="IDX542"></A>
+<A NAME="IDX543"></A>
+The D30V assembler takes as input a series of instructions, either one-per-line,
+or in the special two-per-line format described in the next section.  Some of these
+instructions will be short-form or sub-instructions.  These sub-instructions can be packed
+into a single instruction.  The assembler will do this automatically.  It will also detect
+when it should not pack instructions.  For example, when a label is defined, the next
+instruction will never be packaged with the previous one.  Whenever a branch and link
+instruction is called, it will not be packaged with the next instruction so the return
+address will be valid.  Nops are automatically inserted when necessary.
+
+</P>
+<P>
+If you do not want the assembler automatically making these decisions, you can control
+the packaging and execution type (parallel or sequential) with the special execution 
+symbols described in the next section.  
+
+</P>
+
+
+<H3><A NAME="SEC183" HREF="as_toc.html#TOC183">Special Characters</A></H3>
+<P>
+<A NAME="IDX544"></A>
+<A NAME="IDX545"></A>
+<SAMP>`;'</SAMP> and <SAMP>`#'</SAMP> are the line comment characters.
+<A NAME="IDX546"></A>
+<A NAME="IDX547"></A>
+Sub-instructions may be executed in order, in reverse-order, or in parallel.
+Instructions listed in the standard one-per-line format will be executed
+sequentially unless you use the <SAMP>`-O'</SAMP> option.
+
+</P>
+<P>
+To specify the executing order, use the following symbols: 
+<DL COMPACT>
+
+<DT><SAMP>`-&#62;'</SAMP>
+<DD>
+Sequential with instruction on the left first.
+
+<DT><SAMP>`&#60;-'</SAMP>
+<DD>
+Sequential with instruction on the right first.
+
+<DT><SAMP>`||'</SAMP>
+<DD>
+Parallel
+</DL>
+
+<P>
+The D30V syntax allows either one instruction per line, one instruction per line with
+the execution symbol, or two instructions per line.  For example
+<DL COMPACT>
+
+<DT><CODE>abs r2,r3 -&#62; abs r4,r5</CODE>
+<DD>
+Execute these sequentially.  The instruction on the right is in the right
+container and is executed second.
+
+<DT><CODE>abs r2,r3 &#60;- abs r4,r5</CODE>
+<DD>
+Execute these reverse-sequentially.  The instruction on the right is in the right
+container, and is executed first.
+
+<DT><CODE>abs r2,r3 || abs r4,r5</CODE>
+<DD>
+Execute these in parallel.
+
+<DT><CODE>ldw r2,@(r3,r4) ||</CODE>
+<DD>
+<DT><CODE>mulx r6,r8,r9</CODE>
+<DD>
+Two-line format. Execute these in parallel.
+
+<DT><CODE>mulx a0,r8,r9</CODE>
+<DD>
+<DT><CODE>stw r2,@(r3,r4)</CODE>
+<DD>
+Two-line format. Execute these sequentially unless <SAMP>`-O'</SAMP> option is
+used.  If the <SAMP>`-O'</SAMP> option is used, the assembler will determine if
+the instructions could be done in parallel (the above two instructions
+can be done in parallel), and if so, emit them as parallel instructions.
+The assembler will put them in the proper containers.  In the above
+example, the assembler will put the <SAMP>`stw'</SAMP> instruction in left
+container and the <SAMP>`mulx'</SAMP> instruction in the right container.
+
+<DT><CODE>stw r2,@(r3,r4) -&#62;</CODE>
+<DD>
+<DT><CODE>mulx a0,r8,r9</CODE>
+<DD>
+Two-line format.  Execute the <SAMP>`stw'</SAMP> instruction followed by the
+<SAMP>`mulx'</SAMP> instruction sequentially.  The first instruction goes in the
+left container and the second instruction goes into right container.
+The assembler will give an error if the machine ordering constraints are
+violated.
+
+<DT><CODE>stw r2,@(r3,r4) &#60;-</CODE>
+<DD>
+<DT><CODE>mulx a0,r8,r9</CODE>
+<DD>
+Same as previous example, except that the <SAMP>`mulx'</SAMP> instruction is
+executed before the <SAMP>`stw'</SAMP> instruction.
+</DL>
+
+<P>
+<A NAME="IDX548"></A>
+<A NAME="IDX549"></A>
+Since <SAMP>`$'</SAMP> has no special meaning, you may use it in symbol names.
+
+</P>
+
+
+<H3><A NAME="SEC184" HREF="as_toc.html#TOC184">Guarded Execution</A></H3>
+<P>
+<A NAME="IDX550"></A>
+<CODE>as</CODE> supports the full range of guarded execution
+directives for each instruction.  Just append the directive after the
+instruction proper.  The directives are:
+
+</P>
+<DL COMPACT>
+
+<DT><SAMP>`/tx'</SAMP>
+<DD>
+Execute the instruction if flag f0 is true.
+<DT><SAMP>`/fx'</SAMP>
+<DD>
+Execute the instruction if flag f0 is false.
+<DT><SAMP>`/xt'</SAMP>
+<DD>
+Execute the instruction if flag f1 is true.
+<DT><SAMP>`/xf'</SAMP>
+<DD>
+Execute the instruction if flag f1 is false.
+<DT><SAMP>`/tt'</SAMP>
+<DD>
+Execute the instruction if both flags f0 and f1 are true.
+<DT><SAMP>`/tf'</SAMP>
+<DD>
+Execute the instruction if flag f0 is true and flag f1 is false.
+</DL>
+
+
+
+<H3><A NAME="SEC185" HREF="as_toc.html#TOC185">Register Names</A></H3>
+<P>
+<A NAME="IDX551"></A>
+<A NAME="IDX552"></A>
+You can use the predefined symbols <SAMP>`r0'</SAMP> through <SAMP>`r63'</SAMP> to refer
+to the D30V registers.  You can also use <SAMP>`sp'</SAMP> as an alias for
+<SAMP>`r63'</SAMP> and <SAMP>`link'</SAMP> as an alias for <SAMP>`r62'</SAMP>.  The accumulators
+are <SAMP>`a0'</SAMP> and <SAMP>`a1'</SAMP>.
+
+</P>
+<P>
+The D30V also has predefined symbols for these control registers and status bits:
+<DL COMPACT>
+
+<DT><CODE>psw</CODE>
+<DD>
+Processor Status Word
+<DT><CODE>bpsw</CODE>
+<DD>
+Backup Processor Status Word
+<DT><CODE>pc</CODE>
+<DD>
+Program Counter
+<DT><CODE>bpc</CODE>
+<DD>
+Backup Program Counter
+<DT><CODE>rpt_c</CODE>
+<DD>
+Repeat Count
+<DT><CODE>rpt_s</CODE>
+<DD>
+Repeat Start address
+<DT><CODE>rpt_e</CODE>
+<DD>
+Repeat End address
+<DT><CODE>mod_s</CODE>
+<DD>
+Modulo Start address
+<DT><CODE>mod_e</CODE>
+<DD>
+Modulo End address
+<DT><CODE>iba</CODE>
+<DD>
+Instruction Break Address
+<DT><CODE>f0</CODE>
+<DD>
+Flag 0
+<DT><CODE>f1</CODE>
+<DD>
+Flag 1
+<DT><CODE>f2</CODE>
+<DD>
+Flag 2
+<DT><CODE>f3</CODE>
+<DD>
+Flag 3
+<DT><CODE>f4</CODE>
+<DD>
+Flag 4
+<DT><CODE>f5</CODE>
+<DD>
+Flag 5
+<DT><CODE>f6</CODE>
+<DD>
+Flag 6
+<DT><CODE>f7</CODE>
+<DD>
+Flag 7
+<DT><CODE>s</CODE>
+<DD>
+Same as flag 4 (saturation flag)
+<DT><CODE>v</CODE>
+<DD>
+Same as flag 5 (overflow flag)
+<DT><CODE>va</CODE>
+<DD>
+Same as flag 6 (sticky overflow flag)
+<DT><CODE>c</CODE>
+<DD>
+Same as flag 7 (carry/borrow flag)
+<DT><CODE>b</CODE>
+<DD>
+Same as flag 7 (carry/borrow flag)
+</DL>
+<P>
+        
+
+
+<H3><A NAME="SEC186" HREF="as_toc.html#TOC186">Addressing Modes</A></H3>
+<P>
+<A NAME="IDX553"></A>
+<A NAME="IDX554"></A>
+<CODE>as</CODE> understands the following addressing modes for the D30V.
+<CODE>R<VAR>n</VAR></CODE> in the following refers to any of the numbered
+registers, but <EM>not</EM> the control registers.
+<DL COMPACT>
+
+<DT><CODE>R<VAR>n</VAR></CODE>
+<DD>
+Register direct
+<DT><CODE>@R<VAR>n</VAR></CODE>
+<DD>
+Register indirect
+<DT><CODE>@R<VAR>n</VAR>+</CODE>
+<DD>
+Register indirect with post-increment
+<DT><CODE>@R<VAR>n</VAR>-</CODE>
+<DD>
+Register indirect with post-decrement
+<DT><CODE>@-SP</CODE>
+<DD>
+Register indirect with pre-decrement
+<DT><CODE>@(<VAR>disp</VAR>, R<VAR>n</VAR>)</CODE>
+<DD>
+Register indirect with displacement
+<DT><CODE><VAR>addr</VAR></CODE>
+<DD>
+PC relative address (for branch or rep). 
+<DT><CODE>#<VAR>imm</VAR></CODE>
+<DD>
+Immediate data (the <SAMP>`#'</SAMP> is optional and ignored)
+</DL>
+
+
+
+<H2><A NAME="SEC187" HREF="as_toc.html#TOC187">Floating Point</A></H2>
+<P>
+<A NAME="IDX555"></A>
+<A NAME="IDX556"></A>
+The D30V has no hardware floating point, but the <CODE>.float</CODE> and <CODE>.double</CODE>
+directives generates IEEE floating-point numbers for compatibility
+with other development tools. 
+
+</P>
+
+
+<H2><A NAME="SEC188" HREF="as_toc.html#TOC188">Opcodes</A></H2>
+<P>
+<A NAME="IDX557"></A>
+<A NAME="IDX558"></A>
+<A NAME="IDX559"></A>
+<A NAME="IDX560"></A>
+For detailed information on the D30V machine instruction set, see
+<CITE>D30V Architecture: A VLIW Microprocessor for Multimedia Applications</CITE> 
+(Mitsubishi Electric Corp.).
+<CODE>as</CODE> implements all the standard D30V opcodes.  The only changes are those
+described in the section on size modifiers
+
+</P>
+
+<P><HR><P>
+<p>Go to the <A HREF="as_1.html">first</A>, <A HREF="as_12.html">previous</A>, <A HREF="as_14.html">next</A>, <A HREF="as_28.html">last</A> section, <A HREF="as_toc.html">table of contents</A>.
+</BODY>
+</HTML>

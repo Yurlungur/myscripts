@@ -10,10 +10,10 @@
 ROTATOR=/home/jonah/Dropbox/myscripts/randomwallpaper.py
 
 # Cycle the wallpaper once before waiting for the next rotation
-python $ROTATOR
+python3 $ROTATOR
 
 # The never ending while loop which cycles the wallpaper
 while true; do
     sleep $@
-    python $ROTATOR
+    python3 $ROTATOR
 done

@@ -1,0 +1,93 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Undoing Changes</TITLE>
+<P>Go to the <A HREF="emacs_8.html">previous</A>, <A HREF="emacs_10.html">next</A> section.<P>
+<A NAME="IDX130"></A>
+<A NAME="IDX131"></A>
+<A NAME="IDX132"></A>
+<H1><A NAME="SEC29" HREF="emacs_toc.html#SEC29">Undoing Changes</A></H1>
+<P>
+  Emacs allows all changes made in the text of a buffer to be undone, up
+to a certain amount of change.  Each buffer records changes
+individually, and the undo command always applies to the current
+buffer.  Usually each editing command makes a separate entry in the undo
+records, but some commands such as <CODE>query-replace</CODE> make many
+entries, and very simple commands such as self-inserting characters are
+often grouped to make undoing less tedious.
+<P>
+<DL COMPACT>
+<DT><KBD>C-x u</KBD>
+<DD>Undo one batch of changes--usually, one command worth (<CODE>undo</CODE>).
+<DT><KBD>C-_</KBD>
+<DD>The same.
+</DL>
+<A NAME="IDX133"></A>
+<A NAME="IDX134"></A>
+<A NAME="IDX135"></A>
+<P>
+  The command <KBD>C-x u</KBD> or <KBD>C-_</KBD> is how you undo.  The first time
+you give this command, it undoes the last change.  Point moves back to
+where it was before the command that made the change.
+<P>
+  Consecutive repetitions of the <KBD>C-_</KBD> or <KBD>C-x u</KBD> commands undo
+earlier and earlier changes, back to the limit of what has been
+recorded.  If all recorded changes have already been undone, the undo
+command prints an error message and does nothing.
+<P>
+  Any command other than an undo command breaks the sequence of undo
+commands.  Starting at this moment, the previous undo commands are
+considered ordinary changes that can themselves be undone.  Thus, you can
+redo changes you have undone by typing <KBD>C-f</KBD> or any other command that
+will have no important effect, and then using more undo commands.
+<P>
+  If you notice that a buffer has been modified accidentally, the easiest
+way to recover is to type <KBD>C-_</KBD> repeatedly until the stars disappear
+from the front of the mode line.  At this time, all the modifications you
+made have been cancelled.  If you do not remember whether you changed the
+buffer deliberately, type <KBD>C-_</KBD> once, and when you see the last change
+you made undone, you will remember why you made it.  If it was an accident,
+leave it undone.  If it was deliberate, redo the change as described in the
+preceding paragraph.
+<P>
+  Whenever an undo command makes the stars disappear from the mode line,
+it means that the buffer contents are the same as they were when the
+file was last read in or saved.
+<P>
+  Not all buffers record undo information.  Buffers whose names start with
+spaces don't; these buffers are used internally by Emacs and its extensions
+to hold text that users don't normally look at or edit.
+<P>
+  You cannot undo mere cursor motion; only changes in the buffer
+contents save undo information.  However, some cursor motion commands
+set the mark, so if you use these commands from time to time, you can
+move back to the neighborhoods you have moved through by popping the
+mark ring (see section <A HREF="emacs_13.html#SEC52">The Mark Ring</A>).
+<A NAME="IDX136"></A>
+<A NAME="IDX137"></A>
+<A NAME="IDX138"></A>
+<P>
+  When the undo information of a buffer becomes too large, Emacs
+discards the oldest undo information from time to time (during garbage
+collection).  You can specify how much undo information to keep by
+setting two variables: <CODE>undo-limit</CODE> and <CODE>undo-strong-limit</CODE>.
+Their values are expressed in units of bytes of space.
+<P>
+  The variable <CODE>undo-limit</CODE> sets a soft limit: Emacs keeps undo
+data for enough commands to reach this size, and perhaps exceed it, but
+does not keep data for any earlier commands beyond that.  Its default
+value is 20000.  The variable <CODE>undo-strong-limit</CODE> sets a harsher
+limit: the command which pushes the size past this amount is itself
+forgotten.  Its default value is 30000.
+<P>
+  Regardless of the values of those variables, the most recent change is
+never discarded, so there is no danger that garbage collection occurring
+right after an unintentional large change might prevent you from undoing
+it.
+<P>
+  The reason the <CODE>undo</CODE> command has two keys, <KBD>C-x u</KBD> and
+<KBD>C-_</KBD>, set up to run it is that it is worthy of a single-character
+key, but on some keyboards it is not obvious how to type <KBD>C-_</KBD>.
+<KBD>C-x u</KBD> is an alternative you can type in the same fashion on any
+terminal.
+<P>Go to the <A HREF="emacs_8.html">previous</A>, <A HREF="emacs_10.html">next</A> section.<P>

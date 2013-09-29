@@ -1,0 +1,692 @@
+<HTML>
+<HEAD>
+<TITLE>
+CSCI 1300 Exercise 1 - Using GNU Emacs and G++
+</TITLE>
+</HEAD>
+<BODY>
+
+<H2>
+    CSCI 1300 - Exercise 1
+    <BR>
+    Using GNU Emacs and G++
+</H2>
+
+<FORM METHOD=POST ACTION="../NoSubmitButton">
+
+<B>When and Where to Start this First Exercise</B>
+<br><B>...and What To Do If You Missed the First Recitation</B></P>
+<P CLASS="Main-body-small-type">
+<A NAME="pgfId=2086">
+ </A>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>PC Labs in the<BR>Engineering Center</TH>
+<TR><TD>CR 235&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 239
+<TR><TD>CR 244&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 252 (24 hours)
+<TR><TD>CH 107&nbsp;&nbsp;&nbsp;&nbsp;<TD>ME 107
+<TR><TD COLSPAN=2>Other campus sites are<BR>listed 
+at <a href="http://www.colorado.edu/its/labs/">www.colorado.edu/its/labs</a>.
+</TABLE>
+It is best to start a lab exercise during your assigned recitation period. 
+If you run into any immediate problems, one of the instructors will be able to help. 
+However, some of you might have missed your assigned time during the first week. 
+If so, then you'll need to work on your own home machine or
+go to one of the PC labs on your own to get started.
+<P>
+
+<B>Required Completion Date</B>
+<P>
+This exercise must be completed as soon as possible after your first
+recitation. 
+Otherwise you won't have time to complete the first homework
+(which is due the next week).
+<P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Set up Your University Account and Identikey
+</B>
+<UL><LI>
+If you are working in the university PC labs, you must first have a university
+account and identikey password. If you've already set these up, go to
+the next step. Otherwise, there are two methods to set up the account
+(as described in
+the handout <I>Getting Started with Computing</I>,
+available in ECCR 239):
+<OL>
+<LI>From any web-connected machine (including the ones in the
+first-floor lobby of the Engineering Center, just east of the
+revolving doors)
+<UL>
+<LI>
+Press the return key, and you should get a small grey box.
+Then click on the "Set Identikey" button and follow the directions
+to set up your university PC account.
+</UL>
+<LI>Or you can
+visit the Information Technology Service Center on the first floor
+of the Telecommunications Building (two buildings east of the
+University
+Memorial Center). If you can't find them, telephone at 303-735-HELP.
+Bring your BuffOne card for identification.
+</UL>
+<P><LI>
+Now, whenever you use a university PC,
+your first task is to login through the Identikey system. Do this by
+pressing
+the return key to get the login screen, then type your login name and
+IdentiKey password. This will take you to the Windows work screen.
+</UL>
+
+<P>
+<B><INPUT TYPE="checkbox" NAME="Register">
+Installing the CS1300 Software
+</B>
+<UL>
+<P><LI>
+At the beginning of each lab exercise, you'll need to prepare the PC
+to use the CS1300 software. There are several ways to do this,
+depending on your location:
+
+<P>
+<DL>
+<DT><B>Option 1: On Engineering Center PCs: Server Method</B>
+<DD>On PCs in the Engineering Center, try this method first. If it
+doesn't work, then try the next method instead.
+<OL>
+<LI>Start a DOS session by clicking: Start, Programs, MS-DOS Prompt.
+<LI>If the DOS
+session takes up the whole screen, then reduce it to a smaller window
+by holding down the Alt key and pressing Enter.
+<LI>
+From the DOS-session, try this command: 
+<CODE>&nbsp;&nbsp;H:\gocs</CODE>
+<BR>If the command doesn't
+seem to work, then ask your TA whether the H:\ should be changed
+to something else.
+</DL>
+
+
+<P>
+<DL>
+<DT><B>Or Option 2: On your home PC:</B>
+<DD>
+Directions for permanently installing the CS1300 software on your home
+machine are at
+<A
+HREF="../README.html">www.cs.colorado.edu/~main/cs1300/README.html</A>.
+</DL>
+
+
+<P>
+<DL>
+<DT><B>Or Option 3: On Most PCs: Download Method</B>
+<DD>You can use this method on any machine with a fast internet
+connection and about 100MB of free disk drive space.
+<OL>
+<LI>Start a DOS session by clicking: Start, Programs, MS-DOS Prompt.
+<LI>If the DOS
+session takes up the whole screen, then reduce it to a smaller window
+by holding down the Alt key and pressing Enter.
+<LI>Open a browser (Netscape or IE) and point it at each of these two
+files, selecting to save them to the top level of a drive (such as D:) when you are prompted.
+<BR><CODE>&nbsp;&nbsp;&nbsp;<A HREF="../unzip.exe">www.cs.colorado.edu/~main/cs1300/unzip.exe</A>
+<BR>&nbsp;&nbsp;&nbsp;<A HREF="../cs1300.zip">www.cs.colorado.edu/~main/cs1300/cs1300.zip</A></CODE>
+<BR>The second file is large (about 30MB) and will take nearly a minute to
+download even with a fast internet connection.
+<LI>
+From the DOS-session, given these commands (using the drive letter
+that you selected in place of D:):
+<BR><CODE>&nbsp;&nbsp;D:</CODE>
+<BR><CODE>&nbsp;&nbsp;cd \</CODE>
+<BR><CODE>&nbsp;&nbsp;unzip cs1300.zip</CODE>
+<BR><CODE>&nbsp;&nbsp;cs1300\gocs</CODE>
+</UL>
+</DL>
+
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Create a Working Directory
+</STRONG> </DT>
+    <DD>
+<P>
+At the end of the installation step, you should have a DOS window open
+where you will carry out all your work.
+<P>    This exercise assumes that you're already familiar with MS Windows
+    and that you can create directories or "folders", and move files
+    from one directory to another. For this exercise, you should start
+    by creating a separate directory for this work. I put my working directory on my
+    D: drive and called it D:\michael. From the DOS command line, the
+    commands to create and move into this directory are:
+<BR><CODE>&nbsp;&nbsp;D:</CODE>
+<BR><CODE>&nbsp;&nbsp;cd \</CODE>
+<BR><CODE>&nbsp;&nbsp;mkdir michael</CODE>
+<BR><CODE>&nbsp;&nbsp;cd michael</CODE>
+<P>
+Always put your work in a subdirectory (rather than at the top of the
+disk drive). There are certain parts of the debugger that won't work
+correctly at the top of a disk drive.
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Copying and Listing Files
+</STRONG> </DT>
+<P>
+    <DD>
+    Now you'll copy some files into your working directory. Let's
+    assume
+    that the cs1300 tools are on the H: drive,
+    and that you've just completed the four commands in the previous step.
+    You can copy the necessary files to your working directory with
+    these commands from the DOS command line:
+<PRE>
+        copy H:\cs1300\lab\*.cxx
+        copy H:\cs1300\lab\*.h
+</PRE>
+    If your cs1300 software is not on H:, then type the correct drive
+    letter rather than H:.
+    After you've done this copying, list the working directory (with
+    the dir command) and you should see at least these files (though the sizes
+    and dates might be slightly different).
+<PRE>
+    <A HREF="heatwave.cxx">HEATWAVE CXX</A>         2,135  07-19-99  2:30p heatwave.cxx
+    <A HREF="intarray.cxx">INTARRAY CXX</A>         3,018  07-19-99  2:27p intarray.cxx
+    <A HREF="sinewave.cxx">SINEWAVE CXX</A>           704  07-19-99  2:27p sinewave.cxx
+    <A HREF="intarray.h">INTARRAY H</A>           2,522  07-19-99  2:27p intarray.cxx
+</PRE>
+</DL>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Compiling and Running a C++ Program
+</B>
+<UL><P><LI>
+The files that you copied are C++ programs.
+The last part of the files' names, <CODE>
+cxx</CODE>, indicates that the file is a C++ program. Some files end
+with .h, indicating that they are special "header" files.
+The first program that you'll examine is <CODE>heatwave.cxx</CODE>, which computes
+some information about heating a house, 
+but the real purpose of the program is to demonstrate what a program 
+looks like and how to run a program on a machine.
+<P>
+Later, during your reading assignment, you can look at how this program was written. But for now 
+you will simply see how to run a program such as this one. The first step in running a program is 
+to run the C++ compiler. A compiler does the task of translating from a programming language 
+(such as C++) to the low level instructions that a computer actually runs. Our compiler is 
+Version 2.7 of the Gnu C++ compiler. You can start the compiler from
+the DOS command line by typing this command:
+<PRE>
+    g++ -Wall -gstabs heatwave.cxx -o heatwave
+</PRE>
+<P><LI>Possible errors:
+<OL>
+<P><LI>
+    During the compilation, you might get errors. If you are working
+    on your home machine with permanent installation, then check that
+    the lines added to your autoexec.bat file are exactly correct.
+<P><LI>
+Errors indicating "Out of Environment Space": See the directions for
+fixing this in 
+<A HREF="envspace.html">www.cs.colorado.edu/~main/cs1300/lab/envspace.html
+</A>.
+</UL>
+<P><LI>
+In your compilation command,
+    the <CODE>-Wall</CODE> option instructs the compiler to list all warning messages.
+    These warning messages usually  indicate programming errors, and we'll
+    forbid most warning messages in your programs. The <CODE>-gstabs</CODE> option
+    puts extra debugging information into your program.
+    At the end of the compilation
+    line, the arguments <CODE>-o&nbsp;heatwave</CODE> indicate that the compiler should put
+    its result (the "object  code") in a file called heatwave.exe. If you don't
+    specify a location for the object code, then the compiler  places its
+    result in a file named a.exe, which is not a particularly useful name.
+    <P>
+    Anyway, compile the heatwave program now (as shown above), and then list
+    your files again. You should see these files:
+<PRE>
+    HEATWAVE CXX         2,135  07-19-99  2:30p heatwave.cxx
+    INTARRAY CXX         3,018  07-19-99  2:27p intarray.cxx
+    SINEWAVE CXX           704  07-19-99  2:27p sinewave.cxx
+    INTARRAY H           2,522  07-19-99  2:27p intarray.h
+    HEATWAVE EXE       145,448  07-19-99  2:58p heatwave.exe
+</PRE>
+    <P>
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Running a Program
+</STRONG> </DT>
+    <DD>
+    The important thing now is that heatwave.exe is an executable file,
+    meaning that you can run it by  typing its name at the DOS command
+    line. Do this now. Type
+    heatwave, press return, and then interact with the program.
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Using GNU emacs
+</STRONG> </DT>
+    <DD>
+    In order to modify any of your files, you'll
+    need to use one of the text editors. Some of your have probably used a
+    text editor before, such as edit, vi, pico, or even emacs. In the past,
+    we have let students use whichever editor they wanted. But this
+    semester I'd like everyone to use an editor that has a good degree of
+    integration with a compiler and other tools. The editor is called GNU
+    emacs (yes, the G in GNU is pronounced!).
+    <P>
+    You'll first use emacs to edit heatwave.cxx.
+    In order to start emacs and edit the heatwave.cxx file, give this
+    command from the command line:
+ 
+    <P><CODE>
+    emacs  heatwave.cxx
+    </CODE><P>
+
+    The editor will open, and display the current contents of your heatwave.cxx
+    file. Spend one minute using the terminal's arrow keys to browse through
+    the file. You can also use the keys to page down or page
+    up. Each line of the file is part of a small C++ program.
+    The lines near the top are comments indicating what the program does.
+    One of these comments says that the program is an exercise for
+    Irving Forbush. Use the backspace key to erase Irving's name and
+    put your name instead.
+    <P>
+    After you make this change, you may write out the new heatwave.cxx
+    file,
+    by typing Ctrl-x followed by Ctrl-s, and answering y to the prompt at the bottom of the
+    screen.
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Six Pieces of C++
+</STRONG> </DT>
+    <DD>
+    The next step of this lab is to browse through heatwave.cxx a bit.
+    Using emacs, open the file heatwave.cxx. You might notice that emacs
+    recognized the program as a C++ program, and put the characters (C++)
+    in the status line at the bottom. Move through the program and
+    find the following aspects:
+    <OL>
+
+    <P> 
+    <LI>
+    Comments in C++ are indicated by two slashes in a row. The entire line,
+    after the // is a comment.
+
+    <P>
+    <LI>
+    The program has two include directives that include two C++
+    libraries:
+
+    <P><CODE>
+    #include &lt;iostream&gt;   // Provides cin, cout
+    <BR>
+    #include &lt;cstdlib&gt;    // Provides EXIT_SUCCESS
+    </CODE><P>
+
+    These directive will appear in most every C++ program. The library
+    iostream provides standard input and output functions and devices such
+    as the standard input. The library cstdlib provides several other 
+    standard items such as a constant named EXIT_SUCCESS that our program
+    uses. 
+
+    <P>
+    <LI>
+    After the two include directives, the program declares a double number
+    named PI. But PI is no ordinary  variable; it is a constant variable,
+    declared as shown here:
+
+    <P><CODE>
+    const double PI = 3.14159;
+    </CODE><P>
+
+    A constant declaration, such as this, is a new feature of C and C++. They
+    are like ordinary variable declarations that are given an initial value,
+    but because they are declared as a const, the compiler will prevent you 
+    from writing any statements that change the value of this variable. In
+    this class, our programming style  requires the names of all constants to
+    be written in capital letters, allowing constants to be easily spotted.
+
+    <P>
+    <LI>
+    Search through the code and find the heading of the main program,
+    which
+    begins with the words "int&nbsp;". The word int indicates that the
+    main program computes an integer value and returns this value to
+    the Windows operating system. This may
+    be different than your textbook--many programmers  simply
+    declare the main program as a void function (which means that it
+    does
+    not give any final value back to the operating system).
+    But we suggest that your  main program returns an int value, since this
+    integer can be used to tell the operating system whether the  program was
+    successful or not. For our compilers, a main program returns the number 0
+    to indicate successful termination. For our g++ compiler, this
+    "successful return value" is defined in cstdlib as a constant  called
+    EXIT_SUCCESS. Can you find the return statement in heatwave's main
+    program, which indicates  successful termination? (Be warned: older
+    compilers on our DEC machines don't define EXIT_SUCCESS.  If you are using
+    an older machine some day, you can still compile by adding the string        
+    -DEXIT_SUCCESS=0 immediately after the g++).
+
+    <P>
+    <LI>
+    Some output is quite simple in C++. A basic output statement looks like
+    this:
+
+    <P><CODE>
+    cout &lt;&lt; "How big is your tree?" &lt;&lt; endl;
+    </CODE><P>
+
+    The name cout is the "console output device"--the screen. The operator 
+    &lt;&lt;
+    is the output operator. So this  statement sends the string "How big is
+    your tree?" to the console output device, and then the special object,
+    endl, is sent to the console output device. The object endl is an
+    end-of-line, and it also serves  to "flush" the output (meaning that the
+    output will be written then and there, rather than waiting for some 
+    output buffer to fill up).
+
+    <P>
+    <LI>
+    Some input is also quite simple in C++. A basic input statement looks like
+    this:
+
+    <P><CODE>
+    cin &gt;&gt; radius;
+    </CODE><P>
+
+    The name cin is the "console input device"--the keyboard. The operator 
+    &gt;&gt;
+    is the input operator. So this  statement inputs a real number into the
+    variable radius. You'll learn a lot more about input/output in other 
+    labs, but this will do for now.
+</OL>
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Emacs Indenting
+</STRONG> </DT>
+    <DD>
+    When emacs knows that a file is a C++ program, it can help
+    you to make sensible indentation. To demonstrate this ability, go down
+    into the body of heatwave.cxx, and mess up the indentation on a few lines.
+    Get rid of some spaces or add some extra spaces at the start of a line.
+    Just mess it up some way.
+    Then press the Esc key followed by p. The letter p stands for "pretty-print," and the
+    command will nicely indent your entire program.
+    This command is one of the things that I set up in your emacs
+    initialization file.
+    <P>
+    Here are the indentation items that I have set up in the
+    initialization file:
+    <UL>
+        <P>
+   <LI> The TAB key: When you press TAB, emacs will attempt to
+             correctly indent the current line.
+        <P>
+   <LI> The RETURN key: When you press the RETURN key, emacs will
+             indent the current line, insert a blank line, and move the
+             cursor to the right spot to start typing. If the first
+             character of the newline is a bracket, then its indentation
+             will be corrected after you type the bracket.
+        If you find that you need to turn off the annoying behavior
+             of the RETURN key, then go into your .emacs file and put
+             three semi-colons at the front of the lines that look like this:
+	     <P><CODE>
+             (local-set-key [13] 'tab-return-tab)
+             </CODE><P>
+   <P>
+   <LI> The Pretty-Printer: When you press the Esc key and then press p,
+             emacs will nicely indent the entire file.
+    </UL>
+    Now that you know about pretty-printing, you can
+    move to the next step.
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Compiling from within Emacs
+</STRONG> </DT>
+    <DD>
+    At the moment you are looking at heatwave.cxx from within emacs. You
+    can actually compile heatwave.cxx without stopping the editor. To compile
+    from within the editor, press the escape key once, press x, type the word
+    "compile", and press return. The "mini-window" at the bottom of the screen
+    will change to this message:
+
+    <P><CODE>
+    Compile command: make -k
+    </CODE><P>
+
+    Use the backspace key to erase "make -k", and instead type your usual
+    compilation command, so that the mini-window looks like this:
+
+    <P><CODE>
+    Compile command: g++ -Wall heatwave.cxx -o heatwave
+    </CODE><P>
+
+    Then press return. When you press return, the screen will split into
+    two pieces. The top piece is still your heatwave program. The bottom
+    piece is a new window that will contain any error messages from the
+    compilation. During the compilation, there will also be a message
+    near the bottom of the screen indicating "Compilation: run Compiling".
+    When the compilation finishes, the message changes to "Compilation:
+    exit[0]". If there were no compilation errors, you can get rid of
+    the compile window by giving the "one window" command (Ctrl-x followed
+    by typing the digit 1).
+
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Finding Compilation Errors
+</STRONG> </DT>
+    <DD>
+    Compiling from within emacs is a big help when there are compilation
+    errors. For example, let's put a compilation error into the
+    heatwave.cxx file. Go down to the input line "cin &gt;&gt; height;" 
+    and delete
+    the semicolon at the end of the line. This is certainly an error!
+    Move the cursor away from this error before you proceed to the next
+    paragraph.
+    <P>
+    Now, type the compile command again (ESCAPE x compile RETURN). Notice that
+    when you press return, the miniwindow still remembers your compilation
+    command, so just press return once more to get the compilation underway.
+    When the new compilation starts, emacs will ask whether you want to
+    save the changes to heatwave.cxx before compiling. You should answer
+    y (otherwise the compilation would compile the old version of
+    heatwave.cxx, which did not have an error).
+    The compilation will find your syntax error pretty quickly, and display
+    some error message such as "heatwave.cxx:42: parse error before `<'". 
+    <P>
+    With the error message in the compilation window, you can ask emacs to
+    move the cursor to the location of the error. The emacs "find error"
+    command is Ctrl-x followed by the "backquote" key. (The backquote key is
+    the single quote mark that seems to go backward.) Give this command now.
+    Emacs will move the error message to the top of the compilation window,
+    and move the cursor in the program to line 42. Line 42 is actually one
+    line after the real error. (Remember that usually you must move backward
+    from the error line to find the location of the actual syntax error.)
+    Go ahead and fix this syntax error now, and save the file before
+    moving to the next step.
+</DL>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Modifying the Heatwave Program
+</B>
+<UL><LI>
+The heatwave program prints its answer in days. 
+In order to show you how to modify a program, we'll add weeks to 
+the answer. 
+At this point you still don't need to understand how the program is
+working--it 
+is enough to just understand how to modify a program in the way that these steps describe.</P>
+<P CLASS="Main-body-small-type">
+<A NAME="pgfId=2558">
+ </A>
+For the first modification, move to the top part of the program and find the
+lines shown here:</P>
+<PRE>
+    double height;            // Height of a tree in feet
+    double radius;            // Radius of a tree in feet
+    double requirement;       // Cubic feet of wood to heat house for a day
+    double volume;            // Volume of the tree in cubic feet
+    double days;              // Number of days that tree will heat house
+</PRE>
+These lines tell the program to use memory locations to keep track of
+various computational values.
+We'll tell the program to keep track of one more value, the
+approximate
+number of weeks that the tree will heat the house. 
+To do this move the cursor to the end of these lines--somewhere after the words 
+&quot;<CODE>
+will heat house&quot;</CODE>.
+You can move the cursor here with the arrow keys, or by moving the mouse to the location and clicking 
+the left button. Once the cursor is here, press return, which will open up a new line. On the new 
+line you should type:
+<PRE>
+int weeks;                // Number of whole weeks that tree will heat house
+</PRE>
+Try to align your new line with the rest of the program, aligning
+front of each line,
+and aligning the slashes 
+ (which indicate the start of a comment that is meant to be read by a person).
+<P><LI>
+For the second modification, find these lines:
+<PRE>
+    // Computations
+    volume = height * PI * radius * radius;
+    days = volume / requirement;
+
+    // Output days
+    cout &lt;&lt; "That tree will heat a house for " &lt;&lt; days &lt;&lt; " days." &lt;&lt; endl;
+</PRE>
+Add the two new lines shown here:
+<PRE>
+    // Computations
+    volume = height * PI * radius * radius;
+    days = volume / requirement;
+    weeks = (int) days / 7;
+
+    // Output days
+    cout &lt;&lt; "That tree will heat a house for " &lt;&lt; days &lt;&lt; " days." &lt;&lt; endl;
+    cout &lt;&lt; "Which is " &lt;&lt; weeks &lt;&lt; " whole weeks." &lt;&lt; endl;
+</PRE>
+The first new line calculates the number of whole weeks by dividing
+the days by 7. The second new line prints this number of whole weeks.
+<P>
+Now save and recompile the program (from within emacs). After recompilation,
+you can click on your DOS window and run the program by typing its
+name. You might be surprised to see that the number of whole weeks was
+rounded down. This rounding down to a whole integer occurs whenever
+a value is assigned to an integer variable.
+</UL>
+</DL>
+
+<P><DL>
+<DT><B><INPUT TYPE="checkbox" NAME="Register">
+Printing Your Program
+</B>
+<P><DD>
+You can print your program from within emacs (from the Tools menu), 
+but many of the Engineering PCs
+aren't correctly set up to do this. An alternative way to print a
+program such as heatwave.cxx is to give this command from the DOS
+command line:
+<BR><CODE>&nbsp;&nbsp;&nbsp;&nbsp;copy heatwave.cxx lpt1</CODE>
+<BR>Note that the last word in this command starts with the lowercase 
+letter l and ends with the number 1 (it stands for "line printer number one").
+</DL>
+
+
+<P><DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+More About Emacs
+</STRONG> </DT>
+<P><DD>
+<UL>
+<LI>
+When you are satisfied that the program is running correctly,  shut down emacs by pressing
+its close X in the top right corner. (Or by pressing Ctrl-x followed
+by Ctrl-c.)
+    <P><LI>
+    As the semester progresses, you'll learn a lot more about emacs. For
+    example, you can change the definitions of various keys to match
+    your own preferences for editing operations. You can invoke a debugger
+    from within emacs. For now however, a
+    summary of basic editing commands
+    should be sufficient, available at
+    <A HREF="emacs.html">
+    http://www.cs.colorado.edu/~main/cs1300/lab/emacs.html
+    </A>, and a handy pocket reference guide at.
+    <A HREF="refcard.html">
+    http://www.cs.colorado.edu/~main/cs1300/lab/refcard.html</a>
+    <P>
+    Later you might find it useful to also browse the
+    emacs online manual
+    from
+    <A HREF="http://www.cs.utah.edu/csinfo/texinfo/emacs19/emacs_toc.html">
+    http://www.cs.utah.edu/csinfo/texinfo/emacs19/emacs_toc.html
+    </A>.
+</DL>
+</UL>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Copying your File to a Floppy Disk
+</B>
+<UL>
+<LI>
+On the university computers, 
+your should copy your <CODE>heatwave.cxx</CODE>
+ from the PC's hard drive to your floppy disk before you leave. Then
+ clear the D: drive so that other students won't have access to your
+ work. <B>As part of our effort to reduce academic dishonesty, please 
+ always clear the D: drive before you leave:</B>
+<OL>
+<LI>Click on the My Computer icon.
+<LI>RIGHT click on the D: drive.
+<LI>Select the Format option.
+<LI>Click Start.
+<LI>Click OK.
+<LI>Wait until the format finishes, then click the Logout icon.
+</OL>
+</UL>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Copying a File to or from a University Machine
+</B>
+<UL>
+<LI>
+If you have an account on a university machine, such as ucsub or ucsu, you can also transfer files back and
+forth between the PC and the university machine. You'll use a program called ftp, following
+these steps:
+<OL>
+<LI> From the DOS command line, type the command:
+<CODE>ftp&nbsp;ucsub.colorado.edu</CODE>
+(or use <CODE>ucsu</CODE> if your account is on <CODE>ucsu</CODE>).
+<LI> Type your login name and password for the university machine.
+<LI> To send a file (such as heatwave.cxx) to the university machine,
+type:
+<CODE>put&nbsp;heatwave.cxx</CODE>
+<LI> To retrieve a file (such as heatwave.cxx) from the university machine,
+type:
+<CODE>get&nbsp;heatwave.cxx</CODE>
+<LI>When you are done using ftp, type the command <CODE>bye</CODE>.
+</OL>
+<P>
+Some of the Engineering PCs also have a graphical version of the ftp
+program
+that's available through the Start|Programs menu.
+</UL>
+
+</BODY>
+</HTML>

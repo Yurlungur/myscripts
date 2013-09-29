@@ -1,0 +1,225 @@
+<HTML>
+<HEAD>
+<TITLE>
+CSCI 1300 Exercise 4
+
+
+</TITLE>
+</HEAD>
+<BODY>
+<TABLE>
+<TD>
+<H2>
+
+
+CSCI 1300 - Exercise 4
+<BR>
+More about Program Design and Functions
+
+
+</H2>
+<P>
+<B>What You'll Get from This Exercise</B></P>
+<P CLASS="Main-body-small-type">
+<A NAME="pgfId=2086">
+ </A>
+
+
+This exercise is to supplement your reading on functions and
+parameters.
+
+
+<P>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>PC Labs in the<BR>Engineering Center</TH>
+<TR><TD>CR 235&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 239
+<TR><TD>CR 244&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 252 (24 hours)
+<TR><TD>CH 107&nbsp;&nbsp;&nbsp;&nbsp;<TD>ME 107
+<TR><TD COLSPAN=2>Other campus sites are<BR>listed 
+at <a href="http://www.colorado.edu/its/labs/">www.colorado.edu/its/labs</a>.
+</TABLE>
+<TD>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>Installing the<BR>CS1300 Software</TH>
+<TR><TD COLSPAN=2>
+Open a DOS window. If the CS1300 software is not permanently 
+<BR>installed on your machine, then use one of these methods:
+<UL>
+<LI>On machines in the Engineering Center, try one of
+<BR>these commands:
+<BR><CODE>&nbsp;&nbsp;H:\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;H:\cs1300\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;Z:\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;Z:\cs1300\gocs</CODE>
+<LI>On other machines, download these two files to the C: drive:
+<BR><A HREF="../unzip.exe">
+www.cs.colorado.edu/~main/cs1300/unzip.exe</A>
+<BR><A HREF="../cs1300.zip">
+www.cs.colorado.edu/~main/cs1300/cs1300.zip</A>
+<BR>
+Then type these commands:
+<BR><CODE>&nbsp;&nbsp;C:</CODE>
+<BR><CODE>&nbsp;&nbsp;cd \</CODE>
+<BR><CODE>&nbsp;&nbsp;unzip cs1300.zip</CODE>
+<BR><CODE>&nbsp;&nbsp;cs1300\gocs</CODE>
+</UL>
+<TR><TD>
+If you get the message "Out of environment space", then:
+<UL>
+<LI> Click on the MS-DOS icon in the top left corner of the window.
+<LI> Select Properties from the pop-up menu.
+<LI> Select the Memory tab from the command box.
+<LI> Click the arrow on the Initial Environment box. Move down in the
+box as far as possible (by clicking the downward arrow). Click on the
+biggest number that you see in this box.
+<LI> Click OK in the command box.
+<LI> Click OK in the MS-DOS Prompt information box.
+<LI> Stop the DOS Session by clicking the X in the top-right or by
+typing the command "exit".
+<LI> Restart a new DOS session and try running your commands again.
+</UL>
+</TABLE>
+</TABLE>
+<FORM METHOD=POST ACTION="../NoSubmitButton">
+
+<P>
+<B>A Program to Illustrate Parameters</B></P>
+<P CLASS="Main-body-small-type">
+<A NAME="pgfId=2086">
+ </A>
+<P>
+You'll start this exercise by getting and running
+a parameter demonstration
+program.
+Start by copying <A HREF="params.cxx">params.cxx</A> 
+from your installed cs1300\lab\ directory to your working directory.
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+The Purpose of params.cxx
+</B>
+<ul><P><li>
+The purpose of params.cxx is to show the difference between ordinary value 
+arguments and a new kind or argument called a reference argument. 
+Apart from that, the program doesn’t really do anything useful. 
+Anyway, go ahead and start emacs, and open the params.cxx 
+file. You can look through the code to get an idea of what the program is 
+doing.
+</UL> 
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Illustrating a Value Parameter with the Debugger
+</B>
+<UL><P><LI>
+The program reads an integer into a 
+variable called favorite. The program then uses the integer in a message. 
+Remember, when the program asks for an input you must first click in the black
+program window before you type the input.
+For example, you can click in the program's window and type 42. Then the program will write:
+
+<PRE>
+    Yes, 42 is a fine number.
+</PRE>
+
+Compile the program, then use 
+the debugger to put a breakpoint on the first line of the program.
+Then execute the program until the message asking for a number
+is printed. Use the number 42 as the input, and continue
+executing until the the highlighted line is the function call:
+<PRE>
+    increment_and_print(favorite);
+</PRE>
+
+Now, before we actually execute the increment_and_print function, 
+you should put watches on the favorite variable. It should have a
+value of 42. Then step into the function.
+<P>
+When you step into the function, the debugger will move to the start of the 
+increment_and_print function, and favorite is no longer shown because
+it is not available in the function. 
+From inside the function,
+ the variable <CODE>favorite</CODE> is not available (since it is a local 
+ variable of the main program, and only available when we are actually 
+ inside the main program).
+ <P>
+However, you can now put a watch on the variable i.
+The variable favorite provided the initial value (42) for i, but there is no 
+longer any connection between i and favorite variables. We can execute the rest of 
+the function, changing i to 43, and the value of favorite remains unchanged. 
+Do this now, executing statements until you get back to the main program. You should 
+have seen i change to 43, and when you got back to the main program favorite 
+is still 42. This is the way that an ordinary argument works: The actual 
+argument merely provides the starting value for the formal argument of the 
+function.
+<P>
+Continue to execute statements until the program ends. 
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Changing to a Reference Parameter
+</B>
+<ul><li>
+The ordinary parameter that you just saw is called a value parameter. 
+You will now change the parameter to a second kind of parameter: 
+a reference parameter. Two changes are needed. First, find the prototype of 
+the increment_and_print function, at the top of the main program. 
+Insert the symbol &amp; as shown here:
+<PRE>
+    void increment_and_print(int&amp; i);
+</PRE>
+Next, go down to the function’s implementation and change the parameter
+ list there too, adding the symbol &amp; These two changes make the parameter
+  into a reference parameter. Here’s the key idea for a reference parameter:
+  <P>
+  <TABLE BORDER=1 CELLPADDING=3>
+  <TR><TD>
+  With a reference parameter, every use of the parameter inside the function 
+  will refer to the actual argument back in the main program. If the parameter 
+  is changed inside the function, then this change will effect the actual 
+  argument in the main program. Information passes into the function through 
+  the initial value of the argument, 
+  but information can also pass out of the function through changes
+  that are made to the argument while the function is running.
+  </TABLE>
+</UL><P>
+
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Illustrating a Reference Parameter with the Debugger
+</B>
+<UL><LI>
+Now, compile and run your program again. 
+When you reach the breakpoint at the start of the main program,
+step through the program one line at a time. 
+As you are executing, make sure to display favorite in the main
+program.
+ Stop when you reach the function call:
+<PRE>
+    increment_and_print(favorite);
+</PRE>
+At this point, <CODE>favorite</CODE> is 42.
+Now, step into the function and display i. 
+You will see a rather strange value for i, something like
+"(int&nbsp;*)&nbsp;0x254fe1c".
+The reason for this strange value is a bug in the gdb debugger, which
+causes it to not fully understand reference parameters. However, there
+is a way around this: To display the actual value of a reference
+parameter such as i, ask gdb to display *i. Do this now and you will
+see the value of *i displayed as 42.
+<P>
+Now, as you execute the statements of the function, <CODE>i</CODE> will change 
+to 43. Although you cannot see it in the display, the actual argument 
+<CODE>favorite</CODE> has also changed to 43 in the main program. 
+In fact, the reason for this change is that the computer is using the same 
+memory location for both <CODE>favorite</CODE> and <CODE>i</CODE>. 
+When you return to the main program you will see the value of
+<CODE>favorite</CODE> is now changed to 43.
+<P>
+That’s all there is to it. You now know the two most important kinds of
+parameters. 
+</UL><P>
+
+
+
+</BODY>
+</HTML>

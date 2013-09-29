@@ -1,0 +1,62 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Running Commands by Name</TITLE>
+<P>Go to the <A HREF="emacs_10.html">previous</A>, <A HREF="emacs_12.html">next</A> section.<P>
+<H1><A NAME="SEC40" HREF="emacs_toc.html#SEC40">Running Commands by Name</A></H1>
+<P>
+  The Emacs commands that are used often or that must be quick to type are
+bound to keys--short sequences of characters--for convenient use.  Other
+Emacs commands that do not need to be brief are not bound to keys; to run
+them, you must refer to them by name.
+<P>
+  A command name is, by convention, made up of one or more words,
+separated by hyphens; for example, <CODE>auto-fill-mode</CODE> or
+<CODE>manual-entry</CODE>.  The use of English words makes the command name
+easier to remember than a key made up of obscure characters, even though
+it is more characters to type.
+<A NAME="IDX169"></A>
+<P>
+  The way to run a command by name is to start with <KBD>M-x</KBD>, type the
+command name, and finish it with <KBD>RET</KBD>.  <KBD>M-x</KBD> uses the
+minibuffer to read the command name.  <KBD>RET</KBD> exits the minibuffer and
+runs the command.  The string <SAMP>`M-x'</SAMP> appears at the beginning of the
+minibuffer as a <DFN>prompt</DFN> to remind you to enter the name of a
+command to be run.  See section <A HREF="emacs_10.html#SEC30">The Minibuffer</A>, for full information on the
+features of the minibuffer.
+<P>
+  You can use completion to enter the command name.  For example, the
+command <CODE>forward-char</CODE> can be invoked by name by typing
+<P>
+<PRE>
+M-x forward-char <KBD>RET</KBD>
+
+or
+
+M-x fo <KBD>TAB</KBD> c <KBD>RET</KBD>
+</PRE>
+<P>
+Note that <CODE>forward-char</CODE> is the same command that you invoke with
+the key <KBD>C-f</KBD>.  You can run any Emacs command by its name using
+<KBD>M-x</KBD>, whether or not any keys are bound to it.
+<P>
+  If you type <KBD>C-g</KBD> while the command name is being read, you cancel
+the <KBD>M-x</KBD> command and get out of the minibuffer, ending up at top level.
+<P>
+  To pass a numeric argument to the command you are invoking with
+<KBD>M-x</KBD>, specify the numeric argument before the <KBD>M-x</KBD>.  <KBD>M-x</KBD>
+passes the argument along to the command it runs.  The argument value
+appears in the prompt while the command name is being read.
+<P>
+  Normally, when describing a command that is run by name, we omit the
+<KBD>RET</KBD> that is needed to terminate the name.  Thus we might speak of
+<KBD>M-x auto-fill-mode</KBD> rather than <KBD>M-x auto-fill-mode
+<KBD>RET</KBD></KBD>.  We mention the <KBD>RET</KBD> only when there is a need to
+emphasize its presence, such as when we show the command together with
+following arguments.
+<A NAME="IDX170"></A>
+<P>
+  <KBD>M-x</KBD> is defined to run the command <CODE>execute-extended-command</CODE>,
+which is responsible for reading the name of another command and invoking
+it.
+<P>Go to the <A HREF="emacs_10.html">previous</A>, <A HREF="emacs_12.html">next</A> section.<P>

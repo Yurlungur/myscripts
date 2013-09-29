@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from cpp.texi on 7 November 1999 -->
+
+<TITLE>The C Preprocessor - Table of Contents</TITLE>
+
+</HEAD>
+<BODY>
+<H1>The C Preprocessor</H1>
+<H2>Last revised September 1998</H2>
+<H2>for GCC version 2</H2>
+<ADDRESS>Richard M. Stallman</ADDRESS>
+<P>
+<P><HR><P>
+
+
+<H1><A NAME="SEC1" HREF="cpp_toc.html#TOC1">The C Preprocessor</A></H1>
+
+<P>
+The C preprocessor is a <STRONG>macro processor</STRONG> that is used automatically by
+the C compiler to transform your program before actual compilation.  It is
+called a macro processor because it allows you to define <STRONG>macros</STRONG>,
+which are brief abbreviations for longer constructs.
+
+</P>
+<P>
+The C preprocessor provides four separate facilities that you can use as
+you see fit:
+
+</P>
+
+<UL>
+<LI>
+
+Inclusion of header files.  These are files of declarations that can be
+substituted into your program.
+
+<LI>
+
+Macro expansion.  You can define <STRONG>macros</STRONG>, which are abbreviations
+for arbitrary fragments of C code, and then the C preprocessor will
+replace the macros with their definitions throughout the program.
+
+<LI>
+
+Conditional compilation.  Using special preprocessing directives, you
+can include or exclude parts of the program according to various
+conditions.
+
+<LI>
+
+Line control.  If you use a program to combine or rearrange source files into
+an intermediate file which is then compiled, you can use line control
+to inform the compiler of where each source line originally came from.
+</UL>
+
+<P>
+C preprocessors vary in some details.  This manual discusses the GNU C
+preprocessor, the C Compatible Compiler Preprocessor.  The GNU C
+preprocessor provides a superset of the features of ANSI Standard C.
+
+</P>
+<P>
+ANSI Standard C requires the rejection of many harmless constructs commonly
+used by today's C programs.  Such incompatibility would be inconvenient for
+users, so the GNU C preprocessor is configured to accept these constructs
+by default.  Strictly speaking, to get ANSI Standard C, you must use the
+options <SAMP>`-trigraphs'</SAMP>, <SAMP>`-undef'</SAMP> and <SAMP>`-pedantic'</SAMP>, but in
+practice the consequences of having strict ANSI Standard C make it
+undesirable to do this.  See section <A HREF="cpp_1.html#SEC42">Invoking the C Preprocessor</A>.
+
+</P>
+<P>
+The C preprocessor is designed for C-like languages; you may run into
+problems if you apply it to other kinds of languages, because it assumes
+that it is dealing with C.  For example, the C preprocessor sometimes
+outputs extra white space to avoid inadvertent C token concatenation,
+and this may cause problems with other languages.
+
+</P>
+
+<UL>
+<LI><A HREF="cpp_1.html#SEC2">Global Actions</A>: Actions made uniformly on all input files.
+<LI><A HREF="cpp_1.html#SEC3">Directives</A>: General syntax of preprocessing directives.
+<LI><A HREF="cpp_1.html#SEC4">Header Files</A>: How and why to use header files.
+<LI><A HREF="cpp_1.html#SEC10">Macros</A>: How and why to use macros.
+<LI><A HREF="cpp_1.html#SEC29">Conditionals</A>: How and why to use conditionals.
+<LI><A HREF="cpp_1.html#SEC39">Combining Sources</A>: Use of line control when you combine source files.
+<LI><A HREF="cpp_1.html#SEC40">Other Directives</A>: Miscellaneous preprocessing directives.
+<LI><A HREF="cpp_1.html#SEC41">Output</A>: Format of output from the C preprocessor.
+<LI><A HREF="cpp_1.html#SEC42">Invocation</A>: How to invoke the preprocessor; command options.
+<LI><A HREF="cpp_2.html#SEC43">Concept Index</A>: Index of concepts and terms.
+<LI><A HREF="cpp_3.html#SEC44">Index</A>: Index of directives, predefined macros and options.
+</UL>
+
+<P><HR><P>
+This document was generated on 7 November 1999 using the
+<A HREF="http://wwwcn.cern.ch/dci/texi2html/">texi2html</A>
+translator version 1.51a.</P>
+</BODY>
+</HTML>

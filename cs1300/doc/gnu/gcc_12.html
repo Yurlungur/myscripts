@@ -1,0 +1,61 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from gcc.texi on 7 November 1999 -->
+
+<TITLE>Using and Porting the GNU Compiler Collection (GCC) - GCC and Portability</TITLE>
+<link href="gcc_13.html" rel=Next>
+<link href="gcc_11.html" rel=Previous>
+<link href="gcc_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="gcc_1.html">first</A>, <A HREF="gcc_11.html">previous</A>, <A HREF="gcc_13.html">next</A>, <A HREF="gcc_24.html">last</A> section, <A HREF="gcc_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC146" HREF="gcc_toc.html#TOC146">GCC and Portability</A></H1>
+<P>
+<A NAME="IDX629"></A>
+<A NAME="IDX630"></A>
+
+</P>
+<P>
+The main goal of GCC was to make a good, fast compiler for machines in
+the class that the GNU system aims to run on: 32-bit machines that address
+8-bit bytes and have several general registers.  Elegance, theoretical
+power and simplicity are only secondary.
+
+</P>
+<P>
+GCC gets most of the information about the target machine from a machine
+description which gives an algebraic formula for each of the machine's
+instructions.  This is a very clean way to describe the target.  But when
+the compiler needs information that is difficult to express in this
+fashion, I have not hesitated to define an ad-hoc parameter to the machine
+description.  The purpose of portability is to reduce the total work needed
+on the compiler; it was not of interest for its own sake.
+
+</P>
+<P>
+<A NAME="IDX631"></A>
+<A NAME="IDX632"></A>
+<A NAME="IDX633"></A>
+GCC does not contain machine dependent code, but it does contain code
+that depends on machine parameters such as endianness (whether the most
+significant byte has the highest or lowest address of the bytes in a word)
+and the availability of autoincrement addressing.  In the RTL-generation
+pass, it is often necessary to have multiple strategies for generating code
+for a particular kind of syntax tree, strategies that are usable for different
+combinations of parameters.  Often I have not tried to address all possible
+cases, but only the common ones or only the ones that I have encountered.
+As a result, a new target may require additional strategies.  You will know
+if this happens because the compiler will call <CODE>abort</CODE>.  Fortunately,
+the new strategies can be added in a machine-independent fashion, and will
+affect only the target machines that need them.
+
+</P>
+<P><HR><P>
+<p>Go to the <A HREF="gcc_1.html">first</A>, <A HREF="gcc_11.html">previous</A>, <A HREF="gcc_13.html">next</A>, <A HREF="gcc_24.html">last</A> section, <A HREF="gcc_toc.html">table of contents</A>.
+</BODY>
+</HTML>

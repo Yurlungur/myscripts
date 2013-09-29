@@ -1,0 +1,1261 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from g++FAQ.texi on 30 July 1999 -->
+
+<TITLE>Frequently asked questions about the GNU C++ compiler - User Problems</TITLE>
+<link href="g++FAQ_7.html" rel=Next>
+<link href="g++FAQ_5.html" rel=Previous>
+<link href="g++FAQ_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="g++FAQ_1.html">first</A>, <A HREF="g++FAQ_5.html">previous</A>, <A HREF="g++FAQ_7.html">next</A>, <A HREF="g++FAQ_8.html">last</A> section, <A HREF="g++FAQ_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC39" HREF="g++FAQ_toc.html#TOC39">User Problems</A></H1>
+
+
+<UL>
+<LI><A HREF="g++FAQ_6.html#SEC40">missing virtual table</A>
+<LI><A HREF="g++FAQ_6.html#SEC41">for scope</A>
+<LI><A HREF="g++FAQ_6.html#SEC42">const constructor</A>
+<LI><A HREF="g++FAQ_6.html#SEC43">unused parameter warnings</A>
+<LI><A HREF="g++FAQ_6.html#SEC44">jump crosses initialization</A>
+<LI><A HREF="g++FAQ_6.html#SEC45">Demangler</A>
+<LI><A HREF="g++FAQ_6.html#SEC46">static data members</A>
+<LI><A HREF="g++FAQ_6.html#SEC47">internal compiler error</A>
+<LI><A HREF="g++FAQ_6.html#SEC48">bug reports</A>
+<LI><A HREF="g++FAQ_6.html#SEC49">porting to g++</A>
+<LI><A HREF="g++FAQ_6.html#SEC50">name mangling</A>
+<LI><A HREF="g++FAQ_6.html#SEC51">problems linking with other libraries</A>
+<LI><A HREF="g++FAQ_6.html#SEC52">documentation</A>
+<LI><A HREF="g++FAQ_6.html#SEC53">templates</A>
+<LI><A HREF="g++FAQ_6.html#SEC54">undefined templates</A>
+<LI><A HREF="g++FAQ_6.html#SEC55">redundant templates</A>
+<LI><A HREF="g++FAQ_6.html#SEC56">Standard Template Library</A>
+<LI><A HREF="g++FAQ_6.html#SEC57">STL and string</A>
+<LI><A HREF="g++FAQ_6.html#SEC58">exceptions</A>
+<LI><A HREF="g++FAQ_6.html#SEC59">namespaces</A>
+<LI><A HREF="g++FAQ_6.html#SEC60">agreement with standards</A>
+<LI><A HREF="g++FAQ_6.html#SEC61">compiling standard libraries</A>
+<LI><A HREF="g++FAQ_6.html#SEC62">debugging on SVR4 systems</A>
+<LI><A HREF="g++FAQ_6.html#SEC63">debugging problems on Solaris</A>
+<LI><A HREF="g++FAQ_6.html#SEC64">X11 conflicts with libg++</A>
+<LI><A HREF="g++FAQ_6.html#SEC65">assignment to streams</A>
+</UL>
+
+
+
+<H2><A NAME="SEC40" HREF="g++FAQ_toc.html#TOC40">Linker complains about missing virtual table</A></H2>
+
+<P>
+"I'm getting a message complaining about an undefined virtual table.  Is
+this a compiler bug?"
+
+</P>
+<P>
+(On platforms that run neither collect nor the GNU linker, like Solaris,
+you may see an odd undefined symbol like "_vt.3foo", where foo is a
+class name).
+
+</P>
+<P>
+This is probably because you are missing a definition for the first
+(non-inline) virtual function of the class.  Since gcc-2.7.0, g++ uses
+a trick borrowed from cfront: the .o file containing the definition for
+the first non-inline virtual function for the class will also contain
+the virtual function table.
+
+</P>
+
+
+<H2><A NAME="SEC41" HREF="g++FAQ_toc.html#TOC41">gcc-2.7.0 breaks declarations in "for" statements!</A></H2>
+
+<P>
+<A NAME="IDX119"></A>
+<A NAME="IDX120"></A>
+
+</P>
+<P>
+gcc-2.7.0 implements the new ANSI/ISO rule on the scope of variables
+declared in for loops.
+
+</P>
+
+<PRE>
+for (int i = 1; i &#60;= 10; i++) {
+        // do something here
+}
+foo(i);
+</PRE>
+
+<P>
+In the above example, most existing C++ compilers would pass the
+value 11 to the function <CODE>foo</CODE>.  In gcc 2.7 and in the ANSI/ISO
+working paper, the scope of <CODE>i</CODE> is only the for loop body, so
+this is an error.  So that old code can be compiled, the new gcc has
+a flag <CODE>-fno-for-scope</CODE> that causes the old rule to be used.
+<A NAME="IDX121"></A>
+
+</P>
+<P>
+As of 2.7.1, the compiler attempts to issue warnings about code that
+has different meanings under the two sets of rules, but the code is
+not perfect: the intent was that code that has valid, but different,
+meanings under the ARM rules and the working paper rules would give
+warnings but have the new behavior, and this doesn't seem to happen.
+
+</P>
+<P>
+The <CODE>-ffor-scope</CODE> flag under 2.7.1 and 2.7.2 gives the 2.7.0 behavior.
+
+</P>
+
+
+<H2><A NAME="SEC42" HREF="g++FAQ_toc.html#TOC42">g++ seems to want a const constructor.  What's that?</A></H2>
+
+<P>
+gcc-2.7.1 introduced a bug that causes the compiler to ask for a
+const constructor (there's no such thing in C++) in certain situations
+where a const object appears in a template class.  Most cases have been
+fixed in gcc-2.7.2, but unfortunately not all.  Still, if you're running
+gcc-2.7.1 and have this problem, upgrade to 2.7.2; it is a vast improvement.
+
+</P>
+<P>
+<A NAME="IDX122"></A>
+
+</P>
+<P>
+The default constructor for the template <CODE>pair</CODE> in ObjectSpace's
+implementation of STL triggers the bug in one place, for gcc 2.7.2.  If
+you're using ObjectSpace&#60;STL&#62; and having this problem, simply
+change the default constructor from
+
+</P>
+
+<PRE>
+os_pair () : first (T1 ()), second (T2 ()) {}
+</PRE>
+
+<P>
+to just
+
+</P>
+
+<PRE>
+os_pair () {}
+</PRE>
+
+<P>
+Once this is done, ObjectSpace&#60;STL&#62; works fairly well.
+
+</P>
+
+
+<H2><A NAME="SEC43" HREF="g++FAQ_toc.html#TOC43">How to silence "unused parameter" warnings</A></H2>
+
+<P>
+<A NAME="IDX123"></A>
+<A NAME="IDX124"></A>
+
+</P>
+<P>
+"When I use <CODE>-Wall</CODE> (or <CODE>-Wunused</CODE>), g++ warns about
+unused parameters.  But the parameters have to be there, for use
+in derived class functions.  How do I get g++ to stop complaining?"
+
+</P>
+<P>
+The answer is to simply omit the names of the unused parameters when
+defining the function.  This makes clear, both to g++ and to readers
+of your code, that the parameter is unused.  For example:
+
+</P>
+
+<PRE>
+int Foo::bar(int arg) { return 0; }
+</PRE>
+
+<P>
+will give a warning for the unused parameter <CODE>arg</CODE>.  To suppress
+the warning write
+
+</P>
+
+<PRE>
+int Foo::bar(int) { return 0; }
+</PRE>
+
+
+
+<H2><A NAME="SEC44" HREF="g++FAQ_toc.html#TOC44">g++ objects to a declaration in a case statement</A></H2>
+
+<P>
+"The compiler objects to my declaring a variable in one of the branches
+of a case statement.  Earlier versions used to accept this code.  Why?"
+
+</P>
+<P>
+The draft standard does not allow a goto or a jump to a case label to
+skip over an initialization of a variable or a class object.  For
+example:
+
+</P>
+
+<PRE>
+switch ( i ) {
+  case 1:
+    Object obj(0);
+        ...
+    break;
+  case 2:
+	...
+    break;
+}    
+</PRE>
+
+<P>
+The reason is that <CODE>obj</CODE> is also in scope in the rest of the switch
+statement.
+
+</P>
+<P>
+As of version 2.7.0, the compiler will object that the jump to the
+second case level crosses the initialization of <CODE>obj</CODE>.  Older
+compiler versions would object only if class Object has a destructor.
+In either case, the solution is to add a set of curly braces around
+the case branch:
+
+</P>
+
+<PRE>
+  case 1:
+    {
+       Object obj(0);
+        ...
+       break;
+    }
+</PRE>
+
+
+
+<H2><A NAME="SEC45" HREF="g++FAQ_toc.html#TOC45">Where can I find a demangler?</A></H2>
+
+<P>
+<A NAME="IDX125"></A>
+A g++-compatible demangler named <CODE>c++filt</CODE> can be found in the
+<TT>`binutils'</TT> distribution.  This distribution (which also contains
+the GNU linker) can be found at any GNU archive site.
+
+</P>
+<P>
+As of version 2.7.0, <CODE>c++filt</CODE> is included with gcc and is
+installed automatically.  Even better, it is used by the <CODE>collect</CODE>
+linker, so you don't see mangled symbols anymore (except on platforms
+that use neither collect nor the GNU linker, like Solaris).
+
+</P>
+
+
+<H2><A NAME="SEC46" HREF="g++FAQ_toc.html#TOC46">Linker reports undefined symbols for static data members</A></H2>
+
+<P>
+<A NAME="IDX126"></A>
+"g++ reports undefined symbols for all my static data members when I link,
+even though the program works correctly for compiler XYZ.  What's going on?"
+
+</P>
+<P>
+The problem is almost certainly that you don't give definitions for
+your static data members.  If you have
+
+</P>
+
+<PRE>
+class Foo {
+	...
+	void method();
+	static int bar;
+};
+</PRE>
+
+<P>
+you have only declared that there is an int named Foo::bar and a member
+function named Foo::method that is defined somewhere.  You still need to
+define <EM>both</EM> method() and bar in some source file.  According to
+the draft ANSI standard, you must supply an initializer, such as
+
+</P>
+
+<PRE>
+int Foo::bar = 0;
+</PRE>
+
+<P>
+in one (and only one) source file.
+
+</P>
+
+
+<H2><A NAME="SEC47" HREF="g++FAQ_toc.html#TOC47">What does "Internal compiler error" mean?</A></H2>
+
+<P>
+It means that the compiler has detected a bug in itself.  Unfortunately,
+g++ still has many bugs, though it is a lot better than it used to be.
+If you see this message, please send in a complete bug report (see next
+section).
+
+</P>
+
+
+<H2><A NAME="SEC48" HREF="g++FAQ_toc.html#TOC48">I think I have found a bug in g++.</A></H2>
+
+<P>
+<A NAME="IDX127"></A>
+"I think I have found a bug in g++, but I'm not sure.  How do I know,
+and who should I tell?"
+
+</P>
+<P>
+<A NAME="IDX128"></A>
+First, see the excellent section on bugs and bug reports in the gcc manual
+(which is included in the gcc distribution).  As a short summary of that
+section: if the compiler gets a fatal signal, for any input, it's a bug
+(newer versions of g++ will ask you to send in a bug report when they
+detect an error in themselves).  Same thing for producing invalid
+assembly code.
+
+</P>
+<P>
+When you report a bug, make sure to describe your platform (the type of
+computer, and the version of the operating system it is running) and the
+version of the compiler that you are running.  See the output of the
+command <CODE>g++ -v</CODE> if you aren't sure.  Also provide enough code
+so that the g++ maintainers can duplicate your bug.  Remember that the
+maintainers won't have your header files; one possibility is to send
+the output of the preprocessor (use <CODE>g++ -E</CODE> to get this).  This
+is what a "complete bug report" means.
+
+</P>
+<P>
+I will add some extra notes that are C++-specific, since the notes from
+the gcc documentation are generally C-specific.
+
+</P>
+<P>
+<A NAME="IDX129"></A>
+First, mail your bug report to "bug-g++@prep.ai.mit.edu".  You may also
+post to <TT>`gnu.g++.bug'</TT>, but it's better to use mail, particularly if you
+have any doubt as to whether your news software generates correct reply
+addresses.  Don't mail C++ bugs to bug-gcc@prep.ai.mit.edu.
+
+</P>
+<P>
+<STRONG>News:</STRONG> as I write this (late February 1996) the gateway
+connecting the bug-g++ mailing list and the <TT>`gnu.g++.bug'</TT> newsgroup
+is (temporarily?) broken.  Please mail, do not post bug reports.
+
+</P>
+<P>
+<A NAME="IDX130"></A>
+If your bug involves libg++ rather than the compiler, mail to
+bug-lib-g++@prep.ai.mit.edu.  If you're not sure, choose one, and if you
+guessed wrong, the maintainers will forward it to the other list.
+
+</P>
+<P>
+<A NAME="IDX131"></A>
+<A NAME="IDX132"></A>
+Second, if your program does one thing, and you think it should do
+something else, it is best to consult a good reference if in doubt.
+The standard reference is the draft working paper from the ANSI/ISO
+C++ standardization committee, which you can get on the net.
+For PostScript and PDF (Adobe Acrobat) versions, see the
+archive at <TT>`ftp://research.att.com/dist/stdc++/WP'</TT>.  For HTML and ASCII
+versions, see <TT>`ftp://ftp.cygnus.com/pub/g++'</TT>.  On the World Wide Web, see
+<TT>`http://www.cygnus.com/misc/wp/'</TT>.
+
+</P>
+<P>
+An older
+standard reference is "The Annotated C++ Reference Manual", by Ellis and
+Stroustrup (copyright 1990, ISBN #0-201-51459-1).  This is what they're
+talking about on the net when they refer to "the ARM".  But you should
+know that vast changes have been made to the language since then.
+
+</P>
+<P>
+The ANSI/ISO C++ standards committee have adopted some changes to the
+C++ language since the publication of the original ARM, and newer
+versions of g++ (2.5.x and later) support some of these changes, notably
+the mutable keyword (added in 2.5.0), the bool type (added in 2.6.0),
+and changes in the scope of variables defined in for statements (added
+in 2.7.0).
+You can obtain an addendum to the ARM explaining many of these changes by FTP
+from <TT>`ftp://ftp.std.com/AW/stroustrup2e/new_iso.ps'</TT>.
+
+</P>
+<P>
+<A NAME="IDX133"></A>
+Note that the behavior of (any version of) AT&#38;T's "cfront" compiler is
+NOT the standard for the language.
+
+</P>
+
+
+<H2><A NAME="SEC49" HREF="g++FAQ_toc.html#TOC49">Porting programs from other compilers to g++</A></H2>
+
+<P>
+"I have a program that runs on &#60;some other C++ compiler&#62;, and I want
+to get it running under g++.  Is there anything I should watch out
+for?"
+
+</P>
+<P>
+<A NAME="IDX134"></A>
+
+</P>
+<P>
+Note that g++ supports many of the newer keywords that have recently
+been added to the language.  Your other C++ compiler may not support
+them, so you may need to rename variables and members that conflict
+with these keywords.
+
+</P>
+<P>
+There are two other reasons why a program that worked under one compiler
+might fail under another: your program may depend on the order of
+evaluation of side effects in an expression, or it may depend on the
+lifetime of a temporary (you may be assuming that a temporary object
+"lives" longer than the standard guarantees).  As an example of the
+first:
+
+</P>
+
+<PRE>
+void func(int,int);
+
+int i = 3;
+func(i++,i++);
+</PRE>
+
+<P>
+<A NAME="IDX135"></A>
+Novice programmers think that the increments will be evaluated in strict
+left-to-right order.  Neither C nor C++ guarantees this; the second
+increment might happen first, for example.  func might get 3,4, or it
+might get 4,3.
+
+</P>
+<P>
+<A NAME="IDX136"></A>
+<A NAME="IDX137"></A>
+The second problem often happens with classes like the libg++ String
+class.  Let's say I have
+
+</P>
+
+<PRE>
+String func1();
+void func2(const char*);
+</PRE>
+
+<P>
+and I say
+
+</P>
+
+<PRE>
+func2(func1());
+</PRE>
+
+<P>
+because I know that class String has an "operator const char*".  So what
+really happens is
+
+</P>
+
+<PRE>
+func2(func1().convert());
+</PRE>
+
+<P>
+<A NAME="IDX138"></A>
+where I'm pretending I have a convert() method that is the same as the
+cast.  This is unsafe in g++ versions before 2.6.0, because the
+temporary String object may be deleted after its last use (the call to
+the conversion function), leaving the pointer pointing to garbage, so by
+the time func2 is called, it gets an invalid argument.
+
+</P>
+<P>
+<A NAME="IDX139"></A>
+Both the cfront and the old g++ behaviors are legal according to the ARM,
+but the powers that be have decided that compiler writers were given
+too much freedom here.
+
+</P>
+<P>
+The ANSI C++ committee has now come to a resolution of the lifetime of
+temporaries problem: they specify that temporaries should be deleted at
+end-of-statement (and at a couple of other points).  This means that g++
+versions before 2.6.0 now delete temporaries too early, and cfront
+deletes temporaries too late.  As of version 2.6.0, g++ does things
+according to the new standard.
+
+</P>
+<P>
+<A NAME="IDX140"></A>
+<A NAME="IDX141"></A>
+For now, the safe way to write such code is to give the temporary a name,
+which forces it to live until the end of the scope of the name. For
+example:
+
+</P>
+
+<PRE>
+String&#38; tmp = func1();
+func2(tmp);
+</PRE>
+
+<P>
+Finally, like all compilers (but especially C++ compilers, it seems),
+g++ has bugs, and you may have tweaked one.  If so, please file a bug
+report (after checking the above issues).
+
+</P>
+
+
+<H2><A NAME="SEC50" HREF="g++FAQ_toc.html#TOC50">Why does g++ mangle names differently from other C++ compilers?</A></H2>
+
+<P>
+See the answer to the next question.
+<A NAME="IDX142"></A>
+
+</P>
+
+
+<H2><A NAME="SEC51" HREF="g++FAQ_toc.html#TOC51">Why can't g++ code link with code from other C++ compilers?</A></H2>
+
+<P>
+"Why can't I link g++-compiled programs against libraries compiled by
+some other C++ compiler?"
+
+</P>
+<P>
+<A NAME="IDX143"></A>
+<A NAME="IDX144"></A>
+Some people think that,
+if only the FSF and Cygnus Support folks would stop being
+stubborn and mangle names the same way that, say, cfront does, then any
+g++-compiled program would link successfully against any cfront-compiled
+library and vice versa.  Name mangling is the least of the problems.
+Compilers differ as to how objects are laid out, how multiple inheritance
+is implemented, how virtual function calls are handled, and so on, so if
+the name mangling were made the same, your programs would link against
+libraries provided from other compilers but then crash when run.  For this
+reason, the ARM <EM>encourages</EM> compiler writers to make their name mangling
+different from that of other compilers for the same platform.
+Incompatible libraries are then detected at link time, rather than at run
+time.
+<A NAME="IDX145"></A>
+<A NAME="IDX146"></A>
+
+</P>
+
+
+<H2><A NAME="SEC52" HREF="g++FAQ_toc.html#TOC52">What documentation exists for g++ 2.x?</A></H2>
+
+<P>
+<A NAME="IDX147"></A>
+Relatively little.
+While the gcc manual that comes with the distribution has some coverage
+of the C++ part of the compiler, it focuses mainly on the C compiler
+(though the information on the "back end" pertains to C++ as well).
+Still, there is useful information on the command line options and the
+#pragma interface and #pragma implementation directives in the manual,
+and there is a useful section on template instantiation in the 2.6 version.
+There is a Unix-style manual entry, "g++.1", in the gcc-2.x
+distribution; the information here is a subset of what is in the manual.
+
+</P>
+<P>
+You can buy a nicely printed and bound copy of this manual from the FSF;
+see above for ordering information.
+
+</P>
+<P>
+A draft of a document describing the g++ internals appears in the gcc
+distribution (called g++int.texi); it is incomplete but gives lots of
+information.
+
+</P>
+<P>
+For class libraries, there are several resources available:
+
+</P>
+
+<UL>
+<LI>
+
+The libg++ distribution has a manual
+<TT>`libg++/libg++.texi'</TT> describing the old libg++ classes, and
+another manual <TT>`libio/iostream.texi'</TT> describing the iostreams
+implementation.
+<LI>
+
+While there is no libg++-specific document describing the STL
+implementation, SGI's web site, at
+<TT>`http://www.sgi.com/Technology/STL/'</TT>, is an excellent resource.
+Note that the SGI version of STL is the one that is included with the
+egcs and 2.8.x releases of g++/libstdc++.
+
+</UL>
+
+
+
+<H2><A NAME="SEC53" HREF="g++FAQ_toc.html#TOC53">Problems with the template implementation</A></H2>
+
+<P>
+<A NAME="IDX148"></A>
+<A NAME="IDX149"></A>
+
+</P>
+<P>
+g++ does not implement a separate pass to instantiate template functions
+and classes at this point; for this reason, it will not work, for the most
+part, to declare your template functions in one file and define them in
+another.  The compiler will need to see the entire definition of the
+function, and will generate a static copy of the function in each file
+in which it is used.
+
+</P>
+<P>
+(The experimental template repository code (see section <A HREF="g++FAQ_4.html#SEC25">How do I use the new repository code?</A>) that
+can be added to 2.7.0 or later does implement a separate pass, but there
+is still no searching of files that the compiler never saw).
+
+</P>
+<P>
+As of 2.8.x and egcs-1.0.x, the template implementation has most
+of the features specified in the draft standard.  Still missing are
+template arguments that are themselves templates; however, template
+class member functions work, and most of the limitations of the older
+g++ versions are fixed.
+
+</P>
+<P>
+I think that given this new implementation, it should not be necessary
+for users to mess around with switches like <CODE>-fno-implicit-templates</CODE>
+and <CODE>#pragma</CODE> directives; most of the time, the default behavior
+will work OK.  Users of older versions might want to read on.
+
+</P>
+<P>
+<A NAME="IDX150"></A>
+For version 2.6.0, however, a new switch <CODE>-fno-implicit-templates</CODE>
+was added; with this switch, templates are expanded only under user
+control.  I recommend that all g++ users that use templates read the
+section "Template Instantiation" in the gcc manual (version 2.6.x
+and newer).  g++ now supports explicit template expansion using the
+syntax from the latest C++ working paper:
+
+</P>
+
+<PRE>
+template class A&#60;int&#62;;
+template ostream&#38; operator &#60;&#60; (ostream&#38;, const A&#60;int&#62;&#38;);
+</PRE>
+
+<P>
+<A NAME="IDX151"></A>
+As of version 2.7.2, there are still a few limitations in the template
+implementation besides the above (thanks to Jason Merrill for this info):
+
+</P>
+<P>
+<STRONG>Note</STRONG>: these problems are eliminated in egcs and in gcc-2.8.x.
+
+</P>
+
+<OL>
+<LI>
+
+Static data member templates are not supported in compiler versions older
+than 2.8.0.  You can work around
+this by explicitly declaring the static variable for each template
+specialization:
+
+
+<PRE>
+template &#60;class T&#62; struct A {
+  static T t;
+};
+
+template &#60;class T&#62; T A&#60;T&#62;::t = 0; // gets bogus error
+int A&#60;int&#62;::t = 0;                // OK (workaround)
+</PRE>
+
+<LI>
+
+Template member names are not available when defining member function
+templates.
+
+
+<PRE>
+template &#60;class T&#62; struct A {
+  typedef T foo;
+  void f (foo);
+  void g (foo arg) { ... }; // this works
+};
+
+template &#60;class T&#62; void A&#60;T&#62;::f (foo) { } // gets bogus error
+</PRE>
+
+<LI>
+
+Templates are instantiated using the parser.  This results in two
+problems (again, these problems are fixed in 2.8.0 and egcs):
+
+a) Class templates are instantiated in some situations where such
+instantiation should not occur.
+
+
+<PRE>
+template &#60;class T&#62; class A { };
+A&#60;int&#62; *aip = 0; // should not instantiate A&#60;int&#62; (but does)
+</PRE>
+
+b) Function templates cannot be inlined at the site of their
+instantiation.
+
+
+<PRE>
+template &#60;class T&#62; inline T min (T a, T b) { return a &#60; b ? a : b; }
+
+void f () {
+  int i = min (1, 0);           // not inlined
+}
+
+void g () {
+  int j = min (1, 0);           // inlined
+}
+</PRE>
+
+A workaround that works in version 2.6.1 through 2.7.2.x is to specify
+
+
+<PRE>
+extern template int min (int, int);
+</PRE>
+
+before <CODE>f()</CODE>; this will force it to be instantiated (though not
+emitted). 
+
+<STRONG>Note:</STRONG> this kind of "guiding declaration" is not standard and
+isn't supported by egcs or gcc-2.8.x, as the standard says that this
+declares a "normal" <CODE>min</CODE> function which has no relation to
+the template function <CODE>min&#60;int&#62;(int,int)</CODE>.  But then the new
+compilers have no problem inlining template functions.
+
+<LI>
+
+Member function templates are always instantiated when their containing
+class is.  This is wrong (fixed in egcs/2.8).
+</OL>
+
+
+
+<H2><A NAME="SEC54" HREF="g++FAQ_toc.html#TOC54">I get undefined symbols when using templates</A></H2>
+
+<P>
+(Thanks to Jason Merrill for this section).
+
+</P>
+<P>
+<A NAME="IDX152"></A>
+g++ does not automatically instantiate templates defined in other files.
+Because of this, code written for cfront will often produce undefined
+symbol errors when compiled with g++.  You need to tell g++ which template
+instances you want, by explicitly instantiating them in the file where they
+are defined.  For instance, given the files
+
+</P>
+<P>
+<TT>`templates.h'</TT>:
+
+<PRE>
+template &#60;class T&#62;
+class A {
+public:
+  void f ();
+  T t;
+};
+
+template &#60;class T&#62; void g (T a);
+</PRE>
+
+<P>
+<TT>`templates.cc'</TT>:
+
+<PRE>
+#include "templates.h"
+
+template &#60;class T&#62;
+void A&#60;T&#62;::f () { }
+
+template &#60;class T&#62;
+void g (T a) { }
+</PRE>
+
+<P>
+main.cc:
+
+<PRE>
+#include "templates.h"
+
+main ()
+{
+  A&#60;int&#62; a;
+  a.f ();
+  g (a);
+}
+</PRE>
+
+<P>
+compiling everything with <CODE>g++ main.cc templates.cc</CODE> will result in
+undefined symbol errors for <SAMP>`A&#60;int&#62;::f ()'</SAMP> and <SAMP>`g (A&#60;int&#62;)'</SAMP>.  To
+fix these errors, add the lines
+
+</P>
+
+<PRE>
+template class A&#60;int&#62;;
+template void g (A&#60;int&#62;);
+</PRE>
+
+<P>
+to the bottom of <SAMP>`templates.cc'</SAMP> and recompile.
+
+</P>
+
+
+<H2><A NAME="SEC55" HREF="g++FAQ_toc.html#TOC55">I get multiply defined symbols using templates</A></H2>
+
+<P>
+You may be running into a bug that was introduced in version 2.6.1
+(and is still present in 2.6.3) that generated external linkage
+for templates even when neither <CODE>-fexternal-templates</CODE> nor
+<CODE>-fno-implicit-templates</CODE> is specified.  There is a patch for
+this problem at <BR>
+<TT>`ftp://ftp.cygnus.com/pub/g++/gcc-2.6.3-template-fix'</TT>.
+
+</P>
+<P>
+I recommend either applying the patch or
+using <CODE>-fno-implicit-templates</CODE>
+together with explicit template instantiation as described in previous
+sections.
+
+</P>
+<P>
+This bug is fixed in 2.7.0.
+
+</P>
+
+
+<H2><A NAME="SEC56" HREF="g++FAQ_toc.html#TOC56">Does g++ support the Standard Template Library?</A></H2>
+
+<P>
+If you want to use the Standard Template Library, do not pass go,
+upgrade immediately to gcc-2.8.x or to egcs.  The new C++ front end
+handles STL very well, and the high-quality implementation of STL
+from SGI is included verbatim as part of the libstdc++ class library.
+
+</P>
+<P>
+If for some reason you must use 2.7.2, you can probably get by with
+the hacked-up version of the old implementation from HP that is
+included with libg++-2.7.2, but it is definitely inferior and has more
+problems.  Alternatively, g++ 2.7.2.x users might try the following:
+a group at the Moscow Center for Sparc Technology has
+a port of the SGI STL implementation that mostly works with gcc-2.7.2.
+See
+<TT>`http://www.ipmce.su/people/fbp/stl/stlport.html'</TT>.
+
+</P>
+<P>
+Mumit Khan has produced an "STL newbie guide" with lots of information
+on using STL with gcc.  See
+
+</P>
+<P>
+<TT>`http://www.xraylith.wisc.edu/~khan/software/stl/STL.newbie.html'</TT>
+
+</P>
+
+
+<H2><A NAME="SEC57" HREF="g++FAQ_toc.html#TOC57">I'm having problems mixing STL and the standard string class</A></H2>
+
+<P>
+[ This section is for g++ 2.7.2.x users only ]
+
+</P>
+<P>
+This is due to a bug in g++ version 2.7.2 and 2.7.2.1; the compiler
+is confused by the operator declarations.  There is an easy workaround,
+however; just make sure that the <CODE>&#60;string&#62;</CODE> header is included
+before any STL headers.  That is, just say
+
+</P>
+
+<PRE>
+#include &#60;string&#62;
+</PRE>
+
+<P>
+before any other <CODE>#include</CODE> directives.
+
+</P>
+<P>
+Unfortunately, this doesn't solve all problems; you may still have
+difficulty with the relational operators !=, &#60;=, &#62;, and &#62;=, thanks
+to a conflict with the very general definition of these operators
+in function.h.  One trick that sometimes works is to try to use ==
+and &#60; in your code instead of the other operators.  Another is to
+use a derived class of &#60;string&#62;.  The only completely satisfactory
+solution, I'm afraid, is to wait for the new release.
+
+</P>
+
+
+<H2><A NAME="SEC58" HREF="g++FAQ_toc.html#TOC58">Problems and limitations with exceptions</A></H2>
+
+<P>
+The first really usable exceptions implementations are in 2.8.x and
+egcs.  With these versions, exceptions are enabled by default; use
+-fno-exceptions to disable exceptions.
+
+</P>
+<P>
+However, 2.8.1 still has not integrated egcs work that computes an
+accurate control flow graph in the presence of exceptions.  For this
+reason, you will sometimes get bogus warnings when compiling with 2.8.1,
+-O, and -Wall, about uninitialized variables and the like.
+
+</P>
+<P>
+2.7.2.x has very limited and partially broken support for exceptions.
+With that compiler, you must
+provide the <CODE>-fhandle-exceptions</CODE> flag to enable exception
+handling.  In version 2.7.2 and older, exceptions may not work properly
+(and you may get odd error messages when compiling) if you turn
+on optimization (the <CODE>-O</CODE> flag).  If you care about exceptions,
+please upgrade to a newer compiler!
+
+</P>
+<P>
+In 2.7.2, you must give the <CODE>-frtti</CODE> switch to enable catching
+of derived exception objects with handlers for the base exception class;
+if <CODE>-frtti</CODE> is not given, only exact type matching works.
+
+</P>
+<P>
+For exception handling to work with 2.7.0 your CPU must be a SPARC,
+RS6000/PowerPC, 386/486/Pentium, or ARM.  Release 2.7.1 added support
+for the Alpha, and "m68k is rumored to work on some platforms"
+and "VAX may also work" (according to Mike Stump).
+<EM>It still doesn't work on HP-PA or MIPS platforms.</EM>
+
+</P>
+<P>
+Exception handling adds space overhead (the size of the executable
+grows); the problem is worse on the ix86 (Intel-like) architecture
+than on RISC architectures.  The extra exceptions code is generated
+in a separate program section and is only paged in if an exception
+is thrown, so the cost is in disk, not in RAM or CPU.
+
+</P>
+<P>
+Exception overhead is much lower on ix86 if you use binutils 2.9 or
+later, as gas (the GNU assembler) can now compress the information.
+
+</P>
+
+
+<H2><A NAME="SEC59" HREF="g++FAQ_toc.html#TOC59">Does g++ support namespaces?</A></H2>
+
+<P>
+As of version 2.7.2, g++ recognizes the keywords <CODE>namespace</CODE> and
+<CODE>using</CODE>, and there is some rudimentary code present, but almost
+nothing connected with namespaces works yet.
+The new versions (2.8.x/egcs) still lack namespace support, but to help
+compile standard programs they make
+
+</P>
+
+<PRE>
+using namespace std;
+</PRE>
+
+<P>
+a no-op.  There is namespace implementation work going on in the egcs
+snapshots (but it hasn't been released yet).
+
+</P>
+
+
+<H2><A NAME="SEC60" HREF="g++FAQ_toc.html#TOC60">What are the differences between g++ and the ARM specification of C++?</A></H2>
+
+<P>
+<A NAME="IDX153"></A>
+<A NAME="IDX154"></A>
+
+</P>
+<P>
+Up until recently, there was no really usable exception support.  If you
+need exceptions, you want gcc-2.8.x or egcs.  The implementation works
+fairly well.  The 2.7.x version was strictly alpha quality and quite
+fragile.
+
+</P>
+<P>
+<A NAME="IDX155"></A>
+Some features that the ANSI/ISO standardization committee has voted in
+that don't appear in the ARM are supported, notably the <CODE>mutable</CODE>
+keyword, in version 2.5.x.  2.6.x added support for the built-in boolean
+type <CODE>bool</CODE>, with constants <CODE>true</CODE> and <CODE>false</CODE>.  Run-time
+type identification was rudimentary in 2.7.x but is fully supported in
+2.8.x, so there are
+more reserved words: <CODE>typeid</CODE>, <CODE>static_cast</CODE>,
+<CODE>reinterpret_cast</CODE>, <CODE>const_cast</CODE>, and <CODE>dynamic_cast</CODE>.
+
+</P>
+<P>
+<A NAME="IDX156"></A>
+As with any beta-test compiler, there are bugs.  You can help improve
+the compiler by submitting detailed bug reports.
+
+</P>
+<P>
+[ This paragraph obsoleted by 2.8.x/egcs: ]
+One of the weakest areas of g++ other than templates is the resolution
+of overloaded functions and operators in complex cases.  The usual
+symptom is that in a case where the ARM says that it is ambiguous which
+function should be chosen, g++ chooses one (often the first one
+declared).  This is usually not a problem when porting C++ code from
+other compilers to g++, but shows up as errors when code developed under
+g++ is ported to other compilers.  (I believe this is no longer a
+significant problem in 2.7.0 or later).
+
+</P>
+<P>
+[A full bug list would be very long indeed, so I won't put one here;
+the sheer complexity of the C++ language means that every compiler I've
+tried has some problems. 2.8.x and egcs are a big improvement]
+
+</P>
+
+
+<H2><A NAME="SEC61" HREF="g++FAQ_toc.html#TOC61">Will g++ compile InterViews?  The NIH class library?  Rogue Wave?</A></H2>
+
+<P>
+<A NAME="IDX157"></A>
+<A NAME="IDX158"></A>
+The NIH class library uses a non-portable, compiler-dependent hack
+to initialize itself, which makes life difficult for g++ users.
+It will not work without modification, and I don't know what modifications
+are required or whether anyone has done them successfully.
+
+</P>
+<P>
+In short, it's not going to happen any time soon (previous FAQs referred
+to patches that a new NIHCL release would hopefully contain, but this
+hasn't happened).
+
+</P>
+<P>
+<STRONG>Note:</STRONG> I thought I saw an item indicating that someone
+<EM>had</EM> patched NIHCL to work with g++.  Any pointers?
+
+</P>
+<P>
+<A NAME="IDX159"></A>
+I think that as of version 2.5.6, the standard g++ will compile the
+standard 3.1 InterViews completely successfully.
+Note that you'll need the <CODE>-fno-for-scope</CODE> flag
+if you use gcc-2.7.0; with 2.7.2 you may be able to omit this flag
+but you'll get warnings.
+
+</P>
+<P>
+<A NAME="IDX160"></A>
+According to Jason Merrill, gcc-2.7.0 and newer works with Rogue
+Wave's <CODE>tools.h++</CODE> class library, but you may want to grab
+<TT>`ftp://ftp.cygnus.com/pub/g++/Tools.h++-6.1-patch'</TT>.  Again,
+you'll need the <CODE>-fno-for-scope</CODE> flag since Rogue Wave hasn't
+fixed their code to comply with the new standard yet.
+
+</P>
+
+
+<H2><A NAME="SEC62" HREF="g++FAQ_toc.html#TOC62">Debugging on SVR4 systems</A></H2>
+<P>
+<A NAME="IDX161"></A>
+
+</P>
+<P>
+"How do I get debugging to work on my System V Release 4 system?"
+
+</P>
+<P>
+<A NAME="IDX162"></A>
+
+</P>
+<P>
+Most systems based on System V Release 4 (except Solaris) encode symbolic
+debugging information in a format known as `DWARF'.  There are two forms
+of DWARF, DWARF 1 and DWARF 2.  The default is often DWARF 1, which is
+not really expressive enough to do C++ correctly.
+
+</P>
+<P>
+Now that we have gdb 4.17, DWARF debugging is finally supported (if
+you use gcc 2.8.1 or egcs-1.0.x or newer).
+
+</P>
+<P>
+<A NAME="IDX163"></A>
+<A NAME="IDX164"></A>
+
+</P>
+<P>
+For users of older versions of the tools, you <EM>can</EM> get g++ debugging under SVR4 systems by
+configuring gcc with the <CODE>--with-stabs</CODE> option.  This causes gcc to
+use an alternate debugging format, one more like that used under SunOS4.
+You won't need to do anything special to GDB; it will always understand
+the "stabs" format.
+
+</P>
+<P>
+To specify DWARF 2 output on Unixware, you can give the <CODE>-ggdb</CODE>
+switch; alternatively, <CODE>-gstabs</CODE> produces "stabs" format.
+
+</P>
+
+
+<H2><A NAME="SEC63" HREF="g++FAQ_toc.html#TOC63">debugging problems on Solaris</A></H2>
+
+<P>
+"I'm on Solaris, and gdb says it doesn't know about some of my local
+symbols.  Help!"
+
+</P>
+<P>
+This problem was introduced in gcc 2.7.2; debug symbols for
+locals that aren't declared at the beginning of a block come out in the
+wrong order, and gdb can't find such symbols.
+
+</P>
+<P>
+This problem is fixed in gcc-2.7.2.1.
+
+</P>
+
+
+<H2><A NAME="SEC64" HREF="g++FAQ_toc.html#TOC64">X11 conflicts with libg++ in definition of String</A></H2>
+<P>
+<A NAME="IDX165"></A>
+
+</P>
+<P>
+"X11 and Motif define String, and this conflicts with the String class
+in libg++.  How can I use both together?"
+
+</P>
+<P>
+One possible method is the following:
+
+</P>
+
+<PRE>
+#define String XString
+#include &#60;X11/Intrinsic.h&#62;
+/* include other X11 and Motif headers */
+#undef String
+</PRE>
+
+<P>
+and remember to use the correct <CODE>String</CODE> or <CODE>XString</CODE> when
+you declare things later.
+
+</P>
+
+
+<H2><A NAME="SEC65" HREF="g++FAQ_toc.html#TOC65">Why can't I assign one stream to another?</A></H2>
+
+<P>
+[ Thanks to Per Bothner and Jerry Schwarz for this section. ]
+
+</P>
+<P>
+Assigning one stream to another seems like a reasonable thing to do, but
+it's a bad idea.  Usually, this comes up because people want to assign
+to <CODE>cout</CODE>.  This is poor style, especially for libraries, and is
+contrary to good object-oriented design.  (Libraries that write directly
+to <CODE>cout</CODE> are less flexible, modular, and object-oriented).
+
+</P>
+<P>
+The iostream classes do not allow assigning to arbitrary streams, because
+this can violate typing:
+
+</P>
+
+<PRE>
+ifstream foo ("foo");
+istrstream str(...);
+foo = str;
+foo-&#62;close ();  /* Oops! Not defined for istrstream! */
+</PRE>
+
+<P>
+<A NAME="IDX166"></A>
+
+</P>
+<P>
+The original cfront implementation of iostreams by Jerry Schwarz allows
+you to assign to <CODE>cin</CODE>, <CODE>cout</CODE>, <CODE>cerr</CODE>, and <CODE>clog</CODE>,
+but this is not part of the draft standard for iostreams and generally
+isn't considered a good idea, so standard-conforming code shouldn't use
+this technique.
+
+</P>
+<P>
+The GNU implementation of iostream did not support assigning to 
+<CODE>cin</CODE>, <CODE>cout</CODE>, <CODE>cerr</CODE>, and <CODE>clog</CODE>
+for quite a while, but it now does, for backward
+compatibility with cfront iostream (versions 2.6.1 and later of libg++).
+
+</P>
+<P>
+The ANSI/ISO C++ Working Paper does provide ways of changing the
+streambuf associated with a stream.  Assignment isn't allowed;
+there is an explicit named member that must be used.
+
+</P>
+<P>
+However, it is not wise to do this, and the results are confusing.  For
+example: <CODE>fstream::rdbuf</CODE> is supposed to return the <EM>original</EM>
+filebuf, not the one you assigned. (This is not yet implemented in GNU
+iostream.)  This must be so because <CODE>fstream::rdbuf</CODE> is defined to
+return a <CODE>filebuf *</CODE>.
+
+</P>
+<P><HR><P>
+<p>Go to the <A HREF="g++FAQ_1.html">first</A>, <A HREF="g++FAQ_5.html">previous</A>, <A HREF="g++FAQ_7.html">next</A>, <A HREF="g++FAQ_8.html">last</A> section, <A HREF="g++FAQ_toc.html">table of contents</A>.
+</BODY>
+</HTML>

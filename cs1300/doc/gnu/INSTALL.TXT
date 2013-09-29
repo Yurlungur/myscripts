@@ -1,0 +1,113 @@
+GCC-2.95.2 for Mingw -- Installation instructions
+=================================================
+
+1. Choose what packages to download:
+
+  MANDATORY: Must choose one of the following:
+
+  a. gcc-2.95.2-crtdll.exe ........  C/C++/F77/ObjC compilers (CRTDLL)
+  b. gcc-2.95.2-msvcrt.exe ........  C/C++/F77/ObjC compilers (MSVCRT)
+
+  You must download either (a) or (b); (a) uses CRTDLL runtime, whereas
+  (b) uses MSVCRT runtime. All Win9x/NT systems come with CRTDLL, and 
+  all Win9x/NT systems except perhaps the first edition of Win9x systems 
+  come with MSVCRT as well. Until now, CRTDLL runtime version was the one
+  commonly known as Mingw32, and the MSCVCRT was provided as an add-on.
+
+  You can install both of course, but do so in different directories. Also
+  contains GDB 4.18 and MAKE 3.77.
+
+  OPTIONAL: Documentation packages are optional, but I highly recommend
+  it.
+
+  c. mingw32-docs-html.exe ........  Docs in HTML format.  Contains GCC
+                                     2.95.2, Binutils 2.9.4, GDB 4.18 and
+				     Make 3.77 docs.
+
+1. Get the mandatory package first.
+
+  (1) If you're on a fast link, just get the following files:
+
+      - gcc-2.95.2-crtdll.exe or gcc-2.95.2-msvcrt.exe 
+
+  (2) For slower links, get the split files from "split" directory.
+
+      - gcc-2.95.2-crtdll.exe.* or gcc-2.95.2-msvcrt.exe.*
+  
+  once you have all the gcc-2.95.2.* files, you can combine them
+  using the crtdll-combine.bat or msvcrt-combine.bat file provided 
+  in the "split" directory, which will create a gcc-2.95.2-crtdll.exe 
+  or gcc-2.95.2-msvcrt.exe file.
+
+  I recommend you get the HTML documentation package as well.
+  
+2. Pre-installation:
+
+  a. Decide where to install it. I usually install in "C:\GCC-2.95.2", but
+     you can install *anywhere* you want, including on a ZIP/JAZ drive.
+     All you have to do is to set PATH and optionally GCC_EXEC_PREFIX 
+     accordingly (see later). From here on, I'll use "C:\GCC-2.95.2" as 
+     the installation root directory. Please replace with whatever you've 
+     chosen. You can use the sample "MINGW32.BAT" I've provided in the 
+     distribution to setup the variables. This version should be OK
+     if you install to a directory with spaces in it, but I don't
+     recommend it.
+
+     If you choose to install both CRTDLL and MSVCRT versions, please pick
+     different directories (eg., C:\GCC-2.95.2-CRTDLL for the CRTDLL version
+     and C:\GCC-2.95.2-MSVCRT for the MSVCRT version).
+  
+  b. Make sure you DO NOT install on top of an existing installation.
+     Either install elsewhere, or delete the old directory structure first.
+  
+3. INSTALL:
+   
+   To avoid the issue of having the "correct" unzip program, I have 
+   decided to use self-extracting executables instead of ZIP files.
+
+   Run the gcc-2.95.2-crtdll.exe or gcc-2.95.2-msvcrt.exe file, and
+   type in where you want it to be installed (Step 2a.).
+
+   Note that if you retrieved the "split" files, then you will have to
+   recombine them before you try to run. You can use the DOS COPY trick
+   to recombine, or use the CRTDLL-COMBINE.BAT (or MSVCRT-COMBINE.BAT) in 
+   the "split" dirctory.
+
+4. Setting up environment variables and such:
+   
+   This version of GCC does not require *any* environment variable to run 
+   properly. You can still set GCC_EXEC_PREFIX if you wish (useful for 
+   example to switch between multiple GCC distributions), but it's 
+   completely optional. GCC now looks for the system includes, libraries, 
+   programs, etc relative to its installation directory. 
+
+   You'll still need to add the GCC-2.95.2 bin directory, eg.
+   C:\GCC-2.95.2\bin, to your PATH for GCC to be able to find various 
+   other tools such the linker, assembler, etc.
+
+   The following is all you need for this release:
+     
+     C:\> PATH=C:\GCC-2.95.2\BIN;%PATH%
+    
+   Again, see the supplied MINGW32.BAT file. Those of you who use a Unix
+   like SHELL such as bash, use "mingw32.sh" instead. 
+
+   Make sure you do not have any other variables set from previous version
+   or else GCC will search incorrect places for libraries and headers. The
+   ones that you DO NOT need anymore are: LIBRARY_PATH, C_INCLUDE_PATH,
+   CPLUS_INCLUDE_PATH, and OBJC_INCLUDE_PATH. If you *DO* have the variable
+   GCC_EXEC_PREFIX in your environment, just make sure it's set correctly.
+
+5. INSTALL GCC-2.95.2 OPTIONAL packages following exactly the same steps.
+
+Good luck.
+
+Links:
+
+GNU Compilers    : http://gcc.gnu.org/
+Cygwin site      : http://sourceware.cygnus.com/cygwin/
+My stuff         : http://www.xraylith.wisc.edu/~khan/software/gnu-win32/
+
+Mumit Khan -- khan@xraylith.wisc.edu
+http://www.xraylith.wisc.edu/~khan/
+

@@ -1,0 +1,93 @@
+<TITLE>BGI Documentation for 
+isresizeevent
+</TITLE>
+<H2>
+isresizeevent
+</H2>
+<HR>
+<DL>
+
+
+<DT><B>Syntax</B><DD>
+<PRE>
+#include "graphics.h"
+bool isresizeevent( );
+</PRE>
+
+
+
+<DT><B>Description</B><IMG SRC="win.gif" ALT="[WIN]"><DD>
+The 
+isresizeevent
+function is available in the
+<A HREF="../../bgi/README.html">winbgim</A> implementation of BGI
+graphics.
+   This function returns true if there the window has been resized by
+   the user and the clearresizeevent function has not subsequently
+   been called.  The function actually detects the WM_EXITSIZEMOVE
+   event, which means that moving a window could also trigger
+   this function to return true.  
+   <P>
+   Once this event has been detected, the program can redraw
+   the screen if necessary, using the
+   <a href="getmaxx.html">getmaxx</a> and 
+   <a href="getmaxy.html">getmaxy</a> functions to determine
+   the new size of the screen.  Afterward, the program should
+   call <a href="clearresizeevent">clearresizeevent</a> so that
+   the isresizeevent function doesn't continue to return true.
+   <P>
+   Note: For information on how to create a window that the user
+   can resize, please see the documentation for the final argument of
+   <a href="initwindow">initwindow</a>.
+
+<P><DT><B>Return Value</B><DD>
+True if there is an unprocessed resize event;
+otherwise false.
+
+
+<P><DT><B>See also</B>
+<DD><A HREF="clearresizeevent.html"> clearresizeevent </A>
+<DD><A HREF="getmaxx.html"> getmaxx </A>
+<DD><A HREF="getmaxy.html"> getmaxy </A>
+<DD><A HREF="initwindow.html"> initwindow </A>
+
+
+
+<P><DT><B>Example</B><DD>
+<PRE>
+/* resize example */ 
+#include "graphics.h"
+
+void main(void)
+{
+    int maxx, maxy;  // Maximum x and y pixel coordinates
+    int x, y;        // Coordinates of the mouse click
+    int divisor;     // Divisor for the length of a triangle side
+
+    // Put the machine into graphics mode and get the maximum coordinates:
+    initwindow(450, 300, "", 600, 200, false, false, WS_POPUP|WS_THICKFRAME);         
+    maxx = getmaxx( );
+    maxy = getmaxy( );
+
+    cout &lt;&lt; "WIDTH:  " &lt;&lt; getmaxx( )+1 &lt;&lt; endl;
+    cout &lt;&lt; "HEIGHT: " &lt;&lt; getmaxy( )+1 &lt;&lt; endl;
+
+    do
+    {
+        clearviewport( );
+        line(0, 0, getmaxx( ), getmaxxy( ));
+        while (!isresizeevent( ) & !kbhit( ))
+        {
+            delay(1000);
+        }
+        clearresizeevent( );
+    }   while (!kbhit( ));
+
+    // Switch back to text mode:
+    closegraph( );
+}
+</PRE>
+
+</DL>
+<HR>
+<A HREF="index.html">Back to index</A>

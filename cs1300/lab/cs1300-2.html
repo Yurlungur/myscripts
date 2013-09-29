@@ -1,0 +1,589 @@
+<HTML>
+<HEAD>
+<TITLE>
+
+
+CSCI 1300 Exercise 2 - Programming Errors and the Debugger
+
+
+</TITLE>
+</HEAD>
+<BODY>
+<TABLE>
+<TD>
+<H2>
+
+
+CSCI 1300 - Exercise 2
+<BR>
+Programming Errors and the GDB Debugger
+
+
+</H2>
+<P>
+<B>What You'll Get from This Exercise</B></P>
+<P CLASS="Main-body-small-type">
+<A NAME="pgfId=2086">
+ </A>
+
+
+<A HREF="cs1300-1.html">Last week</A>
+you learned how to use emacs and g++ to edit and compile programs.
+If this editor and compiler are not installed on your machine, then
+you may obtain install them as shown in the box to the right.
+</A>.
+<P>
+Now we would like you to learn about a debugger called gdb that you will
+use this semester.
+By using emacs in conjunction with
+gdb, you obtain a some degree of integration among your
+editor/compiler/debugger.
+
+<P>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>PC Labs in the<BR>Engineering Center</TH>
+<TR><TD>CR 235&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 239
+<TR><TD>CR 244&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 252 (24 hours)
+<TR><TD>CH 107&nbsp;&nbsp;&nbsp;&nbsp;<TD>ME 107
+<TR><TD COLSPAN=2>Other campus sites are<BR>listed 
+at <a href="http://www.colorado.edu/its/labs/">www.colorado.edu/its/labs</a>.
+</TABLE>
+<TD>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>Installing the<BR>CS1300 Software</TH>
+<TR><TD COLSPAN=2>
+Open a DOS window. If the CS1300 software is not permanently 
+<BR>installed on your machine, then use one of these methods:
+<UL>
+<LI>On machines in the Engineering Center, try one of
+<BR>these commands:
+<BR><CODE>&nbsp;&nbsp;H:\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;H:\cs1300\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;Z:\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;Z:\cs1300\gocs</CODE>
+<LI>On other machines, download these two files to the C: drive:
+<BR><A HREF="../unzip.exe">
+www.cs.colorado.edu/~main/cs1300/unzip.exe</A>
+<BR><A HREF="../cs1300.zip">
+www.cs.colorado.edu/~main/cs1300/cs1300.zip</A>
+<BR>
+Then type these commands:
+<BR><CODE>&nbsp;&nbsp;C:</CODE>
+<BR><CODE>&nbsp;&nbsp;cd \</CODE>
+<BR><CODE>&nbsp;&nbsp;unzip cs1300.zip</CODE>
+<BR><CODE>&nbsp;&nbsp;cs1300\gocs</CODE>
+</UL>
+<TR><TD>
+If you get the message "Out of environment space", then:
+<UL>
+<LI> Click on the MS-DOS icon in the top left corner of the window.
+<LI> Select Properties from the pop-up menu.
+<LI> Select the Memory tab from the command box.
+<LI> Click the arrow on the Initial Environment box. Move down in the
+box as far as possible (by clicking the downward arrow). Click on the
+biggest number that you see in this box.
+<LI> Click OK in the command box.
+<LI> Click OK in the MS-DOS Prompt information box.
+<LI> Stop the DOS Session by clicking the X in the top-right or by
+typing the command "exit".
+<LI> Restart a new DOS session and try running your commands again.
+</UL>
+</TABLE>
+</TABLE>
+<FORM METHOD=POST ACTION="../NoSubmitButton">
+
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Create a Working Directory
+</STRONG> </DT>
+<DD>
+As you did last week, make sure that the cs1300 software is installed
+and create a working directory. 
+I would suggest that you use your login name for
+the name of the directory so that you don't get your work mixed
+up with another's. So fill in the blank with your login name:
+<PRE>
+         D:
+         cd \
+         mkdir _______
+         cd ________
+</PRE>
+Once this directory is created, use the copy command to copy two
+files from the cs1300 directory 
+(<A HREF="heatwave.cxx">heatwave.cxx</A> and <A HREF="bugs.cxx">bugs.cxx</A>).
+When you type the command,
+use the letter of your cs1300 drive
+rather than C:
+<PRE>
+         copy C:\cs1300\lab\heatwave.cxx 
+         copy C:\cs1300\lab\bugs.cxx
+</PRE>
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Starting the Debugger within Emacs
+</STRONG> </DT>
+    <DD><LI>
+    Today you'll start by running a debugger session using the
+    heatwave program.
+    To get the debugger started on the heatwave program,
+    make sure that you are in the working directory that you used in the previous exercise,
+    and open heatwave.cxx with the emacs editor.
+    Then recompile heatwave.cxx by giving the "ESC x compile" command.
+    In the miniwindow, you should erase "make -k" and type this
+    compilation command instead:
+
+    <P><CODE>
+    g++ -Wall -gstabs  heatwave.cxx -o heatwave
+    </CODE><P>
+
+    The reason for recompiling is that the debugger
+    requires the compilation to have an extra -gstabs switch. I would
+    suggest that you use -gstabs in all your future compilations. You never
+    know when you might need to debug!
+    After the compilation finishes, you can 
+    <STRONG> start the debugger with these steps:</STRONG>
+    <OL>
+        <LI> Shut the compilation window (Ctrl-x 1, which says "give me
+             just one window").
+   <LI> Split the window into two (Ctrl-x 2). Both the top and bottom
+             window will have heatwave.cxx.
+        <LI> Move the cursor to the "other" window (Ctrl-x o). The cursor
+             should now be in the bottom window.
+        <LI> Start the debugger with the
+             command: "ESCAPE x gdb RETURN". The miniwindow will print a small
+             prompt "Run gdb (like this): gdb". You should type the name of the
+             executable file, as shown here:
+    
+	     <P><CODE>
+             Run gdb (like this): gdb heatwave
+             </CODE><P>
+    
+             Then press return, and the gdb debugger starts in the bottom
+             window.
+    </OL>
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Setting and Removing Breakpoints
+</STRONG> </DT>
+    <DD>
+    When the debugger starts, the bottom screen prints a message and the
+    prompt (gdb). With the cursor at this prompt, you can give commands to
+    the debugger, and there are also a few special emacs commands that you
+    can give while the debugger is running. We'll start by 
+    setting a breakpoint at the start of the main program. A breakpoint is
+    just a line of code where the  program's execution will stop. I like to
+    stop at the beginning of the main program so that I can assess my
+    situation and proceed from there. Here's 
+    how to set or remove a breakpoint:
+    <OL>
+        <LI> Move to the code window (use "Ctrl-x o" to move to the other 
+        window if you are not already in the code window).
+   <LI> Move the cursor desired line in the program. In this case, you
+             should move down to the beginning of the first cout 
+        statement in the main program.
+        <LI> Ctrl-x SPACE (that is, Ctrl-x and then the space bar).
+    </OL>
+    You'll see a message about the breakpoint appear in the bottom
+    window.
+    Or you might get an error message saying that there is no source
+    file HEATWAVE.CXX. If you get this error message, the problem is
+    that the file has been recorded as HEATWAVE.CXX (all capitals) but
+    it should be heatwave.cxx (lower case). To fix this problem, quit
+    emacs and give the rename command:
+<PRE>
+    rename HEATWAVE.CXX heatwave.cxx
+</PRE>
+<P>
+    Later, if you need to remove the breakpoint, move the cursor back to
+    this line, and give the "remove breakpoint" command (Ctrl-x Ctrl-a
+    Ctrl-d).
+    <P>
+    An alternative to "Ctrl-x SPACE" is "Ctrl-x Ctrl-a Ctrl-t", setting
+    a temporary breakpoint (which will be removed the first time it is
+    used).
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Running the Program
+</STRONG> </DT>
+    <DD>
+    Once the breakpoint is set, you can run your program. Of course, it
+    won't run very far, since there is a  breakpoint at the top of the
+    program. Move to the bottom window and type the word "run" at the
+    (gdb) prompt, and press return.
+    You might get a few warnings or messages about Windows DLLs.
+    Then you'll    see messages similar to this:
+    
+    <P><CODE>
+    Breakpoint 1, main () at heatwave.cxx:41
+    <BR>
+    (gdb)
+    </CODE><P>
+    
+    This message means that your program ran until it reached "Breakpoint
+    1", which was in the main() function on line 41 of heatwave.cxx. If
+    you look in the code window at the top, you'll see that emacs placed
+    an arrow on line 41 to indicate where the breakpoint occurred.
+    <P>
+    The prompt (gdb) in the bottom window means that the debugger is ready
+    for you to issue another command. You
+    can proceed in many ways. You can examine the values of variables, you
+    can look at the runtime stack (which indicates the current sequence of
+    function calls), you can  continue executing the program. For now, you
+    should continue executing the program by typing "cont" and pressing
+    return. You will get the message "Continuing," and the program will
+    execute its dialog with you. You should answer all of the program's
+    questions until execution ends. At the end you see the message
+    "Program exited normally" and the (gdb) prompt appears once more.
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Display, Next, Print, Step
+</STRONG> </DT>
+    <DD>
+    The display command allows you to display the current values of particular
+    variables. To see how the display works, you should first restart your
+    program, by typing the run command once again. We'll run through the
+    program in a slightly different way, displaying the value of the variable 
+    height. In order to display this variable, type the command "display
+    height" in the gdb window. You'll get a response such as "height=0",
+    or maybe "height=42" or "height=126429"--you really don't know what
+    value height will have right now because it hasn't yet been given a
+    value.
+    <P>
+    Now we will continue executing the program, but we'll execute only one
+    line at a time. In order to execute one line at a time, type "next"
+    command in the gdb window and press return. Type this command once now.
+    The next statement of your program is executed! In this program,
+    that statement is an output statement, and the output message
+    "How tall is your tree in feet?" appears in the gdb window. In the
+    code window, the arrow has moved down one statement to indicate the
+    current location of the execution.
+    <P>
+    Gdb also keeps you updated on the value of the display variable
+    (height), which has not changed since the last time it was displayed.
+    Finally, the (gdb) prompt appears again, indicating that the debugger
+    is ready for another command.
+    <P>
+    At this point, you should give another next command and press return.
+    The cursor will move to the next line and just sit there. Why did this
+    happen? Has the debugger crashed? No! You see, the next statement of
+    the program is an input statement to read the value of height. The
+    program is waiting for you to type that input. Go ahead and type a
+    number now, and press return. When you press return, the number is
+    read, the new value of height is displayed, and the (gdb) prompt
+    appears once more. Also, the arrow in the code window has moved down
+    to the next statement.
+    <P>
+    Let's add one more variable to the display. Type "display volume" and
+    press return. At this point, the volume just contains garbage because
+    the program has not yet assigned a value to the volume. Now, continue
+    executing the program one statement at a time, and stop when the
+    volume does change. <STRONG> Keep in mind that when the (gdb) prompt
+    appear, you must type a debugger command. When the cursor just sits
+    on the left with no prompt, you must type input for the program.
+    </STRONG> Also, keep an eye on the arrow in the code window to see
+    which statements are about to be executed.
+    <P>
+    After the volume changes to its new value, give the cont command to
+    execute the remainder of the program.
+    <P>
+    There are three other commands that you will find useful:
+    (1) <STRONG>undisplay</STRONG> followed by a number n will remove item
+    n from the display list. (2) <STRONG>print</STRONG> followed by an
+    expression will evaluate and print the expression once (without adding
+    it to the display list).
+    (3) <STRONG>step</STRONG> is similar to "next", executing one statement.
+    The difference is that the step command tries to step into the body of
+    each function, and execute the lines of each function one at a time. Since
+    heatwave has no functions, we're using next. (Also, step would cause
+    problems with heatwave, since the debugger would try to step into
+    the input &gt;&gt; and output &lt;&lt; functions.)
+</DL>
+
+<DL> 
+<DT> <STRONG><INPUT TYPE="checkbox" NAME="Register">
+Quitting and More About Gdb
+</STRONG> </DT>
+    <DD>
+    To end gdb, type the quit command, press return, move the cursor
+    to the top window (Ctrl-x o) and set things to just one window (Ctrl-x 1).
+    <PP>
+    As the semester progresses, you'll learn a lot more about gdb.
+    You can also print the
+    gdb reference card (in pdf format) at 
+    <A HREF="refcard-gdb.pdf">
+    www.cs.colorado.edu/~main/cs1300/lab/refcard-gdb.pdf
+    </A>.
+    For now however, the few commands that you know
+    should be sufficient to finish this exercise.
+</DL>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Different Kinds of Errors
+</B>
+<UL><LI>
+In the textbook, you'll read
+ about three kinds of errors that a program might have. 
+Briefly, the kinds of errors are:
+<UL>
+<LI>
+ Syntax Error: An error that occurs when the compiler does not understand what you have written. These are often small, such as a missing semi-colon.
+<LI>
+ Run-time Error: An error that occurs when a program is actually running. Typically, a run-time error causes a running program to stop immediately, and print an error message. For example, if a program includes an arithmetic expression x/y, and y happens to be zero—then a run-time error will occur when the expression    x/y is encountered. But, this error does not occur until your program is actually running.
+<LI>
+ Logic Error: Sometimes your program compiles correctly, and has all the necessary directives, and runs without producing a run-time error. But, the answer that the program produces might still be wrong. These errors, also called “program bugs” are the toughest errors to find and eliminate.
+</UL>
+During the rest of this lab exercise, we’ll give you a program that has each
+of these kinds of errors. You’ll learn the typical ways of
+tracking down and elmininating these errors. The most important thing
+that you’ll do is continue
+to use the debugger, which is a tool to help you track down those elusive logic errors.
+</UL>
+
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Finding and Correcting the Syntax Error
+</B>
+<UL><P><LI>
+Quit emacs and then restart it on the bugs.cxx file that you copied
+from the cs1300 material.
+The file is a C++ program that I wrote.
+But I have made errors that you will fix. 
+Start by 
+trying to compile it in the usual way (ESC-X compile,
+and type the compile command given here:
+    <P><CODE>
+    g++ -Wall -gstabs  bugs.cxx -o bugs
+    </CODE><P>
+<P>
+The compiler will give a list of errors in a message window. 
+These are usually syntax errors.
+<P>
+<TABLE BORDER=1 CELLPADDING=4>
+<TR><TD>
+<I>When several syntax errors appear in the error message box, always deal with the topmost error first. Often, if you fix the topmost error, then the others will disappear.</I>
+</TABLE>
+<P><LI>
+In this exercise, there are several syntax errors. 
+The topmost error says something similar to this:
+<PRE>
+bugs.cxx: In function `int main()':
+bugs.cxx:46: parse error before `='
+</PRE> 
+This means that the compiler thinks that there is a something missing on line 46
+of the program. To deal with this error, make sure that the cursor is
+in the code window and then type Ctrl-X and press the backward quote
+key (usually in the upper left corner of a keyboard).
+Emacs
+will move the first error message to the top of the error window and
+place the cursor on line 46 of your code, where it thinks something
+is missing. That line looks like this:
+<PRE>
+sum_square = height*height + base*base;
+</PRE>
+But this line looks okay! There doesn't seem to be anything wrong
+before the '='. What is the compiler complaining about?
+<P>
+<TABLE BORDER=1 CELLPADDING=4>
+<TR><TD>
+<I>When the compiler complains about a line, and you don’t see a problem, start looking at the previous lines in your program. Often the error will be one or two lines before the compiler’s guess.</I>
+</TABLE>
+<P><LI>
+In this exercise, the error is a few lines before line 46. Can you see this line in the code:
+<PRE>
+cin &gt;&gt; base
+</PRE>
+<P>
+This line is missing the semicolon at the end. The compiler didn’t realize that the semicolon was missing until it got to line 46.
+ In any case, you can fix the syntax error by placing a semicolon at the end of the statement 
+<CODE>cin &gt;&gt; base;</CODE>
+</UL>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Finding and Correcting the Run-time Error
+</B>
+<UL>
+<LI>
+Once more, compile your program. It should compile with no errors, and you 
+can run the program (from the DOS prompt). The program runs and asks you for 
+some information. But after reading the information, the program 
+crashes--maybe with that ominous "Illegal operation" message from Windows.
+<P>
+The phrase "illegal operation" indicates that the program did
+something that the Windows operating system won't allow.
+In the case of this program, you might
+ be able to figure out what caused the error by simply examining the
+ program. But other times it's hard to see exactly where an 
+ error like this occurs. In such a case, the debugger can help you. 
+ The debugger lets you step through the program one line at a time, showing
+  exactly which line is being executed.
+<P>
+In order to use the debugger, move the cursor to the compile window
+and start the debugger with the ESC-X gdb command. When you are asked
+how to run the debugger, indicate that you are running "gdb bugs" and
+press return. When the degugger starts, go back to the code window and
+put a breakpoint on the first cout statement of the program.
+<P>
+Now, back to the debugger window and run the program. The
+program will run until you reach the breakpoint, which will be highlighted
+by an arrow to indicate that it is about to be executed. 
+We're ready to execute the program one line at a time. Start by
+pressing the n key and return. When you press this key, 
+the compiler executes one line of code and highlights the next line.
+ Press return again, and the compiler will execute the 
+ n-command again. 
+Each time you press return, the debugger executes the 
+highlighted statement and moves to the next line of your program.
+For example, when you execute a cout statement, the message will
+appear in the gdb window. When you execute a cin statement, the
+debugger waits for you to type the input before
+continuing. <I>Warning:
+It is tempting to type the input when a prompt appears such as
+"How tall is your right triangle in inches?" But don't! That prompt
+appeared from the cout statement. You must wait until the cin
+statement is executed before you type any input.</I>
+<P>
+Keep pressing return, running the program one line at a time. 
+In this example, stop when you reach the line:
+<PRE>
+hypotenuse = 1/zero;
+</PRE>
+Press return one more time to execute this line. The debugger should
+intercept the illegal operation and print a message about an
+"exception". This is somewhat useful because you can now see exactly
+which line caused the error. In this case, the error is a division by
+zero, which results in an undefined value. Of course, we shouldn't be
+doing this division at all, so delete the whole line, quit the
+debugger,
+return to the code window and recompile. You'll probably still get one
+warning from the compiler, indicating that the variable "zero" is not
+used. To fix this warning, go near the top of the main program and
+delete the declaration of the variable zero. Then recompile and run
+the program once more. (You have to quit the debugger with the q
+command before you can recompile.)
+</UL>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Finding and Correcting the Logic Error
+</B>
+<UL>
+<LI>
+Finally the program is working. Or is it? There are no syntax or link errors. 
+And there is no run-time error. But look at the answer that the program 
+wrote:
+<PRE>
+This is the same as 0 feet.
+</PRE>
+That's not right!
+<P>
+<TABLE BORDER=1 CELLPADDING=4>
+<TR><TD>
+<I>Even if a program compiles and runs without errors, you still must check 
+that the output is correct.</I>
+</TABLE>
+<P>
+When a program has incorrect output, you can use the debugger to step through 
+it one line at a time with the variables displayed.
+Go ahead and do this now, in the same way that you did before with a
+breakpoint
+on the first cout statement.
+<P>
+Start the programming running, and when you reach the breakpoint, you
+should
+put displays 
+on the five variables by typing these commands in the gdb window:
+<PRE>
+    disp height
+    disp base
+    disp sum_square
+    disp hypotenuse
+    disp feet
+</PRE>   
+You'll then see displays of all their current values.
+At this point, the values of the variables will
+look strange indeed. They are likely to contain garbage--whatever numbers 
+happen to be in the computer’s memory at the moment. But, soon this will 
+change. To see this change, run through the program, entering the number 30 
+for both pieces of data. After entering the second peice of data, the 
+highlighted statement will be the assignment statement:
+<PRE>
+sum_square = height*height + base*base;
+</PRE>
+Execute this highlighted statement, and keep one eye on the variables.
+The value of sum_square should change to 1800 (if you used 30 for 
+ each input number). Then execute the next statement, and the value of 
+ hypotenuse will change to about 42. 
+ At this point you are about to execute the next assignment statement:
+ <PRE>
+ feet = (1/12) * hypotenuse;
+ </PRE>
+Now, hypotenuse is around 42, so we would expect feet to be a bit
+less than 4. So, execute the statement, and oops! Why did feet change to zero?...
+<P>
+The reason for the zero has to do with the factor (1/12) in the arithmetic 
+expression. Remember that when C++ does division with integers, 
+the answer is the quotient, and any remainder is thrown away. So 1/12 
+is actually zero. Here are two possible ways to fix the assignment 
+statement:
+<PRE>
+feet = hypotenuse/12;
+feet = (1.0/12.0) * hypotenuse;
+</PRE>
+The first solution works okay because we are not dividing two integers 
+(hypotenuse is a float number). The second line is another way to fix the 
+problem becuase 1.0 and 12.0 are treated as non-integer
+ numbers (the decimal point is enough to make them non-integer).
+ <P>
+Go ahead and make this last correction, and run the program once more.  
+</UL>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+A Smooth Ending to the Program
+</B>
+<UL>
+The end of our triangle program contains these lines:
+<PRE>
+cout &lt;&lt; "Please press the return key to end the program." << endl;
+cin.ignore( ); // Read the return key at the end of the second input
+cin.ignore( ); // Read the return key that’ pressed to end the program
+</PRE>
+These statements allow for a more elegant end to the program. The message 
+"Please press the return key to end the program" is printed. 
+Then a function, cin.ignore() is called twice. Each time cin.ignore() 
+is called, a character is read from the keyboard and thrown away. 
+The first ignored character is actually something that was typed long ago: 
+The return key after the second input number. The other ignored character is 
+the return key that is pressed to end the program. So, with our smooth 
+program ending, the message appears and the program then waits for you to 
+press the return key. After you press the return key, the program finally 
+ends. 
+</UL>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Copying your File to a Floppy Disk or University Machine
+</B>
+<UL>
+At this point, you are done with the lab part of this exercise. You can exit 
+the compiler. If you like, you can save your work to a floppy disk 
+or to a university machine.
+Saving the bugs program isn’t too important, but in the future you should 
+save all your work.
+</UL>
+
+<HR>
+<address>
+<A HREF="http://www.cs.colorado.edu/~main/Home.html">Michael Main</A>
+(<A HREF="mailto:main@colorado.edu">main@colorado.edu</A>)
+<HR>
+
+</BODY>
+</HTML>
+

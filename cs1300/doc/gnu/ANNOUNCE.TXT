@@ -1,0 +1,113 @@
+GCC-2.95.2 for Mingw (i386-mingw32) -- Release information
+===================================================================
+
+Release date: Nov 7, 1999.
+
+I'm pleased to announce prebuilt gcc-2.95.2 packages for GNU Mingw
+(i386-mingw32). 
+
+What are the various packages?
+  
+  gcc-2.95.2: GNU Compilers for C, C++, ObjC, F77 plus the the respective 
+    runtime libraries. Also includes binutils-2.9.4 (distributed with
+    Cygwin B20.1), Mingw runtime 1999-11-07, Anders Norlander's w32api
+    (slightly modified), GDB version 4.18, MAKE version 3.77.
+
+    Unlike previous releases where I have provided an MSVCRT add-on,
+    this release contains full distributions of CRTDLL and MSVCRT;
+    you choose which one (or both!) you want. If you get both, do
+    install each in a different directory.
+  
+  mingw32-docs-html: Provides the documentation in HTML format. Contains
+    documentation for GCC 2.95.2, Binutils 2.9.4, GDB 4.18 and Make 3.77.
+
+  All the packages are distributed as self-extracting executables instead
+  of .ZIP files to avoid the issue of having the "correct" unzip utility.
+
+What's New?
+
+  GCC: 2.95.2 (obviously), with some Mingw specific patches. Highlights:
+    - deals correctly when installed in pathname with spaces in it.
+    - correct #pragma pack handling.
+    - preliminary COM support.
+    - anonymous structs and unions in C, and anonymous structs in C++.
+    - thread-safe C++ exception support.
+    - support creation of "shared" segments via the "shared" attribute so 
+      that multiple running copies can share data variables. 
+    - ignores GNAT installed registry keys, and can not coexist with GNAT.
+  
+  Mingw runtime:
+    - profiling support! Compile/Link with -pg option, run, and then
+      use gprof (included in distribution). See binutils documentation
+      for more on gprof usage.
+    - Many many fixes to headers. Added many wide character prototypes,
+      but still quite incomplete.
+    - Helper DLL for thread-safe C++ exception support. To enable MT
+      C++ support, you must compile and link using -mthreads option,
+      and your application will need mingwm10.dll (MSVCRT version) or 
+      mingwc10.dll (CRTDLL version). 
+  
+  w32api:
+    - Based on Anders Norlander's 0.2 snapshot, with lots of changes for
+      COM and OLE. Fixes to missing ``extern "C"'' guards, and incorrect
+      packing for some of the headers.
+    - Stub winsock2.h header; very incomplete, which hopefully lots of 
+      applications won't notice.
+
+What's not in this package?
+  
+  libg++: Sorry, I stopped distributing libg++ a while back. If you
+    need it, see the gcc-2.95.2 FAQ (see the "LINKS" section for URL) and 
+    build it yourself.
+
+Where?
+  
+  Web: http://www.xraylith.wisc.edu/~khan/software/gnu-win32/
+  FTP: ftp://ftp.xraylith.wisc.edu/pub/khan/gnu-win32/mingw32/gcc-2.95.2/
+
+  Please visit the web page before you attempt to download/install. It
+  may address problems you might run into.
+
+Installation? 
+
+  See the INSTALL file for instructions. It's basically a matter of
+  unpacking the various packages that you may need.
+
+Disk space?
+   
+  About 24M, give or take a few.
+
+MSVCRT vs CRTDLL runtimes?
+  
+  The CRTDLL distribution links with and uses CRTDLL.DLL, which is
+  guaranteed to be on *every* W95/NT system shipped; the MSVCRT
+  distribution links with and uses MSVCRT.DLL, which is distributed
+  with all new Win9x/NT systems. MSVCRT runtime is faster and better
+  debugged, but do keep in mind that Mingw/MSVCRT is perhaps not as 
+  well tested as Mingw/CRTDLL, simply because a large fraction of the 
+  installed user-base uses the CRTDLL version.
+
+Where are the rest of the utilities, such as make and gdb?
+  
+  GDB version 4.18 is distributed with gcc-2.95.2 binaries, and so is
+  MAKE version 3.77. Jan-Jaap has made most of the other tools available 
+  from his site, and I see no reason to duplicate them. His site is
+  listed in the "Related Sites" on my web page cited below. 
+
+Where to report bugs?
+
+  Report compiler bugs to GCC bugs mailing list. See GCC homepage (URL
+  below in LINKS section) for information on how to submit bug reports.
+  There is a Mingw list http://www.egroups.com/lists/mingw32/ as well.
+  Please always copy me on the bug reports, wherever you choose to send
+  those.
+
+Links?
+  
+  GNU Compilers    : http://gcc.gnu.org/
+  My stuff         : http://www.xraylith.wisc.edu/~khan/software/gnu-win32/
+
+Regards,
+Mumit -- khan@xraylith.wisc.edu
+http://www.xraylith.wisc.edu/~khan/
+

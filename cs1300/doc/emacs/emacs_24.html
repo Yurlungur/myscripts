@@ -1,0 +1,189 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Indentation</TITLE>
+<P>Go to the <A HREF="emacs_23.html">previous</A>, <A HREF="emacs_25.html">next</A> section.<P>
+<A NAME="IDX696"></A>
+<A NAME="IDX697"></A>
+<H1><A NAME="SEC151" HREF="emacs_toc.html#SEC151">Indentation</A></H1>
+<P>
+  This chapter describes the Emacs commands that add, remove, or
+adjust indentation.
+<P>
+<DL COMPACT>
+<DT><KBD><KBD>TAB</KBD></KBD>
+<DD>Indent current line "appropriately" in a mode-dependent fashion.
+<DT><KBD><KBD>LFD</KBD></KBD>
+<DD>Perform <KBD>RET</KBD> followed by <KBD>TAB</KBD> (<CODE>newline-and-indent</CODE>).
+<DT><KBD>M-^</KBD>
+<DD>Merge two lines (<CODE>delete-indentation</CODE>).  This would cancel out
+the effect of <KBD>LFD</KBD>.
+<DT><KBD>C-M-o</KBD>
+<DD>Split line at point; text on the line after point becomes a new line
+indented to the same column that it now starts in (<CODE>split-line</CODE>).
+<DT><KBD>M-m</KBD>
+<DD>Move (forward or back) to the first nonblank character on the current
+line (<CODE>back-to-indentation</CODE>).
+<DT><KBD>C-M-\</KBD>
+<DD>Indent several lines to same column (<CODE>indent-region</CODE>).
+<DT><KBD>C-x <KBD>TAB</KBD></KBD>
+<DD>Shift block of lines rigidly right or left (<CODE>indent-rigidly</CODE>).
+<DT><KBD>M-i</KBD>
+<DD>Indent from point to the next prespecified tab stop column
+(<CODE>tab-to-tab-stop</CODE>).
+<DT><KBD>M-x indent-relative</KBD>
+<DD>Indent from point to under an indentation point in the previous line.
+</DL>
+<A NAME="IDX698"></A>
+<A NAME="IDX699"></A>
+<P>
+  Most programming languages have some indentation convention.  For Lisp
+code, lines are indented according to their nesting in parentheses.  The
+same general idea is used for C code, though many details are different.
+<P>
+  Whatever the language, to indent a line, use the <KBD>TAB</KBD> command.  Each
+major mode defines this command to perform the sort of indentation
+appropriate for the particular language.  In Lisp mode, <KBD>TAB</KBD> aligns
+the line according to its depth in parentheses.  No matter where in the
+line you are when you type <KBD>TAB</KBD>, it aligns the line as a whole.  In C
+mode, <KBD>TAB</KBD> implements a subtle and sophisticated indentation style that
+knows about many aspects of C syntax.
+<P>
+  In Text mode, <KBD>TAB</KBD> runs the command <CODE>tab-to-tab-stop</CODE>, which
+indents to the next tab stop column.  You can set the tab stops with
+<KBD>M-x edit-tab-stops</KBD>.
+<P>
+<H2><A NAME="SEC152" HREF="emacs_toc.html#SEC152">Indentation Commands and Techniques</A></H2>
+<P>
+  If you just want to insert a tab character in the buffer, you can type
+<KBD>C-q <KBD>TAB</KBD></KBD>.
+<A NAME="IDX700"></A>
+<A NAME="IDX701"></A>
+<P>
+  To move over the indentation on a line, do <KBD>M-m</KBD>
+(<CODE>back-to-indentation</CODE>).  This command, given anywhere on a line,
+positions point at the first nonblank character on the line.
+<P>
+  To insert an indented line before the current line, do <KBD>C-a C-o
+<KBD>TAB</KBD></KBD>.  To make an indented line after the current line, use <KBD>C-e
+<KBD>LFD</KBD></KBD>.
+<A NAME="IDX702"></A>
+<A NAME="IDX703"></A>
+<P>
+  <KBD>C-M-o</KBD> (<CODE>split-line</CODE>) moves the text from point to the end of
+the line vertically down, so that the current line becomes two lines.
+<KBD>C-M-o</KBD> first moves point forward over any spaces and tabs.  Then it
+inserts after point a newline and enough indentation to reach the same
+column point is on.  Point remains before the inserted newline; in this
+regard, <KBD>C-M-o</KBD> resembles <KBD>C-o</KBD>.
+<A NAME="IDX704"></A>
+<A NAME="IDX705"></A>
+<P>
+  To join two lines cleanly, use the <KBD>M-^</KBD>
+(<CODE>delete-indentation</CODE>) command.  It deletes the indentation at the
+front of the current line, and the line boundary as well, replacing them
+with a single space.  As a special case (useful for Lisp code) the
+single space is omitted if the characters to be joined are consecutive
+open parentheses or closing parentheses, or if the junction follows
+another newline.  To delete just the indentation of a line, go to the
+beginning of the line and use <KBD>M-\</KBD>
+(<CODE>delete-horizontal-space</CODE>), which deletes all spaces and tabs
+around the cursor.
+<P>
+  If you have a fill prefix, <KBD>M-^</KBD> deletes the fill prefix if it
+appears after the newline that is deleted.  See section <A HREF="emacs_25.html#SEC163">The Fill Prefix</A>.
+<A NAME="IDX706"></A>
+<A NAME="IDX707"></A>
+<A NAME="IDX708"></A>
+<A NAME="IDX709"></A>
+<P>
+  There are also commands for changing the indentation of several lines at
+once.  <KBD>C-M-\</KBD> (<CODE>indent-region</CODE>) gives each line which begins in
+the region the "usual" indentation by invoking <KBD>TAB</KBD> at the beginning
+of the line.  A numeric argument specifies the column to indent to, and
+each line is shifted left or right so that its first nonblank character
+appears in that column.  <KBD>C-x <KBD>TAB</KBD></KBD> (<CODE>indent-rigidly</CODE>) moves
+all of the lines in the region right by its argument (left, for negative
+arguments).  The whole group of lines moves rigidly sideways, which is how
+the command gets its name.<A NAME="IDX710"></A>
+<P>
+  <KBD>M-x indent-relative</KBD> indents at point based on the previous line
+(actually, the last nonempty line).  It inserts whitespace at point, moving
+point, until it is underneath an indentation point in the previous line.
+An indentation point is the end of a sequence of whitespace or the end of
+the line.  If point is farther right than any indentation point in the
+previous line, the whitespace before point is deleted and the first
+indentation point then applicable is used.  If no indentation point is
+applicable even then, <CODE>indent-relative</CODE> runs <CODE>tab-to-tab-stop</CODE>
+(see next section).
+<P>
+  <CODE>indent-relative</CODE> is the definition of <KBD>TAB</KBD> in Indented Text
+mode.  See section <A HREF="emacs_25.html#SEC155">Commands for Human Languages</A>.
+<P>
+<H2><A NAME="SEC153" HREF="emacs_toc.html#SEC153">Tab Stops</A></H2>
+<A NAME="IDX711"></A>
+<A NAME="IDX712"></A>
+<A NAME="IDX713"></A>
+<A NAME="IDX714"></A>
+<A NAME="IDX715"></A>
+<P>
+  For typing in tables, you can use Text mode's definition of <KBD>TAB</KBD>,
+<CODE>tab-to-tab-stop</CODE>.  This command inserts indentation before point,
+enough to reach the next tab stop column.  If you are not in Text mode,
+this command can be found on the key <KBD>M-i</KBD>.
+<A NAME="IDX716"></A>
+<A NAME="IDX717"></A>
+<A NAME="IDX718"></A>
+<A NAME="IDX719"></A>
+<P>
+  You can specify the tab stops used by <KBD>M-i</KBD>.  They are stored in a
+variable called <CODE>tab-stop-list</CODE>, as a list of column-numbers in
+increasing order.
+<P>
+  The convenient way to set the tab stops is with <KBD>M-x edit-tab-stops</KBD>,
+which creates and selects a buffer containing a description of the tab stop
+settings.  You can edit this buffer to specify different tab stops, and
+then type <KBD>C-c C-c</KBD> to make those new tab stops take effect.  In the
+tab stop buffer, <KBD>C-c C-c</KBD> runs the function
+<CODE>edit-tab-stops-note-changes</CODE> rather than its usual definition
+<CODE>save-buffer</CODE>.  <CODE>edit-tab-stops</CODE> records which buffer was current
+when you invoked it, and stores the tab stops back in that buffer; normally
+all buffers share the same tab stops and changing them in one buffer
+affects all, but if you happen to make <CODE>tab-stop-list</CODE> local in one
+buffer then <CODE>edit-tab-stops</CODE> in that buffer will edit the local
+settings.
+<P>
+  Here is what the text representing the tab stops looks like for ordinary
+tab stops every eight columns.
+<P>
+<PRE>
+        :       :       :       :       :       :
+0         1         2         3         4
+0123456789012345678901234567890123456789012345678
+To install changes, type C-c C-c
+</PRE>
+<P>
+  The first line contains a colon at each tab stop.  The remaining lines
+are present just to help you see where the colons are and know what to do.
+<P>
+  Note that the tab stops that control <CODE>tab-to-tab-stop</CODE> have nothing
+to do with displaying tab characters in the buffer.  See section <A HREF="emacs_16.html#SEC76">Variables Controlling Display</A>,
+for more information on that.
+<P>
+<H2><A NAME="SEC154" HREF="emacs_toc.html#SEC154">Tabs vs. Spaces</A></H2>
+<A NAME="IDX720"></A>
+<P>
+  Emacs normally uses both tabs and spaces to indent lines.  If you prefer,
+all indentation can be made from spaces only.  To request this, set
+<CODE>indent-tabs-mode</CODE> to <CODE>nil</CODE>.  This is a per-buffer variable;
+altering the variable affects only the current buffer, but there is a
+default value which you can change as well.  See section <A HREF="emacs_35.html#SEC338">Local Variables</A>.
+<A NAME="IDX721"></A>
+<A NAME="IDX722"></A>
+<P>
+  There are also commands to convert tabs to spaces or vice versa, always
+preserving the columns of all nonblank text.  <KBD>M-x tabify</KBD> scans the
+region for sequences of spaces, and converts sequences of at least three
+spaces to tabs if that can be done without changing indentation.  <KBD>M-x
+untabify</KBD> changes all tabs in the region to appropriate numbers of spaces.
+<P>Go to the <A HREF="emacs_23.html">previous</A>, <A HREF="emacs_25.html">next</A> section.<P>

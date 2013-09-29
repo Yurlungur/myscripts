@@ -1,0 +1,304 @@
+<HTML>
+<HEAD>
+<TITLE>
+CSCI 1300 Exercise 5
+
+
+</TITLE>
+</HEAD>
+<BODY>
+<TABLE>
+<TD>
+<H2>
+
+
+CSCI 1300 - Exercise 5
+<BR>
+Input and Output from Files
+
+
+</H2>
+<P>
+<B>What You'll Get from This Exercise</B></P>
+<P CLASS="Main-body-small-type">
+<A NAME="pgfId=2086">
+ </A>
+
+
+Until now, all of the input and output of your programs has been with the 
+keyboard and monitor. You have used cin for the input stream and cout for the 
+output stream. In this exercise, you’ll learn how to use a disk file for input 
+or output.
+
+<P>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>PC Labs in the<BR>Engineering Center</TH>
+<TR><TD>CR 235&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 239
+<TR><TD>CR 244&nbsp;&nbsp;&nbsp;&nbsp;<TD>CR 252 (24 hours)
+<TR><TD>CH 107&nbsp;&nbsp;&nbsp;&nbsp;<TD>ME 107
+<TR><TD COLSPAN=2>Other campus sites are<BR>listed 
+at <a href="http://www.colorado.edu/its/labs/">www.colorado.edu/its/labs</a>.
+</TABLE>
+<TD>
+<TABLE ALIGN="RIGHT" BORDER CELLPADDING=2>
+<TR><TH COLSPAN=2>Installing the<BR>CS1300 Software</TH>
+<TR><TD COLSPAN=2>
+Open a DOS window. If the CS1300 software is not permanently 
+<BR>installed on your machine, then use one of these methods:
+<UL>
+<LI>On machines in the Engineering Center, try one of
+<BR>these commands:
+<BR><CODE>&nbsp;&nbsp;H:\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;H:\cs1300\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;Z:\gocs</CODE>
+<BR><CODE>&nbsp;&nbsp;Z:\cs1300\gocs</CODE>
+<LI>On other machines, download these two files to the C: drive:
+<BR><A HREF="../unzip.exe">
+www.cs.colorado.edu/~main/cs1300/unzip.exe</A>
+<BR><A HREF="../cs1300.zip">
+www.cs.colorado.edu/~main/cs1300/cs1300.zip</A>
+<BR>
+Then type these commands:
+<BR><CODE>&nbsp;&nbsp;C:</CODE>
+<BR><CODE>&nbsp;&nbsp;cd \</CODE>
+<BR><CODE>&nbsp;&nbsp;unzip cs1300.zip</CODE>
+<BR><CODE>&nbsp;&nbsp;cs1300\gocs</CODE>
+</UL>
+<TR><TD>
+If you get the message "Out of environment space", then:
+<UL>
+<LI> Click on the MS-DOS icon in the top left corner of the window.
+<LI> Select Properties from the pop-up menu.
+<LI> Select the Memory tab from the command box.
+<LI> Click the arrow on the Initial Environment box. Move down in the
+box as far as possible (by clicking the downward arrow). Click on the
+biggest number that you see in this box.
+<LI> Click OK in the command box.
+<LI> Click OK in the MS-DOS Prompt information box.
+<LI> Stop the DOS Session by clicking the X in the top-right or by
+typing the command "exit".
+<LI> Restart a new DOS session and try running your commands again.
+</UL>
+</TABLE>
+</TABLE>
+<FORM METHOD=POST ACTION="../NoSubmitButton">
+
+
+<P>
+<B>A Program to Illustrate File Input/Output</B></P>
+<P CLASS="Main-body-small-type">
+<A NAME="pgfId=2086">
+ </A>
+
+<FORM METHOD=POST ACTION="../NoSubmitButton">
+
+
+<P>
+You'll start this exercise by getting and running
+a file demonstration
+program.
+You can copy <A HREF="copyints.cxx">copyints.cxx</A> from your
+installed cs1300\lab\ directory
+to your working directory.
+Also copy two files named <A HREF="numbers.dat">numbers.dat</A> and 
+<A HREF="message.dat">message.dat</A>, from the same directory. 
+One of these files contains a secret message! 
+
+
+<P>
+<B><INPUT TYPE="checkbox" NAME="Register">
+The Purpose of copyints.cxx
+</B>
+<P>
+<UL><LI>
+The copyints program uses techniques from you textbook's chapter on
+Streams and Basic File I/O.
+The program does not do a whole lot: merely copy integers 
+from one file to another. In this lab exercise you’ll make a few changes to 
+the program, to ensure that you understand what the program is doing. 
+At the end of the lab exercise, you will make more significant changes to the 
+copyints program, to get it to decode the secret message that is in the 
+numbers.dat file.
+</UL><P>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Using the copyints Program without Changes
+</B>
+<ul><P><li>
+Start emacs, and open the file numbers.dat file. 
+You should see a few integers. The copyints.cxx program can read the file 
+numbers.dat, and create a second file of the same numbers. The second file 
+will be named output.dat, and its integers will be printed with just one 
+per line.
+<P>
+In other words, the copyints program looks for a file named numbers.dat on 
+your disk. If it finds this file, then the file is read, and each is integer 
+written to a second file called output.dat.
+<P>
+Go ahead open copyints.cxx now. Compile and run the program. 
+On the screen you should receive a message 
+similar to "Input file in_data.cxx copied to output file output.dat; 
+8 integers copied." At this point, you can open and look at the output file 
+output.dat, which will contain the same integers that are in the in_data 
+file (although output.dat will have only one integer per line).
+<P>
+Before moving to the next step, you should understand how the copyints 
+program is working. (Re-read Section 8.3 if you have any uncertainties.)
+</ul>
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Improving the copyints Program
+</B>
+<UL><P><LI>
+At the moment, the copyints program always uses numbers.dat for its input
+ file, and always uses output.dat for it’s output file. We will change
+  that. To make the change, find these lines in the main program:
+<PRE>
+// Names for the text files.
+char in_file[40] = "numbers.dat";
+char out_file[40] = "output.dat";
+</PRE>
+The data type char, and the number [40] indicates that each of these 
+variables is capable of holding a sequence of up to 40 characters. 
+You’ll read about these sequence of characters later in the semester; 
+for now it is sufficient to know that you can use such a sequence to hold 
+the name of a file such as "numbers.dat" or "output.dat". So, 
+in our program we declare the variables in_file and out_file, and immediately 
+assign the names of the input and output files (numbers.dat and output.dat).
+<P> 
+As an improvement, we will let the program’s user type the name of the input 
+and output files. To carry out the improvement, start by getting rid of the 
+assignments in the four lines that you have just seen. Change the lines to 
+this:
+<PRE>
+// Names for the external files,
+// to be read from the user of the program.
+char in_file[40];
+char out_file[40];
+</PRE>
+Now we have the variables in_file and out_file, but these variables have not 
+been assigned a value. We need to add lines that will read the names of the 
+files from the program’s user. This can be carried out just before each file 
+is opened. For example, the name of the input file is used to open the actual 
+input file in the statment: ins.open(in_file); Just before this open statement 
+we can read the name of the input file, as shown here:
+<PRE>
+// Open input and output files, exit on any error
+cout &lt;&lt; "Please type the input file name: ";
+cin &gt;&gt; in_file;
+ins.open(in_file);
+</PRE>
+After these statements, the input file stream (named ins) will be attached to 
+whatever file was requested by the program’s user. For example, if the user 
+types numbers.dat, then the program will read input from numbers.dat. If the 
+user types message.dat, then the program will take input from message.dat.
+<P>
+We can use the same appraoch to ask the user for the name of the output file. 
+Find the place in the main program where the output file is opened, and add 
+statements to read the name of the output file from the program’s user. Do 
+this now, and then run your program again. When you are prompted for an input 
+file you may type numbers.dat, or type message.dat--the choice is yours. 
+You may type whatever name you like for the output file (though I suggest 
+that the file ends with .dat to indicate that it is a data file rather than a 
+cxx file).
+</UL><P>
+
+
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Summary: How to Open a File for Input
+</B>
+<ol><li>
+Make sure that you have the include directive to include &lt;fstream.h&gt;.
+<LI>
+Declare two variables: a sequence of characters to hold the name of the 
+input file, and a variable (often called ins) to act as the input file stream. 
+For example:
+<PRE>
+char in_file_name[40];
+ifstream ins;
+</PRE>
+<LI>
+Prompt the program’s user for the name of the input file, and read this 
+name. For example:
+<PRE>
+cout &lt;&lt; "Please type the name of the input file: ";
+cin &gt;&gt; in_file_name;
+</PRE>
+<LI>
+Open the input file, attaching it to the input file stream. Make sure to 
+check that there was no problem opening the file, like this:
+<PRE>
+ins.open(in_file_name);
+if (ins.fail( ))
+{
+    cerr &lt;&lt; "Could not open " &lt;&lt; in_file_name &lt;&lt; "!" &lt;&lt; endl;
+    return EXIT_FAILURE;
+}
+</PRE>
+<LI>
+After the input file has been opened, the input file stream ins can be used 
+in exactly the same way that you use the standard input cin. Characters, 
+integers, and other data types can all be read from ins. When the program 
+ends, you should close the input file stream with the statement: ins.close();
+</OL><P>
+
+
+<B><INPUT TYPE="checkbox" NAME="Register">
+Summary: How to Open a File for Output:
+</B>
+<OL><LI>
+Make sure that you have the include directive to include &lt;fstream.h&gt;.
+<LI>
+Declare two variables: a sequence of characters to hold the name of the 
+output file, and a variable (often called outs) to act as the output file 
+stream. For example:
+<PRE>
+char out_file_name[40];
+ofstream outs;
+</PRE>
+<LI>Prompt the program’s user for the name of the output file, and read this 
+name. For example:
+<PRE>
+cout &lt;&lt; "Please type the name of the output file: ";
+cin &gt;&gt; out_file_name;
+</PRE>
+<LI>Open the output file, attaching it to the output file stream. Make sure to
+ check that there was no problem opening the file, like this:
+<PRE>
+outs.open(out_file_name);
+if (outs.fail( ))
+{
+    cerr &lt;&lt; "Could not open " <&lt;&lt; out_file_name &lt;&lt; "!" &lt;&lt; endl;
+    return EXIT_FAILURE;
+}
+</PRE>
+<LI>
+After the output file has been opened, the output file stream outs can be 
+used in exactly the same way that you use the standard output cout. 
+Characters, integers, and other data types can all be written to outs. 
+When the program ends, you should close the output file stream with the 
+statement: outs.close();
+</OL><P>
+
+<DL><DT>
+<B><INPUT TYPE="checkbox" NAME="Register">
+Decoding a Secret Message
+</B>
+<P><DD>
+Modify the program so that instead of writing the numbers to the
+output file, it writes the characters that each number stands for
+from the ASCII character code.  This code assigns one letter to
+each number from 0 to 127.  For example, the number 65 is assigned
+the letter A.  The C++ expression that you'll need
+to get the letter from an integer i is:
+<PRE>
+static_cast<char>(i)
+</PRE>
+This is an example of a type cast as described in your textbook.
+<P>
+In your program, you should print only these letters (no endls).
+Run the program with the input file message.dat that you downloaded earlier.
+</DL>
+</BODY>
+</HTML>

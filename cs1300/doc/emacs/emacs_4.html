@@ -1,0 +1,58 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Introduction</TITLE>
+<P>Go to the <A HREF="emacs_3.html">previous</A>, <A HREF="emacs_5.html">next</A> section.<P>
+<H1><A NAME="SEC7" HREF="emacs_toc.html#SEC7">Introduction</A></H1>
+<P>
+  You are reading about GNU Emacs, the GNU incarnation of the advanced,
+self-documenting, customizable, extensible real-time display editor Emacs.
+(The `G' in `GNU' is not silent.)
+<P>
+  We say that Emacs is a <DFN>display</DFN> editor because normally the text
+being edited is visible on the screen and is updated automatically as you
+type your commands.  See section <A HREF="emacs_5.html#SEC8">The Organization of the Screen</A>.
+<P>
+  We call it a <DFN>real-time</DFN> editor because the display is updated very
+frequently, usually after each character or pair of characters you
+type.  This minimizes the amount of information you must keep in your
+head as you edit.  See section <A HREF="emacs_8.html#SEC19">Basic Editing Commands</A>.
+<P>
+  We call Emacs advanced because it provides facilities that go beyond
+simple insertion and deletion: filling of text; automatic indentation of
+programs; viewing two or more files at once; and dealing in terms of
+characters, words, lines, sentences, paragraphs, and pages, as well as
+expressions and comments in several different programming languages.
+<P>
+  <DFN>Self-documenting</DFN> means that at any time you can type a special
+character, <KBD>Control-h</KBD>, to find out what your options are.  You can
+also use it to find out what any command does, or to find all the commands
+that pertain to a topic.  See section <A HREF="emacs_12.html#SEC41">Help</A>.
+<P>
+  <DFN>Customizable</DFN> means that you can change the definitions of Emacs
+commands in little ways.  For example, if you use a programming language in
+which comments start with <SAMP>`&#60;**'</SAMP> and end with <SAMP>`**&#62;'</SAMP>, you can tell
+the Emacs comment manipulation commands to use those strings
+(see section <A HREF="emacs_26.html#SEC187">Manipulating Comments</A>).  Another sort of customization is rearrangement of the
+command set.  For example, if you prefer the four basic cursor motion
+commands (up, down, left and right) on keys in a diamond pattern on the
+keyboard, you can have it.  See section <A HREF="emacs_35.html#SEC332">Customization</A>.
+<P>
+  <DFN>Extensible</DFN> means that you can go beyond simple customization and
+write entirely new commands, programs in the Lisp language to be run by
+Emacs's own Lisp interpreter.  Emacs is an "on-line extensible" system,
+which means that it is divided into many functions that call each other,
+any of which can be redefined in the middle of an editing session.  Any
+part of Emacs can be replaced without making a separate copy of all of
+Emacs.  Most of the editing commands of Emacs are written in Lisp already;
+the few exceptions could have been written in Lisp but are written in C for
+efficiency.  Although only a programmer can write an extension, anybody can
+use it afterward.
+<P>
+   When run under the X Window System, Emacs provides its own menus and
+convenient bindings to mouse buttons.  But Emacs can provide many of the
+benefits of a window system on a text-only terminal.  For instance, you
+can look at or edit several files at once, move text between them, and
+edit files at the same time as you run shell commands.
+<P>
+<P>Go to the <A HREF="emacs_3.html">previous</A>, <A HREF="emacs_5.html">next</A> section.<P>

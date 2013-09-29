@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# Hotline Miami launcher workaround, since one isn't included in PATH.
+
+/opt/hotline-miami/launcher.sh

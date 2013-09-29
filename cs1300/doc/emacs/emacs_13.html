@@ -1,0 +1,270 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - The Mark and the Region</TITLE>
+<P>Go to the <A HREF="emacs_12.html">previous</A>, <A HREF="emacs_14.html">next</A> section.<P>
+<A NAME="IDX212"></A>
+<A NAME="IDX213"></A>
+<A NAME="IDX214"></A>
+<H1><A NAME="SEC47" HREF="emacs_toc.html#SEC47">The Mark and the Region</A></H1>
+<P>
+  There are many Emacs commands which operate on an arbitrary contiguous
+part of the current buffer.  To specify the text for such a command to
+operate on, you set <DFN>the mark</DFN> at one end of it, and move point to the
+other end.  The text between point and the mark is called <DFN>the region</DFN>.
+You can move point or the mark to adjust the boundaries of the region.  It
+doesn't matter which one is set first chronologically, or which one comes
+earlier in the text.
+<P>
+  Once the mark has been set, it remains where you put it until it is
+set again at another place.  The mark remains fixed with respect to the
+preceding character if text is inserted or deleted in the buffer.  Each
+Emacs buffer has its own mark, so that when you return to a buffer that
+had been selected previously, it has the same mark it had before.
+<P>
+  Many commands that insert text, such as <KBD>C-y</KBD> (<CODE>yank</CODE>) and
+<KBD>M-x insert-buffer</KBD>, position point and the mark at opposite ends of
+the inserted text, so that the region contains the text just inserted.
+<P>
+  Aside from delimiting the region, the mark is also useful for
+remembering a spot that you may want to go back to.  To make this
+feature more useful, each buffer remembers 16 previous locations of the
+mark in the <DFN>mark ring</DFN>.
+<P>
+<H2><A NAME="SEC48" HREF="emacs_toc.html#SEC48">Setting the Mark</A></H2>
+<P>
+  Here are some commands for setting the mark:
+<P>
+<DL COMPACT>
+<DT><KBD>C-<KBD>SPC</KBD></KBD>
+<DD>Set the mark where point is (<CODE>set-mark-command</CODE>).
+<DT><KBD>C-@</KBD>
+<DD>The same.
+<DT><KBD>C-x C-x</KBD>
+<DD>Interchange mark and point (<CODE>exchange-point-and-mark</CODE>).
+</DL>
+<P>
+  For example, suppose you wish to convert part of the buffer to all
+upper-case, using the <KBD>C-x C-u</KBD> (<CODE>upcase-region</CODE>) command
+which operates on the text in the region.  You can first go to the
+beginning of the text to be capitalized, type <KBD>C-<KBD>SPC</KBD></KBD> to put
+the mark there, move to the end, and then type <KBD>C-x C-u</KBD>.  Or, you
+can set the mark at the end of the text, move to the beginning, and then
+type <KBD>C-x C-u</KBD>.
+<A NAME="IDX215"></A>
+<A NAME="IDX216"></A>
+<P>
+  The most common way to set the mark is with the <KBD>C-<KBD>SPC</KBD></KBD> command
+(<CODE>set-mark-command</CODE>).  This sets the mark where point is.  Then you
+can move point away, leaving the mark behind.
+<A NAME="IDX217"></A>
+<A NAME="IDX218"></A>
+<P>
+  Ordinary terminals have only one cursor, so there is no way for Emacs
+to show you where the mark is located.  You have to remember.  The usual
+solution to this problem is to set the mark and then use it soon, before
+you forget where it is.  Alternatively, you can see where the mark is
+with the command <KBD>C-x C-x</KBD> (<CODE>exchange-point-and-mark</CODE>) which
+puts the mark where point was and point where the mark was.  The extent
+of the region is unchanged, but the cursor and point are now at the
+previous position of the mark.
+<P>
+  <KBD>C-x C-x</KBD> is also useful when you are satisfied with the position
+of point but want to move the mark; do <KBD>C-x C-x</KBD> to put point at
+that end of the region, and then move it.  A second use of <KBD>C-x
+C-x</KBD>, if necessary, puts the mark at the new position with point back at
+its original position.
+<A NAME="IDX219"></A>
+<P>
+  There is no such character as <KBD>C-<KBD>SPC</KBD></KBD> in ASCII; when you
+type <KBD>SPC</KBD> while holding down <KBD>CTRL</KBD>, what you get on most
+ordinary terminals is the character <KBD>C-@</KBD>.  This key is actually
+bound to <CODE>set-mark-command</CODE>.  But unless you are unlucky enough to
+have a terminal where typing <KBD>C-<KBD>SPC</KBD></KBD> does not produce
+<KBD>C-@</KBD>, you might as well think of this character as
+<KBD>C-<KBD>SPC</KBD></KBD>.  Under X, <KBD>C-<KBD>SPC</KBD></KBD> is actually a distinct
+character, but its binding is still <CODE>set-mark-command</CODE>.
+<P>
+<A NAME="IDX220"></A>
+<A NAME="IDX221"></A>
+<H2><A NAME="SEC49" HREF="emacs_toc.html#SEC49">Transient Mark Mode</A></H2>
+<P>
+  Many Emacs commands move the mark and invisibly set new regions.
+This means that there is almost always some region that you can act
+on.  This is convenient, provided you get used to keeping track of the
+mark's position.
+<P>
+  Some people prefer a more rigid mode of operation in which you must
+set up a region for each command that uses one--in which the region
+"lasts" only temporarily.  This is called Transient Mark mode.  It
+is particularly well-suited to window systems such as X, since Emacs
+can highlight the region when it is active.
+<A NAME="IDX222"></A>
+<P>
+  To enable Transient Mark mode, type <KBD>M-x transient-mark-mode</KBD>.
+This command toggles the mode, so you can issue it again to return to
+the normal Emacs way of handling the mark and the region.
+<P>
+  Here are the details of Transient Mark mode:
+<P>
+<UL>
+<LI>
+To set the mark, type <KBD>C-<KBD>SPC</KBD></KBD> (<CODE>set-mark-command</CODE>).
+This makes the mark active; as you move point, you will see the region
+highlighting change in extent.
+<P>
+<LI>
+On a window system, an easy way to select a region is to press the
+button <KBD>Mouse-1</KBD> (normally the left button) at one end of it, drag
+the mouse to the other end, and then release the button.
+<P>
+<LI>
+When the mark is active, you can execute any commands you want on the
+region, such as killing, indentation, or writing to a file.
+<P>
+<LI>
+Any change to the buffer, such as inserting or deleting a character,
+deactivates the mark.  This means any subsequent command that operates
+on a region will get an error and refuse to operate.  You can make the
+region active again by typing <KBD>C-x C-x</KBD>.
+<P>
+<LI>
+Commands like <KBD>M-&#62;</KBD> that "leave the mark behind" do not activate
+the new mark.  You can activate the new region by executing <KBD>C-x
+C-x</KBD> (<CODE>exchange-point-and-mark</CODE>).
+<P>
+<LI>
+Quitting with <KBD>C-g</KBD> deactivates the mark.
+</UL>
+<P>
+  Transient Mark mode is also sometimes known as "Zmacs mode"
+because the Zmacs editor on the MIT Lisp Machine handled the mark in a
+similar way.
+<P>
+  When multiple windows show the same buffer, they can have different
+regions, because they can have different values of point.  In Transient
+Mark mode, each window highlights its own region.  The part that is
+highlighted in the selected window is the region that editing commands
+use.  See section <A HREF="emacs_21.html#SEC133">Multiple Windows</A>.
+<P>
+<H2><A NAME="SEC50" HREF="emacs_toc.html#SEC50">Operating on the Region</A></H2>
+<A NAME="IDX223"></A>
+<P>
+  Once you have set up a region and the mark is active, you can do many
+things to the text in it:
+<P>
+<UL>
+<LI>
+Kill it with <KBD>C-w</KBD> (see section <A HREF="emacs_14.html#SEC54">Deletion and Killing</A>).
+<LI>
+Save it in a register with <KBD>C-x r s</KBD> (see section <A HREF="emacs_15.html#SEC64">Registers</A>).
+<LI>
+Save it in a buffer or a file (see section <A HREF="emacs_14.html#SEC62">Accumulating Text</A>).
+<LI>
+Convert case with <KBD>C-x C-l</KBD> or <KBD>C-x C-u</KBD> (see section <A HREF="emacs_25.html#SEC164">Case Conversion Commands</A>).
+<LI>
+Indent it with <KBD>C-x <KBD>TAB</KBD></KBD> or <KBD>C-M-\</KBD> (see section <A HREF="emacs_24.html#SEC151">Indentation</A>).
+<LI>
+Fill it as text with <KBD>M-x fill-region</KBD> (see section <A HREF="emacs_25.html#SEC160">Filling Text</A>).
+<LI>
+Print hardcopy with <KBD>M-x print-region</KBD> (see section <A HREF="emacs_34.html#SEC324">Hardcopy Output</A>).
+<LI>
+Evaluate it as Lisp code with <KBD>M-x eval-region</KBD> (see section <A HREF="emacs_27.html#SEC233">Evaluating Emacs-Lisp Expressions</A>).
+</UL>
+<P>
+  Most commands that operate on the text in the
+region have the word <CODE>region</CODE> in their names.
+<P>
+<H2><A NAME="SEC51" HREF="emacs_toc.html#SEC51">Commands to Mark Textual Objects</A></H2>
+<A NAME="IDX224"></A>
+<P>
+  Here are the commands for placing point and the mark around a textual
+object such as a word, list, paragraph or page.
+<P>
+<DL COMPACT>
+<DT><KBD>M-@</KBD>
+<DD>Set mark after end of next word (<CODE>mark-word</CODE>).  This command and
+the following one do not move point.
+<DT><KBD>C-M-@</KBD>
+<DD>Set mark after end of next Lisp expression (<CODE>mark-sexp</CODE>).
+<DT><KBD>M-h</KBD>
+<DD>Put region around current paragraph (<CODE>mark-paragraph</CODE>).
+<DT><KBD>C-M-h</KBD>
+<DD>Put region around current Lisp defun (<CODE>mark-defun</CODE>).
+<DT><KBD>C-x h</KBD>
+<DD>Put region around entire buffer (<CODE>mark-whole-buffer</CODE>).
+<DT><KBD>C-x C-p</KBD>
+<DD>Put region around current page (<CODE>mark-page</CODE>).
+</DL>
+<P>
+<KBD>M-@</KBD> (<CODE>mark-word</CODE>) puts the mark at the end of the next word,
+while <KBD>C-M-@</KBD> (<CODE>mark-sexp</CODE>) puts it at the end of the next Lisp
+expression.  These commands handle arguments just like <KBD>M-f</KBD> and
+<KBD>C-M-f</KBD>.
+<A NAME="IDX225"></A>
+<A NAME="IDX226"></A>
+<P>
+   Other commands set both point and mark, to delimit an object in the
+buffer.  For example, <KBD>M-h</KBD> (<CODE>mark-paragraph</CODE>) moves point to
+the beginning of the paragraph that surrounds or follows point, and puts
+the mark at the end of that paragraph (see section <A HREF="emacs_25.html#SEC158">Paragraphs</A>).  It prepares
+the region so you can indent, case-convert, or kill a whole paragraph.
+<P>
+  <KBD>C-M-h</KBD> (<CODE>mark-defun</CODE>) similarly puts point before and the
+mark after the current or following defun (see section <A HREF="emacs_26.html#SEC180">Defuns</A>).  <KBD>C-x
+C-p</KBD> (<CODE>mark-page</CODE>) puts point before the current page, and mark at
+the end (see section <A HREF="emacs_25.html#SEC159">Pages</A>).  The mark goes after the terminating page
+delimiter (to include it), while point goes after the preceding page
+delimiter (to exclude it).  A numeric argument specifies a later page
+(if positive) or an earlier page (if negative) instead of the current
+page.
+<P>
+  Finally, <KBD>C-x h</KBD> (<CODE>mark-whole-buffer</CODE>) sets up the entire
+buffer as the region, by putting point at the beginning and the mark at
+the end.
+<P>
+<H2><A NAME="SEC52" HREF="emacs_toc.html#SEC52">The Mark Ring</A></H2>
+<A NAME="IDX227"></A>
+<A NAME="IDX228"></A>
+<A NAME="IDX229"></A>
+<P>
+  Aside from delimiting the region, the mark is also useful for
+remembering a spot that you may want to go back to.  To make this
+feature more useful, each buffer remembers 16 previous locations of the
+mark, in the <DFN>mark ring</DFN>.  Commands that set the mark also push the
+old mark onto this ring.  To return to a marked location, use <KBD>C-u
+C-<KBD>SPC</KBD></KBD> (or <KBD>C-u C-@</KBD>); this is the command
+<CODE>set-mark-command</CODE> given a numeric argument.  It moves point to
+where the mark was, and restores the mark from the ring of former
+marks.  Thus, repeated use of this command moves point to all of the old
+marks on the ring, one by one.  The mark positions you move through in
+this way are not lost; they go to the end of the ring.
+<P>
+  Each buffer has its own mark ring.  All editing commands use the current
+buffer's mark ring.  In particular, <KBD>C-u C-<KBD>SPC</KBD></KBD> always stays in
+the same buffer.
+<P>
+  Many commands that can move long distances, such as <KBD>M-&#60;</KBD>
+(<CODE>beginning-of-buffer</CODE>), start by setting the mark and saving the
+old mark on the mark ring.  This is to make it easier for you to move
+back later.  Searches set the mark if they move point.  You can tell
+when a command sets the mark because it displays <SAMP>`Mark Set'</SAMP> in the
+echo area.
+<P>
+  If you want to move back to the same place over and over, the mark
+ring may not be convenient enough.  If so, you can record the position
+in a register for later retrieval (see section <A HREF="emacs_15.html#SEC65">Saving Positions in Registers</A>).
+<A NAME="IDX230"></A>
+<P>
+  The variable <CODE>mark-ring-max</CODE> specifies the maximum number of
+entries to keep in the mark ring.  If that many entries exist and
+another one is pushed, the last one in the list is discarded.  Repeating
+<KBD>C-u C-<KBD>SPC</KBD></KBD> circulates through the positions currently in the
+ring.
+<A NAME="IDX231"></A>
+<P>
+  The variable <CODE>mark-ring</CODE> holds the mark ring itself, as a list of
+marker objects in the order most recent first.  This variable is local
+in every buffer.
+<P>
+<P>Go to the <A HREF="emacs_12.html">previous</A>, <A HREF="emacs_14.html">next</A> section.<P>

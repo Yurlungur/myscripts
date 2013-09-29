@@ -1,0 +1,2706 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from ../../ld/ld.texinfo on 16 March 1999 -->
+
+<TITLE>Using LD, the GNU linker - Linker Scripts</TITLE>
+<link href="ld_4.html" rel=Next>
+<link href="ld_2.html" rel=Previous>
+<link href="ld_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="ld_1.html">first</A>, <A HREF="ld_2.html">previous</A>, <A HREF="ld_4.html">next</A>, <A HREF="ld_8.html">last</A> section, <A HREF="ld_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC5" HREF="ld_toc.html#TOC5">Linker Scripts</A></H1>
+
+<P>
+<A NAME="IDX191"></A>
+<A NAME="IDX192"></A>
+<A NAME="IDX193"></A>
+Every link is controlled by a <STRONG>linker script</STRONG>.  This script is
+written in the linker command language.
+
+</P>
+<P>
+The main purpose of the linker script is to describe how the sections in
+the input files should be mapped into the output file, and to control
+the memory layout of the output file.  Most linker scripts do nothing
+more than this.  However, when necessary, the linker script can also
+direct the linker to perform many other operations, using the commands
+described below.
+
+</P>
+<P>
+The linker always uses a linker script.  If you do not supply one
+yourself, the linker will use a default script that is compiled into the
+linker executable.  You can use the <SAMP>`--verbose'</SAMP> command line option
+to display the default linker script.  Certain command line options,
+such as <SAMP>`-r'</SAMP> or <SAMP>`-N'</SAMP>, will affect the default linker script.
+
+</P>
+<P>
+You may supply your own linker script by using the <SAMP>`-T'</SAMP> command
+line option.  When you do this, your linker script will replace the
+default linker script.
+
+</P>
+<P>
+You may also use linker scripts implicitly by naming them as input files
+to the linker, as though they were files to be linked.  See section <A HREF="ld_3.html#SEC48">Implicit Linker Scripts</A>.
+
+</P>
+
+<UL>
+<LI><A HREF="ld_3.html#SEC6">Basic Script Concepts</A>: Basic Linker Script Concepts
+<LI><A HREF="ld_3.html#SEC7">Script Format</A>: Linker Script Format
+<LI><A HREF="ld_3.html#SEC8">Simple Example</A>: Simple Linker Script Example
+<LI><A HREF="ld_3.html#SEC9">Simple Commands</A>: Simple Linker Script Commands
+<LI><A HREF="ld_3.html#SEC14">Assignments</A>: Assigning Values to Symbols
+<LI><A HREF="ld_3.html#SEC17">SECTIONS</A>: SECTIONS Command
+<LI><A HREF="ld_3.html#SEC37">MEMORY</A>: MEMORY Command
+<LI><A HREF="ld_3.html#SEC38">PHDRS</A>: PHDRS Command
+<LI><A HREF="ld_3.html#SEC39">VERSION</A>: VERSION Command
+<LI><A HREF="ld_3.html#SEC40">Expressions</A>: Expressions in Linker Scripts
+<LI><A HREF="ld_3.html#SEC48">Implicit Linker Scripts</A>: Implicit Linker Scripts
+</UL>
+
+
+
+<H2><A NAME="SEC6" HREF="ld_toc.html#TOC6">Basic Linker Script Concepts</A></H2>
+<P>
+<A NAME="IDX194"></A>
+We need to define some basic concepts and vocabulary in order to
+describe the linker script language.
+
+</P>
+<P>
+The linker combines input files into a single output file.  The output
+file and each input file are in a special data format known as an
+<STRONG>object file format</STRONG>.  Each file is called an <STRONG>object file</STRONG>.
+The output file is often called an <STRONG>executable</STRONG>, but for our
+purposes we will also call it an object file.  Each object file has,
+among other things, a list of <STRONG>sections</STRONG>.  We sometimes refer to a
+section in an input file as an <STRONG>input section</STRONG>; similarly, a section
+in the output file is an <STRONG>output section</STRONG>.
+
+</P>
+<P>
+Each section in an object file has a name and a size.  Most sections
+also have an associated block of data, known as the <STRONG>section
+contents</STRONG>.  A section may be marked as <STRONG>loadable</STRONG>, which mean that
+the contents should be loaded into memory when the output file is run.
+A section with no contents may be <STRONG>allocatable</STRONG>, which means that an
+area in memory should be set aside, but nothing in particular should be
+loaded there (in some cases this memory must be zeroed out).  A section
+which is neither loadable nor allocatable typically contains some sort
+of debugging information.
+
+</P>
+<P>
+Every loadable or allocatable output section has two addresses.  The
+first is the <STRONG>VMA</STRONG>, or virtual memory address.  This is the address
+the section will have when the output file is run.  The second is the
+<STRONG>LMA</STRONG>, or load memory address.  This is the address at which the
+section will be loaded.  In most cases the two addresses will be the
+same.  An example of when they might be different is when a data section
+is loaded into ROM, and then copied into RAM when the program starts up
+(this technique is often used to initialize global variables in a ROM
+based system).  In this case the ROM address would be the LMA, and the
+RAM address would be the VMA.
+
+</P>
+<P>
+You can see the sections in an object file by using the <CODE>objdump</CODE>
+program with the <SAMP>`-h'</SAMP> option.
+
+</P>
+<P>
+Every object file also has a list of <STRONG>symbols</STRONG>, known as the
+<STRONG>symbol table</STRONG>.  A symbol may be defined or undefined.  Each symbol
+has a name, and each defined symbol has an address, among other
+information.  If you compile a C or C++ program into an object file, you
+will get a defined symbol for every defined function and global or
+static variable.  Every undefined function or global variable which is
+referenced in the input file will become an undefined symbol.
+
+</P>
+<P>
+You can see the symbols in an object file by using the <CODE>nm</CODE>
+program, or by using the <CODE>objdump</CODE> program with the <SAMP>`-t'</SAMP>
+option.
+
+</P>
+
+
+<H2><A NAME="SEC7" HREF="ld_toc.html#TOC7">Linker Script Format</A></H2>
+<P>
+<A NAME="IDX195"></A>
+Linker scripts are text files.
+
+</P>
+<P>
+You write a linker script as a series of commands.  Each command is
+either a keyword, possibly followed by arguments, or an assignment to a
+symbol.  You may separate commands using semicolons.  Whitespace is
+generally ignored.
+
+</P>
+<P>
+Strings such as file or format names can normally be entered directly.
+If the file name contains a character such as a comma which would
+otherwise serve to separate file names, you may put the file name in
+double quotes.  There is no way to use a double quote character in a
+file name.
+
+</P>
+<P>
+You may include comments in linker scripts just as in C, delimited by
+<SAMP>`/*'</SAMP> and <SAMP>`*/'</SAMP>.  As in C, comments are syntactically equivalent
+to whitespace.
+
+</P>
+
+
+<H2><A NAME="SEC8" HREF="ld_toc.html#TOC8">Simple Linker Script Example</A></H2>
+<P>
+<A NAME="IDX196"></A>
+<A NAME="IDX197"></A>
+Many linker scripts are fairly simple.
+
+</P>
+<P>
+The simplest possible linker script has just one command:
+<SAMP>`SECTIONS'</SAMP>.  You use the <SAMP>`SECTIONS'</SAMP> command to describe the
+memory layout of the output file.
+
+</P>
+<P>
+The <SAMP>`SECTIONS'</SAMP> command is a powerful command.  Here we will
+describe a simple use of it.  Let's assume your program consists only of
+code, initialized data, and uninitialized data.  These will be in the
+<SAMP>`.text'</SAMP>, <SAMP>`.data'</SAMP>, and <SAMP>`.bss'</SAMP> sections, respectively.
+Let's assume further that these are the only sections which appear in
+your input files.
+
+</P>
+<P>
+For this example, let's say that the code should be loaded at address
+0x10000, and that the data should start at address 0x8000000.  Here is a
+linker script which will do that:
+
+<PRE>
+SECTIONS
+{
+  . = 0x10000;
+  .text : { *(.text) }
+  . = 0x8000000;
+  .data : { *(.data) }
+  .bss : { *(.bss) }
+}
+</PRE>
+
+<P>
+You write the <SAMP>`SECTIONS'</SAMP> command as the keyword <SAMP>`SECTIONS'</SAMP>,
+followed by a series of symbol assignments and output section
+descriptions enclosed in curly braces.
+
+</P>
+<P>
+The first line in the above example sets the special symbol <SAMP>`.'</SAMP>,
+which is the location counter.  If you do not specify the address of an
+output section in some other way (other ways are described later), the
+address is set from the current value of the location counter.  The
+location counter is then incremented by the size of the output section.
+
+</P>
+<P>
+The first line inside the <SAMP>`SECTIONS'</SAMP> command of the above example
+sets the value of the special symbol <SAMP>`.'</SAMP>, which is the location
+counter.  If you do not specify the address of an output section in some
+other way (other ways are described later), the address is set from the
+current value of the location counter.  The location counter is then
+incremented by the size of the output section.  At the start of the
+<SAMP>`SECTIONS'</SAMP> command, the location counter has the value <SAMP>`0'</SAMP>.
+
+</P>
+<P>
+The second line defines an output section, <SAMP>`.text'</SAMP>.  The colon is
+required syntax which may be ignored for now.  Within the curly braces
+after the output section name, you list the names of the input sections
+which should be placed into this output section.  The <SAMP>`*'</SAMP> is a
+wildcard which matches any file name.  The expression <SAMP>`*(.text)'</SAMP>
+means all <SAMP>`.text'</SAMP> input sections in all input files.
+
+</P>
+<P>
+Since the location counter is <SAMP>`0x10000'</SAMP> when the output section
+<SAMP>`.text'</SAMP> is defined, the linker will set the address of the
+<SAMP>`.text'</SAMP> section in the output file to be <SAMP>`0x10000'</SAMP>.
+
+</P>
+<P>
+The remaining lines define the <SAMP>`.data'</SAMP> and <SAMP>`.bss'</SAMP> sections in
+the output file.  The linker will place the <SAMP>`.data'</SAMP> output section
+at address <SAMP>`0x8000000'</SAMP>.  After the linker places the <SAMP>`.data'</SAMP>
+output section, the value of the location counter will be
+<SAMP>`0x8000000'</SAMP> plus the size of the <SAMP>`.data'</SAMP> output section.  The
+effect is that the linker will place the <SAMP>`.bss'</SAMP> output section
+immediately after the <SAMP>`.data'</SAMP> output section in memory
+
+</P>
+<P>
+The linker will ensure that each output section has the required
+alignment, by increasing the location counter if necessary.  In this
+example, the specified addresses for the <SAMP>`.text'</SAMP> and <SAMP>`.data'</SAMP>
+sections will probably satisfy any alignment constraints, but the linker
+may have to create a small gap between the <SAMP>`.data'</SAMP> and <SAMP>`.bss'</SAMP>
+sections.
+
+</P>
+<P>
+That's it!  That's a simple and complete linker script.
+
+</P>
+
+
+<H2><A NAME="SEC9" HREF="ld_toc.html#TOC9">Simple Linker Script Commands</A></H2>
+<P>
+<A NAME="IDX198"></A>
+In this section we describe the simple linker script commands.
+
+</P>
+
+<UL>
+<LI><A HREF="ld_3.html#SEC10">Entry Point</A>: Setting the entry point
+<LI><A HREF="ld_3.html#SEC11">File Commands</A>: Commands dealing with files
+<LI><A HREF="ld_3.html#SEC12">Format Commands</A>: Commands dealing with object file formats
+
+<LI><A HREF="ld_3.html#SEC13">Miscellaneous Commands</A>: Other linker script commands
+</UL>
+
+
+
+<H3><A NAME="SEC10" HREF="ld_toc.html#TOC10">Setting the entry point</A></H3>
+<P>
+<A NAME="IDX199"></A>
+<A NAME="IDX200"></A>
+<A NAME="IDX201"></A>
+<A NAME="IDX202"></A>
+The first instruction to execute in a program is called the <STRONG>entry
+point</STRONG>.  You can use the <CODE>ENTRY</CODE> linker script command to set the
+entry point.  The argument is a symbol name:
+
+<PRE>
+ENTRY(<VAR>symbol</VAR>)
+</PRE>
+
+<P>
+There are several ways to set the entry point.  The linker will set the
+entry point by trying each of the following methods in order, and
+stopping when one of them succeeds:
+
+<UL>
+<LI>
+
+the <SAMP>`-e'</SAMP> <VAR>entry</VAR> command-line option;
+<LI>
+
+the <CODE>ENTRY(<VAR>symbol</VAR>)</CODE> command in a linker script;
+<LI>
+
+the value of the symbol <CODE>start</CODE>, if defined;
+<LI>
+
+the address of the first byte of the <SAMP>`.text'</SAMP> section, if present;
+<LI>
+
+The address <CODE>0</CODE>.
+</UL>
+
+
+
+<H3><A NAME="SEC11" HREF="ld_toc.html#TOC11">Commands dealing with files</A></H3>
+<P>
+<A NAME="IDX203"></A>
+Several linker script commands deal with files.
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>INCLUDE <VAR>filename</VAR></CODE>
+<DD>
+<A NAME="IDX204"></A>
+<A NAME="IDX205"></A>
+Include the linker script <VAR>filename</VAR> at this point.  The file will
+be searched for in the current directory, and in any directory specified
+with the <CODE>-L</CODE> option.  You can nest calls to <CODE>INCLUDE</CODE> up to
+10 levels deep.
+
+<DT><CODE>INPUT(<VAR>file</VAR>, <VAR>file</VAR>, ...)</CODE>
+<DD>
+<DT><CODE>INPUT(<VAR>file</VAR> <VAR>file</VAR> ...)</CODE>
+<DD>
+<A NAME="IDX206"></A>
+<A NAME="IDX207"></A>
+<A NAME="IDX208"></A>
+<A NAME="IDX209"></A>
+The <CODE>INPUT</CODE> command directs the linker to include the named files
+in the link, as though they were named on the command line.
+
+For example, if you always want to include <TT>`subr.o'</TT> any time you do
+a link, but you can't be bothered to put it on every link command line,
+then you can put <SAMP>`INPUT (subr.o)'</SAMP> in your linker script.
+
+In fact, if you like, you can list all of your input files in the linker
+script, and then invoke the linker with nothing but a <SAMP>`-T'</SAMP> option.
+
+The linker will first try to open the file in the current directory.  If
+it is not found, the linker will search through the archive library
+search path.  See the description of <SAMP>`-L'</SAMP> in section <A HREF="ld_2.html#SEC3">Command Line Options</A>.
+
+If you use <SAMP>`INPUT (-l<VAR>file</VAR>)'</SAMP>, <CODE>ld</CODE> will transform the
+name to <CODE>lib<VAR>file</VAR>.a</CODE>, as with the command line argument
+<SAMP>`-l'</SAMP>.
+
+When you use the <CODE>INPUT</CODE> command in an implicit linker script, the
+files will be included in the link at the point at which the linker
+script file is included.  This can affect archive searching.
+
+<DT><CODE>GROUP(<VAR>file</VAR>, <VAR>file</VAR>, ...)</CODE>
+<DD>
+<DT><CODE>GROUP(<VAR>file</VAR> <VAR>file</VAR> ...)</CODE>
+<DD>
+<A NAME="IDX210"></A>
+<A NAME="IDX211"></A>
+The <CODE>GROUP</CODE> command is like <CODE>INPUT</CODE>, except that the named
+files should all be archives, and they are searched repeatedly until no
+new undefined references are created.  See the description of <SAMP>`-('</SAMP>
+in section <A HREF="ld_2.html#SEC3">Command Line Options</A>.
+
+<DT><CODE>OUTPUT(<VAR>filename</VAR>)</CODE>
+<DD>
+<A NAME="IDX212"></A>
+<A NAME="IDX213"></A>
+The <CODE>OUTPUT</CODE> command names the output file.  Using
+<CODE>OUTPUT(<VAR>filename</VAR>)</CODE> in the linker script is exactly like using
+<SAMP>`-o <VAR>filename</VAR>'</SAMP> on the command line (see section <A HREF="ld_2.html#SEC3">Command Line Options</A>).  If both are used, the command line option takes
+precedence.
+
+You can use the <CODE>OUTPUT</CODE> command to define a default name for the
+output file other than the usual default of <TT>`a.out'</TT>.
+
+<DT><CODE>SEARCH_DIR(<VAR>path</VAR>)</CODE>
+<DD>
+<A NAME="IDX214"></A>
+<A NAME="IDX215"></A>
+<A NAME="IDX216"></A>
+<A NAME="IDX217"></A>
+The <CODE>SEARCH_DIR</CODE> command adds <VAR>path</VAR> to the list of paths where
+<CODE>ld</CODE> looks for archive libraries.  Using
+<CODE>SEARCH_DIR(<VAR>path</VAR>)</CODE> is exactly like using <SAMP>`-L <VAR>path</VAR>'</SAMP>
+on the command line (see section <A HREF="ld_2.html#SEC3">Command Line Options</A>).  If both
+are used, then the linker will search both paths.  Paths specified using
+the command line option are searched first.
+
+<DT><CODE>STARTUP(<VAR>filename</VAR>)</CODE>
+<DD>
+<A NAME="IDX218"></A>
+<A NAME="IDX219"></A>
+The <CODE>STARTUP</CODE> command is just like the <CODE>INPUT</CODE> command, except
+that <VAR>filename</VAR> will become the first input file to be linked, as
+though it were specified first on the command line.  This may be useful
+when using a system in which the entry point is always the start of the
+first file.
+</DL>
+
+
+
+<H3><A NAME="SEC12" HREF="ld_toc.html#TOC12">Commands dealing with object file formats</A></H3>
+<P>
+A couple of linker script commands deal with object file formats.
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>OUTPUT_FORMAT(<VAR>bfdname</VAR>)</CODE>
+<DD>
+<DT><CODE>OUTPUT_FORMAT(<VAR>default</VAR>, <VAR>big</VAR>, <VAR>little</VAR>)</CODE>
+<DD>
+<A NAME="IDX220"></A>
+<A NAME="IDX221"></A>
+The <CODE>OUTPUT_FORMAT</CODE> command names the BFD format to use for the
+output file (see section <A HREF="ld_5.html#SEC53">BFD</A>).  Using <CODE>OUTPUT_FORMAT(<VAR>bfdname</VAR>)</CODE> is
+exactly like using <SAMP>`-oformat <VAR>bfdname</VAR>'</SAMP> on the command line
+(see section <A HREF="ld_2.html#SEC3">Command Line Options</A>).  If both are used, the command
+line option takes precedence.
+
+You can use <CODE>OUTPUT_FORMAT</CODE> with three arguments to use different
+formats based on the <SAMP>`-EB'</SAMP> and <SAMP>`-EL'</SAMP> command line options.
+This permits the linker script to set the output format based on the
+desired endianness.
+
+If neither <SAMP>`-EB'</SAMP> nor <SAMP>`-EL'</SAMP> are used, then the output format
+will be the first argument, <VAR>default</VAR>.  If <SAMP>`-EB'</SAMP> is used, the
+output format will be the second argument, <VAR>big</VAR>.  If <SAMP>`-EL'</SAMP> is
+used, the output format will be the third argument, <VAR>little</VAR>.
+
+For example, the default linker script for the MIPS ELF target uses this
+command:
+
+<PRE>
+OUTPUT_FORMAT(elf32-bigmips, elf32-bigmips, elf32-littlemips)
+</PRE>
+
+This says that the default format for the output file is
+<SAMP>`elf32-bigmips'</SAMP>, but if the user uses the <SAMP>`-EL'</SAMP> command line
+option, the output file will be created in the <SAMP>`elf32-littlemips'</SAMP>
+format.
+
+<DT><CODE>TARGET(<VAR>bfdname</VAR>)</CODE>
+<DD>
+<A NAME="IDX222"></A>
+<A NAME="IDX223"></A>
+The <CODE>TARGET</CODE> command names the BFD format to use when reading input
+files.  It affects subsequent <CODE>INPUT</CODE> and <CODE>GROUP</CODE> commands.
+This command is like using <SAMP>`-b <VAR>bfdname</VAR>'</SAMP> on the command line
+(see section <A HREF="ld_2.html#SEC3">Command Line Options</A>).  If the <CODE>TARGET</CODE> command
+is used but <CODE>OUTPUT_FORMAT</CODE> is not, then the last <CODE>TARGET</CODE>
+command is also used to set the format for the output file.  See section <A HREF="ld_5.html#SEC53">BFD</A>.
+</DL>
+
+
+
+<H3><A NAME="SEC13" HREF="ld_toc.html#TOC13">Other linker script commands</A></H3>
+<P>
+There are a few other linker scripts commands.
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>ASSERT(<VAR>exp</VAR>, <VAR>message</VAR>)</CODE>
+<DD>
+<A NAME="IDX224"></A>
+<A NAME="IDX225"></A>
+Ensure that <VAR>exp</VAR> is non-zero.  If it is zero, then exit the linker
+with an error code, and print <VAR>message</VAR>.
+
+<DT><CODE>EXTERN(<VAR>symbol</VAR> <VAR>symbol</VAR> ...)</CODE>
+<DD>
+<A NAME="IDX226"></A>
+<A NAME="IDX227"></A>
+Force <VAR>symbol</VAR> to be entered in the output file as an undefined
+symbol.  Doing this may, for example, trigger linking of additional
+modules from standard libraries.  You may list several <VAR>symbol</VAR>s for
+each <CODE>EXTERN</CODE>, and you may use <CODE>EXTERN</CODE> multiple times.  This
+command has the same effect as the <SAMP>`-u'</SAMP> command-line option.
+
+<DT><CODE>FORCE_COMMON_ALLOCATION</CODE>
+<DD>
+<A NAME="IDX228"></A>
+<A NAME="IDX229"></A>
+This command has the same effect as the <SAMP>`-d'</SAMP> command-line option:
+to make <CODE>ld</CODE> assign space to common symbols even if a relocatable
+output file is specified (<SAMP>`-r'</SAMP>).
+
+<DT><CODE>NOCROSSREFS(<VAR>section</VAR> <VAR>section</VAR> ...)</CODE>
+<DD>
+<A NAME="IDX230"></A>
+<A NAME="IDX231"></A>
+This command may be used to tell <CODE>ld</CODE> to issue an error about any
+references among certain output sections.
+
+In certain types of programs, particularly on embedded systems when
+using overlays, when one section is loaded into memory, another section
+will not be.  Any direct references between the two sections would be
+errors.  For example, it would be an error if code in one section called
+a function defined in the other section.
+
+The <CODE>NOCROSSREFS</CODE> command takes a list of output section names.  If
+<CODE>ld</CODE> detects any cross references between the sections, it reports
+an error and returns a non-zero exit status.  Note that the
+<CODE>NOCROSSREFS</CODE> command uses output section names, not input section
+names.
+
+<DT><CODE>OUTPUT_ARCH(<VAR>bfdarch</VAR>)</CODE>
+<DD>
+<A NAME="IDX232"></A>
+<A NAME="IDX233"></A>
+<A NAME="IDX234"></A>
+Specify a particular output machine architecture.  The argument is one
+of the names used by the BFD library (see section <A HREF="ld_5.html#SEC53">BFD</A>).  You can see the
+architecture of an object file by using the <CODE>objdump</CODE> program with
+the <SAMP>`-f'</SAMP> option.
+</DL>
+
+
+
+<H2><A NAME="SEC14" HREF="ld_toc.html#TOC14">Assigning Values to Symbols</A></H2>
+<P>
+<A NAME="IDX235"></A>
+<A NAME="IDX236"></A>
+<A NAME="IDX237"></A>
+You may assign a value to a symbol in a linker script.  This will define
+the symbol as a global symbol.
+
+</P>
+
+<UL>
+<LI><A HREF="ld_3.html#SEC15">Simple Assignments</A>: Simple Assignments
+<LI><A HREF="ld_3.html#SEC16">PROVIDE</A>: PROVIDE
+</UL>
+
+
+
+<H3><A NAME="SEC15" HREF="ld_toc.html#TOC15">Simple Assignments</A></H3>
+
+<P>
+You may assign to a symbol using any of the C assignment operators:
+
+</P>
+<DL COMPACT>
+
+<DT><CODE><VAR>symbol</VAR> = <VAR>expression</VAR> ;</CODE>
+<DD>
+<DT><CODE><VAR>symbol</VAR> += <VAR>expression</VAR> ;</CODE>
+<DD>
+<DT><CODE><VAR>symbol</VAR> -= <VAR>expression</VAR> ;</CODE>
+<DD>
+<DT><CODE><VAR>symbol</VAR> *= <VAR>expression</VAR> ;</CODE>
+<DD>
+<DT><CODE><VAR>symbol</VAR> /= <VAR>expression</VAR> ;</CODE>
+<DD>
+<DT><CODE><VAR>symbol</VAR> &#60;&#60;= <VAR>expression</VAR> ;</CODE>
+<DD>
+<DT><CODE><VAR>symbol</VAR> &#62;&#62;= <VAR>expression</VAR> ;</CODE>
+<DD>
+<DT><CODE><VAR>symbol</VAR> &#38;= <VAR>expression</VAR> ;</CODE>
+<DD>
+<DT><CODE><VAR>symbol</VAR> |= <VAR>expression</VAR> ;</CODE>
+<DD>
+</DL>
+
+<P>
+The first case will define <VAR>symbol</VAR> to the value of
+<VAR>expression</VAR>.  In the other cases, <VAR>symbol</VAR> must already be
+defined, and the value will be adjusted accordingly.
+
+</P>
+<P>
+The special symbol name <SAMP>`.'</SAMP> indicates the location counter.  You
+may only use this within a <CODE>SECTIONS</CODE> command.
+
+</P>
+<P>
+The semicolon after <VAR>expression</VAR> is required.
+
+</P>
+<P>
+Expressions are defined below; see section <A HREF="ld_3.html#SEC40">Expressions in Linker Scripts</A>.
+
+</P>
+<P>
+You may write symbol assignments as commands in their own right, or as
+statements within a <CODE>SECTIONS</CODE> command, or as part of an output
+section description in a <CODE>SECTIONS</CODE> command.
+
+</P>
+<P>
+The section of the symbol will be set from the section of the
+expression; for more information, see section <A HREF="ld_3.html#SEC46">The Section of an Expression</A>.
+
+</P>
+<P>
+Here is an example showing the three different places that symbol
+assignments may be used:
+
+</P>
+
+<PRE>
+floating_point = 0;
+SECTIONS
+{
+  .text :
+    {
+      *(.text)
+      _etext = .;
+    }
+  _bdata = (. + 3) &#38; ~ 4;
+  .data : { *(.data) }
+}
+</PRE>
+
+<P>
+In this example, the symbol <SAMP>`floating_point'</SAMP> will be defined as
+zero.  The symbol <SAMP>`_etext'</SAMP> will be defined as the address following
+the last <SAMP>`.text'</SAMP> input section.  The symbol <SAMP>`_bdata'</SAMP> will be
+defined as the address following the <SAMP>`.text'</SAMP> output section aligned
+upward to a 4 byte boundary.
+
+</P>
+
+
+<H3><A NAME="SEC16" HREF="ld_toc.html#TOC16">PROVIDE</A></H3>
+<P>
+<A NAME="IDX238"></A>
+In some cases, it is desirable for a linker script to define a symbol
+only if it is referenced and is not defined by any object included in
+the link.  For example, traditional linkers defined the symbol
+<SAMP>`etext'</SAMP>.  However, ANSI C requires that the user be able to use
+<SAMP>`etext'</SAMP> as a function name without encountering an error.  The
+<CODE>PROVIDE</CODE> keyword may be used to define a symbol, such as
+<SAMP>`etext'</SAMP>, only if it is referenced but not defined.  The syntax is
+<CODE>PROVIDE(<VAR>symbol</VAR> = <VAR>expression</VAR>)</CODE>.
+
+</P>
+<P>
+Here is an example of using <CODE>PROVIDE</CODE> to define <SAMP>`etext'</SAMP>:
+
+<PRE>
+SECTIONS
+{
+  .text :
+    {
+      *(.text)
+      _etext = .;
+      PROVIDE(etext = .);
+    }
+}
+</PRE>
+
+<P>
+In this example, if the program defines <SAMP>`_etext'</SAMP> (with a leading
+underscore), the linker will give a multiple definition error.  If, on
+the other hand, the program defines <SAMP>`etext'</SAMP> (with no leading
+underscore), the linker will silently use the definition in the program.
+If the program references <SAMP>`etext'</SAMP> but does not define it, the
+linker will use the definition in the linker script.
+
+</P>
+
+
+<H2><A NAME="SEC17" HREF="ld_toc.html#TOC17">SECTIONS command</A></H2>
+<P>
+<A NAME="IDX239"></A>
+The <CODE>SECTIONS</CODE> command tells the linker how to map input sections
+into output sections, and how to place the output sections in memory.
+
+</P>
+<P>
+The format of the <CODE>SECTIONS</CODE> command is:
+
+<PRE>
+SECTIONS
+{
+  <VAR>sections-command</VAR>
+  <VAR>sections-command</VAR>
+  ...
+}
+</PRE>
+
+<P>
+Each <VAR>sections-command</VAR> may of be one of the following:
+
+</P>
+
+<UL>
+<LI>
+
+an <CODE>ENTRY</CODE> command (see section <A HREF="ld_3.html#SEC10">Setting the entry point</A>)
+<LI>
+
+a symbol assignment (see section <A HREF="ld_3.html#SEC14">Assigning Values to Symbols</A>)
+<LI>
+
+an output section description
+<LI>
+
+an overlay description
+</UL>
+
+<P>
+The <CODE>ENTRY</CODE> command and symbol assignments are permitted inside the
+<CODE>SECTIONS</CODE> command for convenience in using the location counter in
+those commands.  This can also make the linker script easier to
+understand because you can use those commands at meaningful points in
+the layout of the output file.
+
+</P>
+<P>
+Output section descriptions and overlay descriptions are described
+below.
+
+</P>
+<P>
+If you do not use a <CODE>SECTIONS</CODE> command in your linker script, the
+linker will place each input section into an identically named output
+section in the order that the sections are first encountered in the
+input files.  If all input sections are present in the first file, for
+example, the order of sections in the output file will match the order
+in the first input file.  The first section will be at address zero.
+
+</P>
+
+<UL>
+<LI><A HREF="ld_3.html#SEC18">Output Section Description</A>: Output section description
+<LI><A HREF="ld_3.html#SEC19">Output Section Name</A>: Output section name
+<LI><A HREF="ld_3.html#SEC20">Output Section Address</A>: Output section address
+<LI><A HREF="ld_3.html#SEC21">Input Section</A>: Input section description
+<LI><A HREF="ld_3.html#SEC27">Output Section Data</A>: Output section data
+<LI><A HREF="ld_3.html#SEC28">Output Section Keywords</A>: Output section keywords
+<LI><A HREF="ld_3.html#SEC29">Output Section Discarding</A>: Output section discarding
+<LI><A HREF="ld_3.html#SEC30">Output Section Attributes</A>: Output section attributes
+<LI><A HREF="ld_3.html#SEC36">Overlay Description</A>: Overlay description
+</UL>
+
+
+
+<H3><A NAME="SEC18" HREF="ld_toc.html#TOC18">Output section description</A></H3>
+<P>
+The full description of an output section looks like this:
+
+<PRE>
+<VAR>section</VAR> [<VAR>address</VAR>] [(<VAR>type</VAR>)] : [AT(<VAR>lma</VAR>)]
+  {
+    <VAR>output-section-command</VAR>
+    <VAR>output-section-command</VAR>
+    ...
+  } [&#62;<VAR>region</VAR>] [:<VAR>phdr</VAR> :<VAR>phdr</VAR> ...] [=<VAR>fillexp</VAR>]
+</PRE>
+
+<P>
+Most output sections do not use most of the optional section attributes.
+
+</P>
+<P>
+The whitespace around <VAR>section</VAR> is required, so that the section
+name is unambiguous.  The colon and the curly braces are also required.
+The line breaks and other white space are optional.
+
+</P>
+<P>
+Each <VAR>output-section-command</VAR> may be one of the following:
+
+</P>
+
+<UL>
+<LI>
+
+a symbol assignment (see section <A HREF="ld_3.html#SEC14">Assigning Values to Symbols</A>)
+<LI>
+
+an input section description (see section <A HREF="ld_3.html#SEC21">Input section description</A>)
+<LI>
+
+data values to include directly (see section <A HREF="ld_3.html#SEC27">Output section data</A>)
+<LI>
+
+a special output section keyword (see section <A HREF="ld_3.html#SEC28">Output section keywords</A>)
+</UL>
+
+
+
+<H3><A NAME="SEC19" HREF="ld_toc.html#TOC19">Output section name</A></H3>
+<P>
+<A NAME="IDX240"></A>
+<A NAME="IDX241"></A>
+The name of the output section is <VAR>section</VAR>.  <VAR>section</VAR> must
+meet the constraints of your output format.  In formats which only
+support a limited number of sections, such as <CODE>a.out</CODE>, the name
+must be one of the names supported by the format (<CODE>a.out</CODE>, for
+example, allows only <SAMP>`.text'</SAMP>, <SAMP>`.data'</SAMP> or <SAMP>`.bss'</SAMP>). If the
+output format supports any number of sections, but with numbers and not
+names (as is the case for Oasys), the name should be supplied as a
+quoted numeric string.  A section name may consist of any sequence of
+characters, but a name which contains any unusual characters such as
+commas must be quoted.
+
+</P>
+<P>
+The output section name <SAMP>`/DISCARD/'</SAMP> is special; section <A HREF="ld_3.html#SEC29">Output section discarding</A>.
+
+</P>
+
+
+<H3><A NAME="SEC20" HREF="ld_toc.html#TOC20">Output section address</A></H3>
+<P>
+<A NAME="IDX242"></A>
+<A NAME="IDX243"></A>
+The <VAR>address</VAR> is an expression for the VMA (the virtual memory
+address) of the output section.  If you do not provide <VAR>address</VAR>,
+the linker will set it based on <VAR>region</VAR> if present, or otherwise
+based on the current value of the location counter.
+
+</P>
+<P>
+If you provide <VAR>address</VAR>, the address of the output section will be
+set to precisely that.  If you provide neither <VAR>address</VAR> nor
+<VAR>region</VAR>, then the address of the output section will be set to the
+current value of the location counter aligned to the alignment
+requirements of the output section.  The alignment requirement of the
+output section is the strictest alignment of any input section contained
+within the output section.
+
+</P>
+<P>
+For example,
+
+<PRE>
+.text . : { *(.text) }
+</PRE>
+
+<P>
+and
+
+<PRE>
+.text : { *(.text) }
+</PRE>
+
+<P>
+are subtly different.  The first will set the address of the
+<SAMP>`.text'</SAMP> output section to the current value of the location
+counter.  The second will set it to the current value of the location
+counter aligned to the strictest alignment of a <SAMP>`.text'</SAMP> input
+section.
+
+</P>
+<P>
+The <VAR>address</VAR> may be an arbitrary expression; section <A HREF="ld_3.html#SEC40">Expressions in Linker Scripts</A>.
+For example, if you want to align the section on a 0x10 byte boundary,
+so that the lowest four bits of the section address are zero, you could
+do something like this:
+
+<PRE>
+.text ALIGN(0x10) : { *(.text) }
+</PRE>
+
+<P>
+This works because <CODE>ALIGN</CODE> returns the current location counter
+aligned upward to the specified value.
+
+</P>
+<P>
+Specifying <VAR>address</VAR> for a section will change the value of the
+location counter.
+
+</P>
+
+
+<H3><A NAME="SEC21" HREF="ld_toc.html#TOC21">Input section description</A></H3>
+<P>
+<A NAME="IDX244"></A>
+<A NAME="IDX245"></A>
+The most common output section command is an input section description.
+
+</P>
+<P>
+The input section description is the most basic linker script operation.
+You use output sections to tell the linker how to lay out your program
+in memory.  You use input section descriptions to tell the linker how to
+map the input files into your memory layout.
+
+</P>
+
+<UL>
+<LI><A HREF="ld_3.html#SEC22">Input Section Basics</A>: Input section basics
+<LI><A HREF="ld_3.html#SEC23">Input Section Wildcards</A>: Input section wildcard patterns
+<LI><A HREF="ld_3.html#SEC24">Input Section Common</A>: Input section for common symbols
+<LI><A HREF="ld_3.html#SEC25">Input Section Keep</A>: Input section and garbage collection
+<LI><A HREF="ld_3.html#SEC26">Input Section Example</A>: Input section example
+</UL>
+
+
+
+<H4><A NAME="SEC22" HREF="ld_toc.html#TOC22">Input section basics</A></H4>
+<P>
+<A NAME="IDX246"></A>
+An input section description consists of a file name optionally followed
+by a list of section names in parentheses.
+
+</P>
+<P>
+The file name and the section name may be wildcard patterns, which we
+describe further below (see section <A HREF="ld_3.html#SEC23">Input section wildcard patterns</A>).
+
+</P>
+<P>
+The most common input section description is to include all input
+sections with a particular name in the output section.  For example, to
+include all input <SAMP>`.text'</SAMP> sections, you would write:
+
+<PRE>
+*(.text)
+</PRE>
+
+<P>
+Here the <SAMP>`*'</SAMP> is a wildcard which matches any file name.
+
+</P>
+<P>
+There are two ways to include more than one section:
+
+<PRE>
+*(.text .rdata)
+*(.text) *(.rdata)
+</PRE>
+
+<P>
+The difference between these is the order in which the <SAMP>`.text'</SAMP> and
+<SAMP>`.rdata'</SAMP> input sections will appear in the output section.  In the
+first example, they will be intermingled.  In the second example, all
+<SAMP>`.text'</SAMP> input sections will appear first, followed by all
+<SAMP>`.rdata'</SAMP> input sections.
+
+</P>
+<P>
+You can specify a file name to include sections from a particular file.
+You would do this if one or more of your files contain special data that
+needs to be at a particular location in memory.  For example:
+
+<PRE>
+data.o(.data)
+</PRE>
+
+<P>
+If you use a file name without a list of sections, then all sections in
+the input file will be included in the output section.  This is not
+commonly done, but it may by useful on occasion.  For example:
+
+<PRE>
+data.o
+</PRE>
+
+<P>
+When you use a file name which does not contain any wild card
+characters, the linker will first see if you also specified the file
+name on the linker command line or in an <CODE>INPUT</CODE> command.  If you
+did not, the linker will attempt to open the file as an input file, as
+though it appeared on the command line.  Note that this differs from an
+<CODE>INPUT</CODE> command, because the linker will not search for the file in
+the archive search path.
+
+</P>
+
+
+<H4><A NAME="SEC23" HREF="ld_toc.html#TOC23">Input section wildcard patterns</A></H4>
+<P>
+<A NAME="IDX247"></A>
+<A NAME="IDX248"></A>
+<A NAME="IDX249"></A>
+<A NAME="IDX250"></A>
+In an input section description, either the file name or the section
+name or both may be wildcard patterns.
+
+</P>
+<P>
+The file name of <SAMP>`*'</SAMP> seen in many examples is a simple wildcard
+pattern for the file name.
+
+</P>
+<P>
+The wildcard patterns are like those used by the Unix shell.
+
+</P>
+<DL COMPACT>
+
+<DT><SAMP>`*'</SAMP>
+<DD>
+matches any number of characters
+<DT><SAMP>`?'</SAMP>
+<DD>
+matches any single character
+<DT><SAMP>`[<VAR>chars</VAR>]'</SAMP>
+<DD>
+matches a single instance of any of the <VAR>chars</VAR>; the <SAMP>`-'</SAMP>
+character may be used to specify a range of characters, as in
+<SAMP>`[a-z]'</SAMP> to match any lower case letter
+<DT><SAMP>`\'</SAMP>
+<DD>
+quotes the following character
+</DL>
+
+<P>
+When a file name is matched with a wildcard, the wildcard characters
+will not match a <SAMP>`/'</SAMP> character (used to separate directory names on
+Unix).  A pattern consisting of a single <SAMP>`*'</SAMP> character is an
+exception; it will always match any file name, whether it contains a
+<SAMP>`/'</SAMP> or not.  In a section name, the wildcard characters will match
+a <SAMP>`/'</SAMP> character.
+
+</P>
+<P>
+File name wildcard patterns only match files which are explicitly
+specified on the command line or in an <CODE>INPUT</CODE> command.  The linker
+does not search directories to expand wildcards.
+
+</P>
+<P>
+If a file name matches more than one wildcard pattern, or if a file name
+appears explicitly and is also matched by a wildcard pattern, the linker
+will use the first match in the linker script.  For example, this
+sequence of input section descriptions is probably in error, because the
+<TT>`data.o'</TT> rule will not be used:
+
+<PRE>
+.data : { *(.data) }
+.data1 : { data.o(.data) }
+</PRE>
+
+<P>
+<A NAME="IDX251"></A>
+Normally, the linker will place files and sections matched by wildcards
+in the order in which they are seen during the link.  You can change
+this by using the <CODE>SORT</CODE> keyword, which appears before a wildcard
+pattern in parentheses (e.g., <CODE>SORT(.text*)</CODE>).  When the
+<CODE>SORT</CODE> keyword is used, the linker will sort the files or sections
+into ascending order by name before placing them in the output file.
+
+</P>
+<P>
+If you ever get confused about where input sections are going, use the
+<SAMP>`-M'</SAMP> linker option to generate a map file.  The map file shows
+precisely how input sections are mapped to output sections.
+
+</P>
+<P>
+This example shows how wildcard patterns might be used to partition
+files.  This linker script directs the linker to place all <SAMP>`.text'</SAMP>
+sections in <SAMP>`.text'</SAMP> and all <SAMP>`.bss'</SAMP> sections in <SAMP>`.bss'</SAMP>.
+The linker will place the <SAMP>`.data'</SAMP> section from all files beginning
+with an upper case character in <SAMP>`.DATA'</SAMP>; for all other files, the
+linker will place the <SAMP>`.data'</SAMP> section in <SAMP>`.data'</SAMP>.
+
+<PRE>
+SECTIONS {
+  .text : { *(.text) }
+  .DATA : { [A-Z]*(.data) }
+  .data : { *(.data) }
+  .bss : { *(.bss) }
+}
+</PRE>
+
+
+
+<H4><A NAME="SEC24" HREF="ld_toc.html#TOC24">Input section for common symbols</A></H4>
+<P>
+<A NAME="IDX252"></A>
+<A NAME="IDX253"></A>
+A special notation is needed for common symbols, because in many object
+file formats common symbols do not have a particular input section.  The
+linker treats common symbols as though they are in an input section
+named <SAMP>`COMMON'</SAMP>.
+
+</P>
+<P>
+You may use file names with the <SAMP>`COMMON'</SAMP> section just as with any
+other input sections.  You can use this to place common symbols from a
+particular input file in one section while common symbols from other
+input files are placed in another section.
+
+</P>
+<P>
+In most cases, common symbols in input files will be placed in the
+<SAMP>`.bss'</SAMP> section in the output file.  For example:
+
+<PRE>
+.bss { *(.bss) *(COMMON) }
+</PRE>
+
+<P>
+<A NAME="IDX254"></A>
+<A NAME="IDX255"></A>
+Some object file formats have more than one type of common symbol.  For
+example, the MIPS ELF object file format distinguishes standard common
+symbols and small common symbols.  In this case, the linker will use a
+different special section name for other types of common symbols.  In
+the case of MIPS ELF, the linker uses <SAMP>`COMMON'</SAMP> for standard common
+symbols and <SAMP>`.scommon'</SAMP> for small common symbols.  This permits you
+to map the different types of common symbols into memory at different
+locations.
+
+</P>
+<P>
+<A NAME="IDX256"></A>
+You will sometimes see <SAMP>`[COMMON]'</SAMP> in old linker scripts.  This
+notation is now considered obsolete.  It is equivalent to
+<SAMP>`*(COMMON)'</SAMP>.
+
+</P>
+
+
+<H4><A NAME="SEC25" HREF="ld_toc.html#TOC25">Input section and garbage collection</A></H4>
+<P>
+<A NAME="IDX257"></A>
+<A NAME="IDX258"></A>
+When link-time garbage collection is in use (<SAMP>`--gc-sections'</SAMP>),
+it is often useful to mark sections that should not be eliminated. 
+This is accomplished by surrounding an input section's wildcard entry
+with <CODE>KEEP()</CODE>, as in <CODE>KEEP(*(.init))</CODE> or
+<CODE>KEEP(SORT(*)(.ctors))</CODE>.
+
+</P>
+
+
+<H4><A NAME="SEC26" HREF="ld_toc.html#TOC26">Input section example</A></H4>
+<P>
+The following example is a complete linker script.  It tells the linker
+to read all of the sections from file <TT>`all.o'</TT> and place them at the
+start of output section <SAMP>`outputa'</SAMP> which starts at location
+<SAMP>`0x10000'</SAMP>.  All of section <SAMP>`.input1'</SAMP> from file <TT>`foo.o'</TT>
+follows immediately, in the same output section.  All of section
+<SAMP>`.input2'</SAMP> from <TT>`foo.o'</TT> goes into output section
+<SAMP>`outputb'</SAMP>, followed by section <SAMP>`.input1'</SAMP> from <TT>`foo1.o'</TT>.
+All of the remaining <SAMP>`.input1'</SAMP> and <SAMP>`.input2'</SAMP> sections from any
+files are written to output section <SAMP>`outputc'</SAMP>.
+
+</P>
+
+<PRE>
+SECTIONS {
+  outputa 0x10000 :
+    {
+    all.o
+    foo.o (.input1)
+    }
+  outputb :
+    {
+    foo.o (.input2)
+    foo1.o (.input1)
+    }
+  outputc :
+    {
+    *(.input1)
+    *(.input2)
+    }
+}
+</PRE>
+
+
+
+<H3><A NAME="SEC27" HREF="ld_toc.html#TOC27">Output section data</A></H3>
+<P>
+<A NAME="IDX259"></A>
+<A NAME="IDX260"></A>
+<A NAME="IDX261"></A>
+<A NAME="IDX262"></A>
+<A NAME="IDX263"></A>
+<A NAME="IDX264"></A>
+<A NAME="IDX265"></A>
+<A NAME="IDX266"></A>
+You can include explicit bytes of data in an output section by using
+<CODE>BYTE</CODE>, <CODE>SHORT</CODE>, <CODE>LONG</CODE>, <CODE>QUAD</CODE>, or <CODE>SQUAD</CODE> as
+an output section command.  Each keyword is followed by an expression in
+parentheses providing the value to store (see section <A HREF="ld_3.html#SEC40">Expressions in Linker Scripts</A>).  The
+value of the expression is stored at the current value of the location
+counter.
+
+</P>
+<P>
+The <CODE>BYTE</CODE>, <CODE>SHORT</CODE>, <CODE>LONG</CODE>, and <CODE>QUAD</CODE> commands
+store one, two, four, and eight bytes (respectively).  After storing the
+bytes, the location counter is incremented by the number of bytes
+stored.
+
+</P>
+<P>
+For example, this will store the byte 1 followed by the four byte value
+of the symbol <SAMP>`addr'</SAMP>:
+
+<PRE>
+BYTE(1)
+LONG(addr)
+</PRE>
+
+<P>
+When using a 64 bit host or target, <CODE>QUAD</CODE> and <CODE>SQUAD</CODE> are the
+same; they both store an 8 byte, or 64 bit, value.  When both host and
+target are 32 bits, an expression is computed as 32 bits.  In this case
+<CODE>QUAD</CODE> stores a 32 bit value zero extended to 64 bits, and
+<CODE>SQUAD</CODE> stores a 32 bit value sign extended to 64 bits.
+
+</P>
+<P>
+If the object file format of the output file has an explicit endianness,
+which is the normal case, the value will be stored in that endianness.
+When the object file format does not have an explicit endianness, as is
+true of, for example, S-records, the value will be stored in the
+endianness of the first input object file.
+
+</P>
+<P>
+<A NAME="IDX267"></A>
+<A NAME="IDX268"></A>
+<A NAME="IDX269"></A>
+You may use the <CODE>FILL</CODE> command to set the fill pattern for the
+current section.  It is followed by an expression in parentheses.  Any
+otherwise unspecified regions of memory within the section (for example,
+gaps left due to the required alignment of input sections) are filled
+with the two least significant bytes of the expression, repeated as
+necessary.  A <CODE>FILL</CODE> statement covers memory locations after the
+point at which it occurs in the section definition; by including more
+than one <CODE>FILL</CODE> statement, you can have different fill patterns in
+different parts of an output section.
+
+</P>
+<P>
+This example shows how to fill unspecified regions of memory with the
+value <SAMP>`0x9090'</SAMP>:
+
+<PRE>
+FILL(0x9090)
+</PRE>
+
+<P>
+The <CODE>FILL</CODE> command is similar to the <SAMP>`=<VAR>fillexp</VAR>'</SAMP> output
+section attribute (see section <A HREF="ld_3.html#SEC35">Output section fill</A>), but it only affects the
+part of the section following the <CODE>FILL</CODE> command, rather than the
+entire section.  If both are used, the <CODE>FILL</CODE> command takes
+precedence.
+
+</P>
+
+
+<H3><A NAME="SEC28" HREF="ld_toc.html#TOC28">Output section keywords</A></H3>
+<P>
+There are a couple of keywords which can appear as output section
+commands.
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>CREATE_OBJECT_SYMBOLS</CODE>
+<DD>
+<A NAME="IDX270"></A>
+ <A NAME="IDX271"></A>
+ <A NAME="IDX272"></A>
+ 
+The command tells the linker to create a symbol for each input file.
+The name of each symbol will be the name of the corresponding input
+file.  The section of each symbol will be the output section in which
+the <CODE>CREATE_OBJECT_SYMBOLS</CODE> command appears.
+
+This is conventional for the a.out object file format.  It is not
+normally used for any other object file format.
+
+<A NAME="IDX273"></A>
+<A NAME="IDX274"></A>
+<A NAME="IDX275"></A>
+<DT><CODE>CONSTRUCTORS</CODE>
+<DD>
+When linking using the a.out object file format, the linker uses an
+unusual set construct to support C++ global constructors and
+destructors.  When linking object file formats which do not support
+arbitrary sections, such as ECOFF and XCOFF, the linker will
+automatically recognize C++ global constructors and destructors by name.
+For these object file formats, the <CODE>CONSTRUCTORS</CODE> command tells the
+linker to place constructor information in the output section where the
+<CODE>CONSTRUCTORS</CODE> command appears.  The <CODE>CONSTRUCTORS</CODE> command is
+ignored for other object file formats.
+
+The symbol <CODE>__CTOR_LIST__</CODE> marks the start of the global
+constructors, and the symbol <CODE>__DTOR_LIST</CODE> marks the end.  The
+first word in the list is the number of entries, followed by the address
+of each constructor or destructor, followed by a zero word.  The
+compiler must arrange to actually run the code.  For these object file
+formats GNU C++ normally calls constructors from a subroutine
+<CODE>__main</CODE>; a call to <CODE>__main</CODE> is automatically inserted into
+the startup code for <CODE>main</CODE>.  GNU C++ normally runs
+destructors either by using <CODE>atexit</CODE>, or directly from the function
+<CODE>exit</CODE>.
+
+For object file formats such as <CODE>COFF</CODE> or <CODE>ELF</CODE> which support
+arbitrary section names, GNU C++ will normally arrange to put the
+addresses of global constructors and destructors into the <CODE>.ctors</CODE>
+and <CODE>.dtors</CODE> sections.  Placing the following sequence into your
+linker script will build the sort of table which the GNU C++
+runtime code expects to see.
+
+
+<PRE>
+      __CTOR_LIST__ = .;
+      LONG((__CTOR_END__ - __CTOR_LIST__) / 4 - 2)
+      *(.ctors)
+      LONG(0)
+      __CTOR_END__ = .;
+      __DTOR_LIST__ = .;
+      LONG((__DTOR_END__ - __DTOR_LIST__) / 4 - 2)
+      *(.dtors)
+      LONG(0)
+      __DTOR_END__ = .;
+</PRE>
+
+If you are using the GNU C++ support for initialization priority,
+which provides some control over the order in which global constructors
+are run, you must sort the constructors at link time to ensure that they
+are executed in the correct order.  When using the <CODE>CONSTRUCTORS</CODE>
+command, use <SAMP>`SORT(CONSTRUCTORS)'</SAMP> instead.  When using the
+<CODE>.ctors</CODE> and <CODE>.dtors</CODE> sections, use <SAMP>`*(SORT(.ctors))'</SAMP> and
+<SAMP>`*(SORT(.dtors))'</SAMP> instead of just <SAMP>`*(.ctors)'</SAMP> and
+<SAMP>`*(.dtors)'</SAMP>.
+
+Normally the compiler and linker will handle these issues automatically,
+and you will not need to concern yourself with them.  However, you may
+need to consider this if you are using C++ and writing your own linker
+scripts.
+
+</DL>
+
+
+
+<H3><A NAME="SEC29" HREF="ld_toc.html#TOC29">Output section discarding</A></H3>
+<P>
+<A NAME="IDX276"></A>
+<A NAME="IDX277"></A>
+<A NAME="IDX278"></A>
+The linker will not create output section which do not have any
+contents.  This is for convenience when referring to input sections that
+may or may not be present in any of the input files.  For example:
+
+<PRE>
+.foo { *(.foo) }
+</PRE>
+
+<P>
+will only create a <SAMP>`.foo'</SAMP> section in the output file if there is a
+<SAMP>`.foo'</SAMP> section in at least one input file.
+
+</P>
+<P>
+If you use anything other than an input section description as an output
+section command, such as a symbol assignment, then the output section
+will always be created, even if there are no matching input sections.
+
+</P>
+<P>
+<A NAME="IDX279"></A>
+The special output section name <SAMP>`/DISCARD/'</SAMP> may be used to discard
+input sections.  Any input sections which are assigned to an output
+section named <SAMP>`/DISCARD/'</SAMP> are not included in the output file.
+
+</P>
+
+
+<H3><A NAME="SEC30" HREF="ld_toc.html#TOC30">Output section attributes</A></H3>
+<P>
+<A NAME="IDX280"></A>
+We showed above that the full description of an output section looked
+like this:
+
+<PRE>
+<VAR>section</VAR> [<VAR>address</VAR>] [(<VAR>type</VAR>)] : [AT(<VAR>lma</VAR>)]
+  {
+    <VAR>output-section-command</VAR>
+    <VAR>output-section-command</VAR>
+    ...
+  } [&#62;<VAR>region</VAR>] [:<VAR>phdr</VAR> :<VAR>phdr</VAR> ...] [=<VAR>fillexp</VAR>]
+</PRE>
+
+<P>
+We've already described <VAR>section</VAR>, <VAR>address</VAR>, and
+<VAR>output-section-command</VAR>.  In this section we will describe the
+remaining section attributes.
+
+</P>
+
+<UL>
+<LI><A HREF="ld_3.html#SEC31">Output Section Type</A>: Output section type
+<LI><A HREF="ld_3.html#SEC32">Output Section LMA</A>: Output section LMA
+<LI><A HREF="ld_3.html#SEC33">Output Section Region</A>: Output section region
+<LI><A HREF="ld_3.html#SEC34">Output Section Phdr</A>: Output section phdr
+<LI><A HREF="ld_3.html#SEC35">Output Section Fill</A>: Output section fill
+</UL>
+
+
+
+<H4><A NAME="SEC31" HREF="ld_toc.html#TOC31">Output section type</A></H4>
+<P>
+Each output section may have a type.  The type is a keyword in
+parentheses.  The following types are defined:
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>NOLOAD</CODE>
+<DD>
+The section should be marked as not loadable, so that it will not be
+loaded into memory when the program is run.
+<DT><CODE>DSECT</CODE>
+<DD>
+<DT><CODE>COPY</CODE>
+<DD>
+<DT><CODE>INFO</CODE>
+<DD>
+<DT><CODE>OVERLAY</CODE>
+<DD>
+These type names are supported for backward compatibility, and are
+rarely used.  They all have the same effect: the section should be
+marked as not allocatable, so that no memory is allocated for the
+section when the program is run.
+</DL>
+
+<P>
+<A NAME="IDX281"></A>
+<A NAME="IDX282"></A>
+<A NAME="IDX283"></A>
+The linker normally sets the attributes of an output section based on
+the input sections which map into it.  You can override this by using
+the section type.  For example, in the script sample below, the
+<SAMP>`ROM'</SAMP> section is addressed at memory location <SAMP>`0'</SAMP> and does not
+need to be loaded when the program is run.  The contents of the
+<SAMP>`ROM'</SAMP> section will appear in the linker output file as usual.
+
+<PRE>
+SECTIONS {
+  ROM 0 (NOLOAD) : { ... }
+  ...
+}
+</PRE>
+
+
+
+<H4><A NAME="SEC32" HREF="ld_toc.html#TOC32">Output section LMA</A></H4>
+<P>
+<A NAME="IDX284"></A>
+<A NAME="IDX285"></A>
+<A NAME="IDX286"></A>
+Every section has a virtual address (VMA) and a load address (LMA); see
+section <A HREF="ld_3.html#SEC6">Basic Linker Script Concepts</A>.  The address expression which may appear in
+an output section description sets the VMA (see section <A HREF="ld_3.html#SEC20">Output section address</A>).
+
+</P>
+<P>
+The linker will normally set the LMA equal to the VMA.  You can change
+that by using the <CODE>AT</CODE> keyword.  The expression <VAR>lma</VAR> that
+follows the <CODE>AT</CODE> keyword specifies the load address of the section.
+
+</P>
+<P>
+<A NAME="IDX287"></A>
+<A NAME="IDX288"></A>
+This feature is designed to make it easy to build a ROM image.  For
+example, the following linker script creates three output sections: one
+called <SAMP>`.text'</SAMP>, which starts at <CODE>0x1000</CODE>, one called
+<SAMP>`.mdata'</SAMP>, which is loaded at the end of the <SAMP>`.text'</SAMP> section
+even though its VMA is <CODE>0x2000</CODE>, and one called <SAMP>`.bss'</SAMP> to hold
+uninitialized data at address <CODE>0x3000</CODE>.  The symbol <CODE>_data</CODE> is
+defined with the value <CODE>0x2000</CODE>, which shows that the location
+counter holds the VMA value, not the LMA value.
+
+</P>
+
+<PRE>
+SECTIONS
+  {
+  .text 0x1000 : { *(.text) _etext = . ; }
+  .mdata 0x2000 : 
+    AT ( ADDR (.text) + SIZEOF (.text) )
+    { _data = . ; *(.data); _edata = . ;  }
+  .bss 0x3000 :
+    { _bstart = . ;  *(.bss) *(COMMON) ; _bend = . ;}
+}
+</PRE>
+
+<P>
+The run-time initialization code for use with a program generated with
+this linker script would include something like the following, to copy
+the initialized data from the ROM image to its runtime address.  Notice
+how this code takes advantage of the symbols defined by the linker
+script.
+
+</P>
+
+<PRE>
+extern char _etext, _data, _edata, _bstart, _bend;
+char *src = &#38;_etext;
+char *dst = &#38;_data;
+
+/* ROM has data at end of text; copy it. */
+while (dst &#60; &#38;_edata) {
+  *dst++ = *src++;
+}
+
+/* Zero bss */
+for (dst = &#38;_bstart; dst&#60; &#38;_bend; dst++)
+  *dst = 0;
+</PRE>
+
+
+
+<H4><A NAME="SEC33" HREF="ld_toc.html#TOC33">Output section region</A></H4>
+<P>
+<A NAME="IDX289"></A>
+<A NAME="IDX290"></A>
+<A NAME="IDX291"></A>
+You can assign a section to a previously defined region of memory by
+using <SAMP>`&#62;<VAR>region</VAR>'</SAMP>.  See section <A HREF="ld_3.html#SEC37">MEMORY command</A>.
+
+</P>
+<P>
+Here is a simple example:
+
+<PRE>
+MEMORY { rom : ORIGIN = 0x1000, LENGTH = 0x1000 }
+SECTIONS { ROM : { *(.text) } &#62;rom }
+</PRE>
+
+
+
+<H4><A NAME="SEC34" HREF="ld_toc.html#TOC34">Output section phdr</A></H4>
+<P>
+<A NAME="IDX292"></A>
+<A NAME="IDX293"></A>
+<A NAME="IDX294"></A>
+You can assign a section to a previously defined program segment by
+using <SAMP>`:<VAR>phdr</VAR>'</SAMP>.  See section <A HREF="ld_3.html#SEC38">PHDRS Command</A>.  If a section is assigned to
+one or more segments, then all subsequent allocated sections will be
+assigned to those segments as well, unless they use an explicitly
+<CODE>:<VAR>phdr</VAR></CODE> modifier.  You can use <CODE>:NONE</CODE> to tell the
+linker to not put the section in any segment at all.
+
+</P>
+<P>
+Here is a simple example:
+
+<PRE>
+PHDRS { text PT_LOAD ; }
+SECTIONS { .text : { *(.text) } :text }
+</PRE>
+
+
+
+<H4><A NAME="SEC35" HREF="ld_toc.html#TOC35">Output section fill</A></H4>
+<P>
+<A NAME="IDX295"></A>
+<A NAME="IDX296"></A>
+<A NAME="IDX297"></A>
+You can set the fill pattern for an entire section by using
+<SAMP>`=<VAR>fillexp</VAR>'</SAMP>.  <VAR>fillexp</VAR> is an expression
+(see section <A HREF="ld_3.html#SEC40">Expressions in Linker Scripts</A>).  Any otherwise unspecified regions of memory
+within the output section (for example, gaps left due to the required
+alignment of input sections) will be filled with the two least
+significant bytes of the value, repeated as necessary.
+
+</P>
+<P>
+You can also change the fill value with a <CODE>FILL</CODE> command in the
+output section commands; see section <A HREF="ld_3.html#SEC27">Output section data</A>.
+
+</P>
+<P>
+Here is a simple example:
+
+<PRE>
+SECTIONS { .text : { *(.text) } =0x9090 }
+</PRE>
+
+
+
+<H3><A NAME="SEC36" HREF="ld_toc.html#TOC36">Overlay description</A></H3>
+<P>
+<A NAME="IDX298"></A>
+<A NAME="IDX299"></A>
+An overlay description provides an easy way to describe sections which
+are to be loaded as part of a single memory image but are to be run at
+the same memory address.  At run time, some sort of overlay manager will
+copy the overlaid sections in and out of the runtime memory address as
+required, perhaps by simply manipulating addressing bits.  This approach
+can be useful, for example, when a certain region of memory is faster
+than another.
+
+</P>
+<P>
+Overlays are described using the <CODE>OVERLAY</CODE> command.  The
+<CODE>OVERLAY</CODE> command is used within a <CODE>SECTIONS</CODE> command, like an
+output section description.  The full syntax of the <CODE>OVERLAY</CODE>
+command is as follows:
+
+<PRE>
+OVERLAY [<VAR>start</VAR>] : [NOCROSSREFS] [AT ( <VAR>ldaddr</VAR> )]
+  {
+    <VAR>secname1</VAR>
+      {
+        <VAR>output-section-command</VAR>
+        <VAR>output-section-command</VAR>
+        ...
+      } [:<VAR>phdr</VAR>...] [=<VAR>fill</VAR>]
+    <VAR>secname2</VAR>
+      {
+        <VAR>output-section-command</VAR>
+        <VAR>output-section-command</VAR>
+        ...
+      } [:<VAR>phdr</VAR>...] [=<VAR>fill</VAR>]
+    ...
+  } [&#62;<VAR>region</VAR>] [:<VAR>phdr</VAR>...] [=<VAR>fill</VAR>]
+</PRE>
+
+<P>
+Everything is optional except <CODE>OVERLAY</CODE> (a keyword), and each
+section must have a name (<VAR>secname1</VAR> and <VAR>secname2</VAR> above).  The
+section definitions within the <CODE>OVERLAY</CODE> construct are identical to
+those within the general <CODE>SECTIONS</CODE> contruct (see section <A HREF="ld_3.html#SEC17">SECTIONS command</A>),
+except that no addresses and no memory regions may be defined for
+sections within an <CODE>OVERLAY</CODE>.
+
+</P>
+<P>
+The sections are all defined with the same starting address.  The load
+addresses of the sections are arranged such that they are consecutive in
+memory starting at the load address used for the <CODE>OVERLAY</CODE> as a
+whole (as with normal section definitions, the load address is optional,
+and defaults to the start address; the start address is also optional,
+and defaults to the current value of the location counter).
+
+</P>
+<P>
+If the <CODE>NOCROSSREFS</CODE> keyword is used, and there any references
+among the sections, the linker will report an error.  Since the sections
+all run at the same address, it normally does not make sense for one
+section to refer directly to another.  See section <A HREF="ld_3.html#SEC13">Other linker script commands</A>.
+
+</P>
+<P>
+For each section within the <CODE>OVERLAY</CODE>, the linker automatically
+defines two symbols.  The symbol <CODE>__load_start_<VAR>secname</VAR></CODE> is
+defined as the starting load address of the section.  The symbol
+<CODE>__load_stop_<VAR>secname</VAR></CODE> is defined as the final load address of
+the section.  Any characters within <VAR>secname</VAR> which are not legal
+within C identifiers are removed.  C (or assembler) code may use these
+symbols to move the overlaid sections around as necessary.
+
+</P>
+<P>
+At the end of the overlay, the value of the location counter is set to
+the start address of the overlay plus the size of the largest section.
+
+</P>
+<P>
+Here is an example.  Remember that this would appear inside a
+<CODE>SECTIONS</CODE> construct.
+
+<PRE>
+  OVERLAY 0x1000 : AT (0x4000)
+   {
+     .text0 { o1/*.o(.text) }
+     .text1 { o2/*.o(.text) }
+   }
+</PRE>
+
+<P>
+This will define both <SAMP>`.text0'</SAMP> and <SAMP>`.text1'</SAMP> to start at
+address 0x1000.  <SAMP>`.text0'</SAMP> will be loaded at address 0x4000, and
+<SAMP>`.text1'</SAMP> will be loaded immediately after <SAMP>`.text0'</SAMP>.  The
+following symbols will be defined: <CODE>__load_start_text0</CODE>,
+<CODE>__load_stop_text0</CODE>, <CODE>__load_start_text1</CODE>,
+<CODE>__load_stop_text1</CODE>.
+
+</P>
+<P>
+C code to copy overlay <CODE>.text1</CODE> into the overlay area might look
+like the following.
+
+</P>
+
+<PRE>
+  extern char __load_start_text1, __load_stop_text1;
+  memcpy ((char *) 0x1000, &#38;__load_start_text1,
+          &#38;__load_stop_text1 - &#38;__load_start_text1);
+</PRE>
+
+<P>
+Note that the <CODE>OVERLAY</CODE> command is just syntactic sugar, since
+everything it does can be done using the more basic commands.  The above
+example could have been written identically as follows.
+
+</P>
+
+<PRE>
+  .text0 0x1000 : AT (0x4000) { o1/*.o(.text) }
+  __load_start_text0 = LOADADDR (.text0);
+  __load_stop_text0 = LOADADDR (.text0) + SIZEOF (.text0);
+  .text1 0x1000 : AT (0x4000 + SIZEOF (.text0)) { o2/*.o(.text) }
+  __load_start_text1 = LOADADDR (.text1);
+  __load_stop_text1 = LOADADDR (.text1) + SIZEOF (.text1);
+  . = 0x1000 + MAX (SIZEOF (.text0), SIZEOF (.text1));
+</PRE>
+
+
+
+<H2><A NAME="SEC37" HREF="ld_toc.html#TOC37">MEMORY command</A></H2>
+<P>
+<A NAME="IDX300"></A>
+<A NAME="IDX301"></A>
+<A NAME="IDX302"></A>
+<A NAME="IDX303"></A>
+<A NAME="IDX304"></A>
+The linker's default configuration permits allocation of all available
+memory.  You can override this by using the <CODE>MEMORY</CODE> command.
+
+</P>
+<P>
+The <CODE>MEMORY</CODE> command describes the location and size of blocks of
+memory in the target.  You can use it to describe which memory regions
+may be used by the linker, and which memory regions it must avoid.  You
+can then assign sections to particular memory regions.  The linker will
+set section addresses based on the memory regions, and will warn about
+regions that become too full.  The linker will not shuffle sections
+around to fit into the available regions.
+
+</P>
+<P>
+A linker script may contain at most one use of the <CODE>MEMORY</CODE>
+command.  However, you can define as many blocks of memory within it as
+you wish.  The syntax is:
+
+<PRE>
+MEMORY 
+  {
+    <VAR>name</VAR> [(<VAR>attr</VAR>)] : ORIGIN = <VAR>origin</VAR>, LENGTH = <VAR>len</VAR>
+    ...
+  }
+</PRE>
+
+<P>
+The <VAR>name</VAR> is a name used in the linker script to refer to the
+region.  The region name has no meaning outside of the linker script.
+Region names are stored in a separate name space, and will not conflict
+with symbol names, file names, or section names.  Each memory region
+must have a distinct name.
+
+</P>
+<P>
+<A NAME="IDX305"></A>
+The <VAR>attr</VAR> string is an optional list of attributes that specify
+whether to use a particular memory region for an input section which is
+not explicitly mapped in the linker script.  As described in
+section <A HREF="ld_3.html#SEC17">SECTIONS command</A>, if you do not specify an output section for some input
+section, the linker will create an output section with the same name as
+the input section.  If you define region attributes, the linker will use
+them to select the memory region for the output section that it creates.
+
+</P>
+<P>
+The <VAR>attr</VAR> string must consist only of the following characters:
+<DL COMPACT>
+
+<DT><SAMP>`R'</SAMP>
+<DD>
+Read-only section
+<DT><SAMP>`W'</SAMP>
+<DD>
+Read/write section
+<DT><SAMP>`X'</SAMP>
+<DD>
+Executable section
+<DT><SAMP>`A'</SAMP>
+<DD>
+Allocatable section
+<DT><SAMP>`I'</SAMP>
+<DD>
+Initialized section
+<DT><SAMP>`L'</SAMP>
+<DD>
+Same as <SAMP>`I'</SAMP>
+<DT><SAMP>`!'</SAMP>
+<DD>
+Invert the sense of any of the preceding attributes
+</DL>
+
+<P>
+If a unmapped section matches any of the listed attributes other than
+<SAMP>`!'</SAMP>, it will be placed in the memory region.  The <SAMP>`!'</SAMP>
+attribute reverses this test, so that an unmapped section will be placed
+in the memory region only if it does not match any of the listed
+attributes.
+
+</P>
+<P>
+<A NAME="IDX306"></A>
+<A NAME="IDX307"></A>
+<A NAME="IDX308"></A>
+The <VAR>origin</VAR> is an expression for the start address of the memory
+region.  The expression must evaluate to a constant before memory
+allocation is performed, which means that you may not use any section
+relative symbols.  The keyword <CODE>ORIGIN</CODE> may be abbreviated to
+<CODE>org</CODE> or <CODE>o</CODE> (but not, for example, <CODE>ORG</CODE>).
+
+</P>
+<P>
+<A NAME="IDX309"></A>
+<A NAME="IDX310"></A>
+<A NAME="IDX311"></A>
+The <VAR>len</VAR> is an expression for the size in bytes of the memory
+region.  As with the <VAR>origin</VAR> expression, the expression must
+evaluate to a constant before memory allocation is performed.  The
+keyword <CODE>LENGTH</CODE> may be abbreviated to <CODE>len</CODE> or <CODE>l</CODE>.
+
+</P>
+<P>
+In the following example, we specify that there are two memory regions
+available for allocation: one starting at <SAMP>`0'</SAMP> for 256 kilobytes,
+and the other starting at <SAMP>`0x40000000'</SAMP> for four megabytes.  The
+linker will place into the <SAMP>`rom'</SAMP> memory region every section which
+is not explicitly mapped into a memory region, and is either read-only
+or executable.  The linker will place other sections which are not
+explicitly mapped into a memory region into the <SAMP>`ram'</SAMP> memory
+region.
+
+</P>
+
+<PRE>
+MEMORY 
+  {
+    rom (rx)  : ORIGIN = 0, LENGTH = 256K
+    ram (!rx) : org = 0x40000000, l = 4M
+  }
+</PRE>
+
+<P>
+Once you define a memory region, you can direct the linker to place
+specific output sections into that memory region by using the
+<SAMP>`&#62;<VAR>region</VAR>'</SAMP> output section attribute.  For example, if you have
+a memory region named <SAMP>`mem'</SAMP>, you would use <SAMP>`&#62;mem'</SAMP> in the
+output section definition.  See section <A HREF="ld_3.html#SEC33">Output section region</A>.  If no address
+was specified for the output section, the linker will set the address to
+the next available address within the memory region.  If the combined
+output sections directed to a memory region are too large for the
+region, the linker will issue an error message.
+
+</P>
+
+
+<H2><A NAME="SEC38" HREF="ld_toc.html#TOC38">PHDRS Command</A></H2>
+<P>
+<A NAME="IDX312"></A>
+<A NAME="IDX313"></A>
+<A NAME="IDX314"></A>
+<A NAME="IDX315"></A>
+<A NAME="IDX316"></A>
+The ELF object file format uses <STRONG>program headers</STRONG>, also knows as
+<STRONG>segments</STRONG>.  The program headers describe how the program should be
+loaded into memory.  You can print them out by using the <CODE>objdump</CODE>
+program with the <SAMP>`-p'</SAMP> option.
+
+</P>
+<P>
+When you run an ELF program on a native ELF system, the system loader
+reads the program headers in order to figure out how to load the
+program.  This will only work if the program headers are set correctly.
+This manual does not describe the details of how the system loader
+interprets program headers; for more information, see the ELF ABI.
+
+</P>
+<P>
+The linker will create reasonable program headers by default.  However,
+in some cases, you may need to specify the program headers more
+precisely.  You may use the <CODE>PHDRS</CODE> command for this purpose.  When
+the linker sees the <CODE>PHDRS</CODE> command in the linker script, it will
+not create any program headers other than the ones specified.
+
+</P>
+<P>
+The linker only pays attention to the <CODE>PHDRS</CODE> command when
+generating an ELF output file.  In other cases, the linker will simply
+ignore <CODE>PHDRS</CODE>.
+
+</P>
+<P>
+This is the syntax of the <CODE>PHDRS</CODE> command.  The words <CODE>PHDRS</CODE>,
+<CODE>FILEHDR</CODE>, <CODE>AT</CODE>, and <CODE>FLAGS</CODE> are keywords.
+
+</P>
+
+<PRE>
+PHDRS
+{
+  <VAR>name</VAR> <VAR>type</VAR> [ FILEHDR ] [ PHDRS ] [ AT ( <VAR>address</VAR> ) ]
+        [ FLAGS ( <VAR>flags</VAR> ) ] ;
+}
+</PRE>
+
+<P>
+The <VAR>name</VAR> is used only for reference in the <CODE>SECTIONS</CODE> command
+of the linker script.  It is not put into the output file.  Program
+header names are stored in a separate name space, and will not conflict
+with symbol names, file names, or section names.  Each program header
+must have a distinct name.
+
+</P>
+<P>
+Certain program header types describe segments of memory which the
+system loader will load from the file.  In the linker script, you
+specify the contents of these segments by placing allocatable output
+sections in the segments.  You use the <SAMP>`:<VAR>phdr</VAR>'</SAMP> output section
+attribute to place a section in a particular segment.  See section <A HREF="ld_3.html#SEC34">Output section phdr</A>.
+
+</P>
+<P>
+It is normal to put certain sections in more than one segment.  This
+merely implies that one segment of memory contains another.  You may
+repeat <SAMP>`:<VAR>phdr</VAR>'</SAMP>, using it once for each segment which should
+contain the section.
+
+</P>
+<P>
+If you place a section in one or more segments using <SAMP>`:<VAR>phdr</VAR>'</SAMP>,
+then the linker will place all subsequent allocatable sections which do
+not specify <SAMP>`:<VAR>phdr</VAR>'</SAMP> in the same segments.  This is for
+convenience, since generally a whole set of contiguous sections will be
+placed in a single segment.  You can use <CODE>:NONE</CODE> to override the
+default segment and tell the linker to not put the section in any
+segment at all.
+
+</P>
+<P>
+<A NAME="IDX317"></A>
+<A NAME="IDX318"></A>
+You may use the <CODE>FILEHDR</CODE> and <CODE>PHDRS</CODE> keywords appear after
+the program header type to further describe the contents of the segment.
+The <CODE>FILEHDR</CODE> keyword means that the segment should include the ELF
+file header.  The <CODE>PHDRS</CODE> keyword means that the segment should
+include the ELF program headers themselves.
+
+</P>
+<P>
+The <VAR>type</VAR> may be one of the following.  The numbers indicate the
+value of the keyword.
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>PT_NULL</CODE> (0)
+<DD>
+Indicates an unused program header.
+
+<DT><CODE>PT_LOAD</CODE> (1)
+<DD>
+Indicates that this program header describes a segment to be loaded from
+the file.
+
+<DT><CODE>PT_DYNAMIC</CODE> (2)
+<DD>
+Indicates a segment where dynamic linking information can be found.
+
+<DT><CODE>PT_INTERP</CODE> (3)
+<DD>
+Indicates a segment where the name of the program interpreter may be
+found.
+
+<DT><CODE>PT_NOTE</CODE> (4)
+<DD>
+Indicates a segment holding note information.
+
+<DT><CODE>PT_SHLIB</CODE> (5)
+<DD>
+A reserved program header type, defined but not specified by the ELF
+ABI.
+
+<DT><CODE>PT_PHDR</CODE> (6)
+<DD>
+Indicates a segment where the program headers may be found.
+
+<DT><VAR>expression</VAR>
+<DD>
+An expression giving the numeric type of the program header.  This may
+be used for types not defined above.
+</DL>
+
+<P>
+You can specify that a segment should be loaded at a particular address
+in memory by using an <CODE>AT</CODE> expression.  This is identical to the
+<CODE>AT</CODE> command used as an output section attribute (see section <A HREF="ld_3.html#SEC32">Output section LMA</A>).  The <CODE>AT</CODE> command for a program header overrides the
+output section attribute.
+
+</P>
+<P>
+The linker will normally set the segment flags based on the sections
+which comprise the segment.  You may use the <CODE>FLAGS</CODE> keyword to
+explicitly specify the segment flags.  The value of <VAR>flags</VAR> must be
+an integer.  It is used to set the <CODE>p_flags</CODE> field of the program
+header.
+
+</P>
+<P>
+Here is an example of <CODE>PHDRS</CODE>.  This shows a typical set of program
+headers used on a native ELF system.
+
+</P>
+
+<PRE>
+PHDRS
+{
+  headers PT_PHDR PHDRS ;
+  interp PT_INTERP ;
+  text PT_LOAD FILEHDR PHDRS ;
+  data PT_LOAD ;
+  dynamic PT_DYNAMIC ;
+}
+
+SECTIONS
+{
+  . = SIZEOF_HEADERS;
+  .interp : { *(.interp) } :text :interp
+  .text : { *(.text) } :text
+  .rodata : { *(.rodata) } /* defaults to :text */
+  ...
+  . = . + 0x1000; /* move to a new page in memory */
+  .data : { *(.data) } :data
+  .dynamic : { *(.dynamic) } :data :dynamic
+  ...
+}
+</PRE>
+
+
+
+<H2><A NAME="SEC39" HREF="ld_toc.html#TOC39">VERSION Command</A></H2>
+<P>
+<A NAME="IDX319"></A>
+<A NAME="IDX320"></A>
+<A NAME="IDX321"></A>
+<A NAME="IDX322"></A>
+The linker supports symbol versions when using ELF.  Symbol versions are
+only useful when using shared libraries.  The dynamic linker can use
+symbol versions to select a specific version of a function when it runs
+a program that may have been linked against an earlier version of the
+shared library.
+
+</P>
+<P>
+You can include a version script directly in the main linker script, or
+you can supply the version script as an implicit linker script.  You can
+also use the <SAMP>`--version-script'</SAMP> linker option.
+
+</P>
+<P>
+The syntax of the <CODE>VERSION</CODE> command is simply
+
+<PRE>
+VERSION { version-script-commands }
+</PRE>
+
+<P>
+The format of the version script commands is identical to that used by
+Sun's linker in Solaris 2.5.  The version script defines a tree of
+version nodes.  You specify the node names and interdependencies in the
+version script.  You can specify which symbols are bound to which
+version nodes, and you can reduce a specified set of symbols to local
+scope so that they are not globally visible outside of the shared
+library.
+
+</P>
+<P>
+The easiest way to demonstrate the version script language is with a few
+examples.
+
+</P>
+
+<PRE>
+VERS_1.1 {
+	 global:
+		 foo1;
+	 local:
+		 old*; 
+		 original*; 
+		 new*; 
+};
+
+VERS_1.2 {
+		 foo2;
+} VERS_1.1;
+
+VERS_2.0 {
+		 bar1; bar2;
+} VERS_1.2;
+</PRE>
+
+<P>
+This example version script defines three version nodes.  The first
+version node defined is <SAMP>`VERS_1.1'</SAMP>; it has no other dependencies.
+The script binds the symbol <SAMP>`foo1'</SAMP> to <SAMP>`VERS_1.1'</SAMP>.  It reduces
+a number of symbols to local scope so that they are not visible outside
+of the shared library.
+
+</P>
+<P>
+Next, the version script defines node <SAMP>`VERS_1.2'</SAMP>.  This node
+depends upon <SAMP>`VERS_1.1'</SAMP>.  The script binds the symbol <SAMP>`foo2'</SAMP>
+to the version node <SAMP>`VERS_1.2'</SAMP>.
+
+</P>
+<P>
+Finally, the version script defines node <SAMP>`VERS_2.0'</SAMP>.  This node
+depends upon <SAMP>`VERS_1.2'</SAMP>.  The scripts binds the symbols <SAMP>`bar1'</SAMP>
+and <SAMP>`bar2'</SAMP> are bound to the version node <SAMP>`VERS_2.0'</SAMP>.
+
+</P>
+<P>
+When the linker finds a symbol defined in a library which is not
+specifically bound to a version node, it will effectively bind it to an
+unspecified base version of the library.  You can bind all otherwise
+unspecified symbols to a given version node by using <SAMP>`global: *'</SAMP>
+somewhere in the version script.
+
+</P>
+<P>
+The names of the version nodes have no specific meaning other than what
+they might suggest to the person reading them.  The <SAMP>`2.0'</SAMP> version
+could just as well have appeared in between <SAMP>`1.1'</SAMP> and <SAMP>`1.2'</SAMP>.
+However, this would be a confusing way to write a version script.
+
+</P>
+<P>
+When you link an application against a shared library that has versioned
+symbols, the application itself knows which version of each symbol it
+requires, and it also knows which version nodes it needs from each
+shared library it is linked against.  Thus at runtime, the dynamic
+loader can make a quick check to make sure that the libraries you have
+linked against do in fact supply all of the version nodes that the
+application will need to resolve all of the dynamic symbols.  In this
+way it is possible for the dynamic linker to know with certainty that
+all external symbols that it needs will be resolvable without having to
+search for each symbol reference.
+
+</P>
+<P>
+The symbol versioning is in effect a much more sophisticated way of
+doing minor version checking that SunOS does.  The fundamental problem
+that is being addressed here is that typically references to external
+functions are bound on an as-needed basis, and are not all bound when
+the application starts up.  If a shared library is out of date, a
+required interface may be missing; when the application tries to use
+that interface, it may suddenly and unexpectedly fail.  With symbol
+versioning, the user will get a warning when they start their program if
+the libraries being used with the application are too old.
+
+</P>
+<P>
+There are several GNU extensions to Sun's versioning approach.  The
+first of these is the ability to bind a symbol to a version node in the
+source file where the symbol is defined instead of in the versioning
+script.  This was done mainly to reduce the burden on the library
+maintainer.  You can do this by putting something like:
+
+<PRE>
+__asm__(".symver original_foo,foo@VERS_1.1");
+</PRE>
+
+<P>
+in the C source file.  This renames the function <SAMP>`original_foo'</SAMP> to
+be an alias for <SAMP>`foo'</SAMP> bound to the version node <SAMP>`VERS_1.1'</SAMP>.
+The <SAMP>`local:'</SAMP> directive can be used to prevent the symbol
+<SAMP>`original_foo'</SAMP> from being exported.
+
+</P>
+<P>
+The second GNU extension is to allow multiple versions of the same
+function to appear in a given shared library.  In this way you can make
+an incompatible change to an interface without increasing the major
+version number of the shared library, while still allowing applications
+linked against the old interface to continue to function.
+
+</P>
+<P>
+To do this, you must use multiple <SAMP>`.symver'</SAMP> directives in the
+source file.  Here is an example:
+
+</P>
+
+<PRE>
+__asm__(".symver original_foo,foo@");
+__asm__(".symver old_foo,foo@VERS_1.1");
+__asm__(".symver old_foo1,foo@VERS_1.2");
+__asm__(".symver new_foo,foo@@VERS_2.0");
+</PRE>
+
+<P>
+In this example, <SAMP>`foo@'</SAMP> represents the symbol <SAMP>`foo'</SAMP> bound to the
+unspecified base version of the symbol.  The source file that contains this
+example would define 4 C functions: <SAMP>`original_foo'</SAMP>, <SAMP>`old_foo'</SAMP>,
+<SAMP>`old_foo1'</SAMP>, and <SAMP>`new_foo'</SAMP>.
+
+</P>
+<P>
+When you have multiple definitions of a given symbol, there needs to be
+some way to specify a default version to which external references to
+this symbol will be bound.  You can do this with the
+<SAMP>`foo@@VERS_2.0'</SAMP> type of <SAMP>`.symver'</SAMP> directive.  You can only
+declare one version of a symbol as the default in this manner; otherwise
+you would effectively have multiple definitions of the same symbol.
+
+</P>
+<P>
+If you wish to bind a reference to a specific version of the symbol
+within the shared library, you can use the aliases of convenience
+(i.e. <SAMP>`old_foo'</SAMP>), or you can use the <SAMP>`.symver'</SAMP> directive to
+specifically bind to an external version of the function in question.
+
+</P>
+
+
+<H2><A NAME="SEC40" HREF="ld_toc.html#TOC40">Expressions in Linker Scripts</A></H2>
+<P>
+<A NAME="IDX323"></A>
+<A NAME="IDX324"></A>
+The syntax for expressions in the linker script language is identical to
+that of C expressions.  All expressions are evaluated as integers.  All
+expressions are evaluated in the same size, which is 32 bits if both the
+host and target are 32 bits, and is otherwise 64 bits.
+
+</P>
+<P>
+You can use and set symbol values in expressions.
+
+</P>
+<P>
+The linker defines several special purpose builtin functions for use in
+expressions.
+
+</P>
+
+<UL>
+<LI><A HREF="ld_3.html#SEC41">Constants</A>: Constants
+<LI><A HREF="ld_3.html#SEC42">Symbols</A>: Symbol Names
+<LI><A HREF="ld_3.html#SEC43">Location Counter</A>: The Location Counter
+<LI><A HREF="ld_3.html#SEC44">Operators</A>: Operators
+<LI><A HREF="ld_3.html#SEC45">Evaluation</A>: Evaluation
+<LI><A HREF="ld_3.html#SEC46">Expression Section</A>: The Section of an Expression
+<LI><A HREF="ld_3.html#SEC47">Builtin Functions</A>: Builtin Functions
+</UL>
+
+
+
+<H3><A NAME="SEC41" HREF="ld_toc.html#TOC41">Constants</A></H3>
+<P>
+<A NAME="IDX325"></A>
+<A NAME="IDX326"></A>
+All constants are integers.
+
+</P>
+<P>
+As in C, the linker considers an integer beginning with <SAMP>`0'</SAMP> to be
+octal, and an integer beginning with <SAMP>`0x'</SAMP> or <SAMP>`0X'</SAMP> to be
+hexadecimal.  The linker considers other integers to be decimal.
+
+</P>
+<P>
+<A NAME="IDX327"></A>
+<A NAME="IDX328"></A>
+<A NAME="IDX329"></A>
+<A NAME="IDX330"></A>
+<A NAME="IDX331"></A>
+In addition, you can use the suffixes <CODE>K</CODE> and <CODE>M</CODE> to scale a
+constant by
+respectively. For example, the following all refer to the same quantity:
+
+<PRE>
+  _fourk_1 = 4K;
+  _fourk_2 = 4096;
+  _fourk_3 = 0x1000;
+</PRE>
+
+
+
+<H3><A NAME="SEC42" HREF="ld_toc.html#TOC42">Symbol Names</A></H3>
+<P>
+<A NAME="IDX332"></A>
+<A NAME="IDX333"></A>
+<A NAME="IDX334"></A>
+<A NAME="IDX335"></A>
+Unless quoted, symbol names start with a letter, underscore, or period
+and may include letters, digits, underscores, periods, and hyphens.
+Unquoted symbol names must not conflict with any keywords.  You can
+specify a symbol which contains odd characters or has the same name as a
+keyword by surrounding the symbol name in double quotes:
+
+<PRE>
+  "SECTION" = 9;
+  "with a space" = "also with a space" + 10;
+</PRE>
+
+<P>
+Since symbols can contain many non-alphabetic characters, it is safest
+to delimit symbols with spaces.  For example, <SAMP>`A-B'</SAMP> is one symbol,
+whereas <SAMP>`A - B'</SAMP> is an expression involving subtraction.
+
+</P>
+
+
+<H3><A NAME="SEC43" HREF="ld_toc.html#TOC43">The Location Counter</A></H3>
+<P>
+<A NAME="IDX336"></A>
+<A NAME="IDX337"></A>
+<A NAME="IDX338"></A>
+<A NAME="IDX339"></A>
+The special linker variable <STRONG>dot</STRONG> <SAMP>`.'</SAMP> always contains the
+current output location counter.  Since the <CODE>.</CODE> always refers to a
+location in an output section, it may only appear in an expression
+within a <CODE>SECTIONS</CODE> command.  The <CODE>.</CODE> symbol may appear
+anywhere that an ordinary symbol is allowed in an expression.
+
+</P>
+<P>
+<A NAME="IDX340"></A>
+Assigning a value to <CODE>.</CODE> will cause the location counter to be
+moved.  This may be used to create holes in the output section.  The
+location counter may never be moved backwards.
+
+</P>
+
+<PRE>
+SECTIONS
+{
+  output :
+    {
+      file1(.text)
+      . = . + 1000;
+      file2(.text)
+      . += 1000;
+      file3(.text)
+    } = 0x1234;
+}
+</PRE>
+
+<P>
+In the previous example, the <SAMP>`.text'</SAMP> section from <TT>`file1'</TT> is
+located at the beginning of the output section <SAMP>`output'</SAMP>.  It is
+followed by a 1000 byte gap.  Then the <SAMP>`.text'</SAMP> section from
+<TT>`file2'</TT> appears, also with a 1000 byte gap following before the
+<SAMP>`.text'</SAMP> section from <TT>`file3'</TT>.  The notation <SAMP>`= 0x1234'</SAMP>
+specifies what data to write in the gaps (see section <A HREF="ld_3.html#SEC35">Output section fill</A>).
+
+</P>
+
+
+<H3><A NAME="SEC44" HREF="ld_toc.html#TOC44">Operators</A></H3>
+<P>
+<A NAME="IDX341"></A>
+<A NAME="IDX342"></A>
+<A NAME="IDX343"></A>
+The linker recognizes the standard C set of arithmetic operators, with
+the standard bindings and precedence levels:
+{
+@obeylines@parskip=0pt@parindent=0pt
+@dag@quad Prefix operators.
+@ddag@quad See section <A HREF="ld_3.html#SEC14">Assigning Values to Symbols</A>.
+}
+
+</P>
+
+
+<H3><A NAME="SEC45" HREF="ld_toc.html#TOC45">Evaluation</A></H3>
+<P>
+<A NAME="IDX344"></A>
+<A NAME="IDX345"></A>
+The linker evaluates expressions lazily.  It only computes the value of
+an expression when absolutely necessary.
+
+</P>
+<P>
+The linker needs some information, such as the value of the start
+address of the first section, and the origins and lengths of memory
+regions, in order to do any linking at all.  These values are computed
+as soon as possible when the linker reads in the linker script.
+
+</P>
+<P>
+However, other values (such as symbol values) are not known or needed
+until after storage allocation.  Such values are evaluated later, when
+other information (such as the sizes of output sections) is available
+for use in the symbol assignment expression.
+
+</P>
+<P>
+The sizes of sections cannot be known until after allocation, so
+assignments dependent upon these are not performed until after
+allocation.
+
+</P>
+<P>
+Some expressions, such as those depending upon the location counter
+<SAMP>`.'</SAMP>, must be evaluated during section allocation.
+
+</P>
+<P>
+If the result of an expression is required, but the value is not
+available, then an error results.  For example, a script like the
+following
+
+<PRE>
+SECTIONS
+  {
+    .text 9+this_isnt_constant : 
+      { *(.text) }
+  }
+</PRE>
+
+<P>
+will cause the error message <SAMP>`non constant expression for initial
+address'</SAMP>.
+
+</P>
+
+
+<H3><A NAME="SEC46" HREF="ld_toc.html#TOC46">The Section of an Expression</A></H3>
+<P>
+<A NAME="IDX346"></A>
+<A NAME="IDX347"></A>
+<A NAME="IDX348"></A>
+<A NAME="IDX349"></A>
+<A NAME="IDX350"></A>
+<A NAME="IDX351"></A>
+When the linker evaluates an expression, the result is either absolute
+or relative to some section.  A relative expression is expressed as a
+fixed offset from the base of a section.
+
+</P>
+<P>
+The position of the expression within the linker script determines
+whether it is absolute or relative.  An expression which appears within
+an output section definition is relative to the base of the output
+section.  An expression which appears elsewhere will be absolute.
+
+</P>
+<P>
+A symbol set to a relative expression will be relocatable if you request
+relocatable output using the <SAMP>`-r'</SAMP> option.  That means that a
+further link operation may change the value of the symbol.  The symbol's
+section will be the section of the relative expression.
+
+</P>
+<P>
+A symbol set to an absolute expression will retain the same value
+through any further link operation.  The symbol will be absolute, and
+will not have any particular associated section.
+
+</P>
+<P>
+You can use the builtin function <CODE>ABSOLUTE</CODE> to force an expression
+to be absolute when it would otherwise be relative.  For example, to
+create an absolute symbol set to the address of the end of the output
+section <SAMP>`.data'</SAMP>:
+
+<PRE>
+SECTIONS
+  {
+    .data : { *(.data) _edata = ABSOLUTE(.); }
+  }
+</PRE>
+
+<P>
+If <SAMP>`ABSOLUTE'</SAMP> were not used, <SAMP>`_edata'</SAMP> would be relative to the
+<SAMP>`.data'</SAMP> section.
+
+</P>
+
+
+<H3><A NAME="SEC47" HREF="ld_toc.html#TOC47">Builtin Functions</A></H3>
+<P>
+<A NAME="IDX352"></A>
+The linker script language includes a number of builtin functions for
+use in linker script expressions.
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>ABSOLUTE(<VAR>exp</VAR>)</CODE>
+<DD>
+<A NAME="IDX353"></A>
+<A NAME="IDX354"></A>
+Return the absolute (non-relocatable, as opposed to non-negative) value
+of the expression <VAR>exp</VAR>.  Primarily useful to assign an absolute
+value to a symbol within a section definition, where symbol values are
+normally section relative.  See section <A HREF="ld_3.html#SEC46">The Section of an Expression</A>.
+
+<DT><CODE>ADDR(<VAR>section</VAR>)</CODE>
+<DD>
+<A NAME="IDX355"></A>
+<A NAME="IDX356"></A>
+Return the absolute address (the VMA) of the named <VAR>section</VAR>.  Your
+script must previously have defined the location of that section.  In
+the following example, <CODE>symbol_1</CODE> and <CODE>symbol_2</CODE> are assigned
+identical values:
+
+<PRE>
+SECTIONS { ...
+  .output1 :
+    { 
+    start_of_output_1 = ABSOLUTE(.);
+    ...
+    }
+  .output :
+    {
+    symbol_1 = ADDR(.output1);
+    symbol_2 = start_of_output_1;
+    }
+... }
+</PRE>
+
+<DT><CODE>ALIGN(<VAR>exp</VAR>)</CODE>
+<DD>
+<A NAME="IDX357"></A>
+<A NAME="IDX358"></A>
+<A NAME="IDX359"></A>
+Return the location counter (<CODE>.</CODE>) aligned to the next <VAR>exp</VAR>
+boundary.  <VAR>exp</VAR> must be an expression whose value is a power of
+two.  This is equivalent to
+
+<PRE>
+(. + <VAR>exp</VAR> - 1) &#38; ~(<VAR>exp</VAR> - 1)
+</PRE>
+
+<CODE>ALIGN</CODE> doesn't change the value of the location counter--it just
+does arithmetic on it.  Here is an example which aligns the output
+<CODE>.data</CODE> section to the next <CODE>0x2000</CODE> byte boundary after the
+preceding section and sets a variable within the section to the next
+<CODE>0x8000</CODE> boundary after the input sections:
+
+<PRE>
+SECTIONS { ...
+  .data ALIGN(0x2000): {
+    *(.data)
+    variable = ALIGN(0x8000);
+  }
+... }
+</PRE>
+
+The first use of <CODE>ALIGN</CODE> in this example specifies the location of
+a section because it is used as the optional <VAR>address</VAR> attribute of
+a section definition (see section <A HREF="ld_3.html#SEC20">Output section address</A>).  The second use
+of <CODE>ALIGN</CODE> is used to defines the value of a symbol.
+
+The builtin function <CODE>NEXT</CODE> is closely related to <CODE>ALIGN</CODE>.
+
+<DT><CODE>BLOCK(<VAR>exp</VAR>)</CODE>
+<DD>
+<A NAME="IDX360"></A>
+This is a synonym for <CODE>ALIGN</CODE>, for compatibility with older linker
+scripts.  It is most often seen when setting the address of an output
+section.
+
+<DT><CODE>DEFINED(<VAR>symbol</VAR>)</CODE>
+<DD>
+<A NAME="IDX361"></A>
+<A NAME="IDX362"></A>
+Return 1 if <VAR>symbol</VAR> is in the linker global symbol table and is
+defined, otherwise return 0.  You can use this function to provide
+default values for symbols.  For example, the following script fragment
+shows how to set a global symbol <SAMP>`begin'</SAMP> to the first location in
+the <SAMP>`.text'</SAMP> section--but if a symbol called <SAMP>`begin'</SAMP> already
+existed, its value is preserved:
+
+
+<PRE>
+SECTIONS { ...
+  .text : {
+    begin = DEFINED(begin) ? begin : . ;
+    ...
+  }
+  ...
+}
+</PRE>
+
+<DT><CODE>LOADADDR(<VAR>section</VAR>)</CODE>
+<DD>
+<A NAME="IDX363"></A>
+<A NAME="IDX364"></A>
+Return the absolute LMA of the named <VAR>section</VAR>.  This is normally
+the same as <CODE>ADDR</CODE>, but it may be different if the <CODE>AT</CODE>
+attribute is used in the output section definition (see section <A HREF="ld_3.html#SEC32">Output section LMA</A>).
+
+<A NAME="IDX365"></A>
+<DT><CODE>MAX(<VAR>exp1</VAR>, <VAR>exp2</VAR>)</CODE>
+<DD>
+Returns the maximum of <VAR>exp1</VAR> and <VAR>exp2</VAR>.
+
+<A NAME="IDX366"></A>
+<DT><CODE>MIN(<VAR>exp1</VAR>, <VAR>exp2</VAR>)</CODE>
+<DD>
+Returns the minimum of <VAR>exp1</VAR> and <VAR>exp2</VAR>.
+
+<DT><CODE>NEXT(<VAR>exp</VAR>)</CODE>
+<DD>
+<A NAME="IDX367"></A>
+<A NAME="IDX368"></A>
+Return the next unallocated address that is a multiple of <VAR>exp</VAR>.
+This function is closely related to <CODE>ALIGN(<VAR>exp</VAR>)</CODE>; unless you
+use the <CODE>MEMORY</CODE> command to define discontinuous memory for the
+output file, the two functions are equivalent.
+
+<DT><CODE>SIZEOF(<VAR>section</VAR>)</CODE>
+<DD>
+<A NAME="IDX369"></A>
+<A NAME="IDX370"></A>
+Return the size in bytes of the named <VAR>section</VAR>, if that section has
+been allocated.  If the section has not been allocated when this is
+evaluated, the linker will report an error.  In the following example,
+<CODE>symbol_1</CODE> and <CODE>symbol_2</CODE> are assigned identical values:
+
+<PRE>
+SECTIONS{ ...
+  .output {
+    .start = . ;
+    ...
+    .end = . ;
+    }
+  symbol_1 = .end - .start ;
+  symbol_2 = SIZEOF(.output);
+... }
+</PRE>
+
+<DT><CODE>SIZEOF_HEADERS</CODE>
+<DD>
+<DT><CODE>sizeof_headers</CODE>
+<DD>
+<A NAME="IDX371"></A>
+<A NAME="IDX372"></A>
+Return the size in bytes of the output file's headers.  This is
+information which appears at the start of the output file.  You can use
+this number when setting the start address of the first section, if you
+choose, to facilitate paging.
+
+<A NAME="IDX373"></A>
+<A NAME="IDX374"></A>
+When producing an ELF output file, if the linker script uses the
+<CODE>SIZEOF_HEADERS</CODE> builtin function, the linker must compute the
+number of program headers before it has determined all the section
+addresses and sizes.  If the linker later discovers that it needs
+additional program headers, it will report an error <SAMP>`not enough
+room for program headers'</SAMP>.  To avoid this error, you must avoid using
+the <CODE>SIZEOF_HEADERS</CODE> function, or you must rework your linker
+script to avoid forcing the linker to use additional program headers, or
+you must define the program headers yourself using the <CODE>PHDRS</CODE>
+command (see section <A HREF="ld_3.html#SEC38">PHDRS Command</A>).
+</DL>
+
+
+
+<H2><A NAME="SEC48" HREF="ld_toc.html#TOC48">Implicit Linker Scripts</A></H2>
+<P>
+<A NAME="IDX375"></A>
+If you specify a linker input file which the linker can not recognize as
+an object file or an archive file, it will try to read the file as a
+linker script.  If the file can not be parsed as a linker script, the
+linker will report an error.
+
+</P>
+<P>
+An implicit linker script will not replace the default linker script.
+
+</P>
+<P>
+Typically an implicit linker script would contain only symbol
+assignments, or the <CODE>INPUT</CODE>, <CODE>GROUP</CODE>, or <CODE>VERSION</CODE>
+commands.
+
+</P>
+<P>
+Any input files read because of an implicit linker script will be read
+at the position in the command line where the implicit linker script was
+read.  This can affect archive searching.
+
+</P>
+<P><HR><P>
+<p>Go to the <A HREF="ld_1.html">first</A>, <A HREF="ld_2.html">previous</A>, <A HREF="ld_4.html">next</A>, <A HREF="ld_8.html">last</A> section, <A HREF="ld_toc.html">table of contents</A>.
+</BODY>
+</HTML>

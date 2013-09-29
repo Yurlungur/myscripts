@@ -1,0 +1,411 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.54
+     from ../../../gas/doc/as.texinfo on 16 March 1999 -->
+
+<TITLE>Using as - H8/300 Dependent Features</TITLE>
+<link href="as_15.html" rel=Next>
+<link href="as_13.html" rel=Previous>
+<link href="as_toc.html" rel=ToC>
+
+</HEAD>
+<BODY>
+<p>Go to the <A HREF="as_1.html">first</A>, <A HREF="as_13.html">previous</A>, <A HREF="as_15.html">next</A>, <A HREF="as_28.html">last</A> section, <A HREF="as_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC189" HREF="as_toc.html#TOC189">H8/300 Dependent Features</A></H1>
+
+<P>
+<A NAME="IDX561"></A>
+
+<UL>
+<LI><A HREF="as_14.html#SEC190">H8/300 Options</A>: Options
+<LI><A HREF="as_14.html#SEC191">H8/300 Syntax</A>: Syntax
+<LI><A HREF="as_14.html#SEC195">H8/300 Floating Point</A>: Floating Point
+<LI><A HREF="as_14.html#SEC196">H8/300 Directives</A>: H8/300 Machine Directives
+<LI><A HREF="as_14.html#SEC197">H8/300 Opcodes</A>: Opcodes
+</UL>
+
+
+
+<H2><A NAME="SEC190" HREF="as_toc.html#TOC190">Options</A></H2>
+
+<P>
+<A NAME="IDX562"></A>
+<A NAME="IDX563"></A>
+<CODE>as</CODE> has no additional command-line options for the Hitachi
+H8/300 family.
+
+</P>
+
+
+<H2><A NAME="SEC191" HREF="as_toc.html#TOC191">Syntax</A></H2>
+
+<UL>
+<LI><A HREF="as_14.html#SEC192">H8/300-Chars</A>: Special Characters
+<LI><A HREF="as_14.html#SEC193">H8/300-Regs</A>: Register Names
+<LI><A HREF="as_14.html#SEC194">H8/300-Addressing</A>: Addressing Modes
+</UL>
+
+
+
+<H3><A NAME="SEC192" HREF="as_toc.html#TOC192">Special Characters</A></H3>
+
+<P>
+<A NAME="IDX564"></A>
+<A NAME="IDX565"></A>
+<SAMP>`;'</SAMP> is the line comment character.
+
+</P>
+<P>
+<A NAME="IDX566"></A>
+<A NAME="IDX567"></A>
+<A NAME="IDX568"></A>
+<SAMP>`$'</SAMP> can be used instead of a newline to separate statements.
+Therefore <EM>you may not use <SAMP>`$'</SAMP> in symbol names</EM> on the H8/300.
+
+</P>
+
+
+<H3><A NAME="SEC193" HREF="as_toc.html#TOC193">Register Names</A></H3>
+
+<P>
+<A NAME="IDX569"></A>
+<A NAME="IDX570"></A>
+You can use predefined symbols of the form <SAMP>`r<VAR>n</VAR>h'</SAMP> and
+<SAMP>`r<VAR>n</VAR>l'</SAMP> to refer to the H8/300 registers as sixteen 8-bit
+general-purpose registers.  <VAR>n</VAR> is a digit from <SAMP>`0'</SAMP> to
+<SAMP>`7'</SAMP>); for instance, both <SAMP>`r0h'</SAMP> and <SAMP>`r7l'</SAMP> are valid
+register names.
+
+</P>
+<P>
+You can also use the eight predefined symbols <SAMP>`r<VAR>n</VAR>'</SAMP> to refer
+to the H8/300 registers as 16-bit registers (you must use this form for
+addressing).
+
+</P>
+<P>
+On the H8/300H, you can also use the eight predefined symbols
+<SAMP>`er<VAR>n</VAR>'</SAMP> (<SAMP>`er0'</SAMP> ... <SAMP>`er7'</SAMP>) to refer to the 32-bit
+general purpose registers.
+
+</P>
+<P>
+The two control registers are called <CODE>pc</CODE> (program counter; a
+16-bit register, except on the H8/300H where it is 24 bits) and
+<CODE>ccr</CODE> (condition code register; an 8-bit register).  <CODE>r7</CODE> is
+used as the stack pointer, and can also be called <CODE>sp</CODE>.
+
+</P>
+
+
+<H3><A NAME="SEC194" HREF="as_toc.html#TOC194">Addressing Modes</A></H3>
+
+<P>
+<A NAME="IDX571"></A>
+<A NAME="IDX572"></A>
+as understands the following addressing modes for the H8/300:
+<DL COMPACT>
+
+<DT><CODE>r<VAR>n</VAR></CODE>
+<DD>
+Register direct
+
+<DT><CODE>@r<VAR>n</VAR></CODE>
+<DD>
+Register indirect
+
+<DT><CODE>@(<VAR>d</VAR>, r<VAR>n</VAR>)</CODE>
+<DD>
+<DT><CODE>@(<VAR>d</VAR>:16, r<VAR>n</VAR>)</CODE>
+<DD>
+<DT><CODE>@(<VAR>d</VAR>:24, r<VAR>n</VAR>)</CODE>
+<DD>
+Register indirect: 16-bit or 24-bit displacement <VAR>d</VAR> from register
+<VAR>n</VAR>.  (24-bit displacements are only meaningful on the H8/300H.)
+
+<DT><CODE>@r<VAR>n</VAR>+</CODE>
+<DD>
+Register indirect with post-increment
+
+<DT><CODE>@-r<VAR>n</VAR></CODE>
+<DD>
+Register indirect with pre-decrement
+
+<DT><CODE><CODE>@</CODE><VAR>aa</VAR></CODE>
+<DD>
+<DT><CODE><CODE>@</CODE><VAR>aa</VAR>:8</CODE>
+<DD>
+<DT><CODE><CODE>@</CODE><VAR>aa</VAR>:16</CODE>
+<DD>
+<DT><CODE><CODE>@</CODE><VAR>aa</VAR>:24</CODE>
+<DD>
+Absolute address <CODE>aa</CODE>.  (The address size <SAMP>`:24'</SAMP> only makes
+sense on the H8/300H.)
+
+<DT><CODE>#<VAR>xx</VAR></CODE>
+<DD>
+<DT><CODE>#<VAR>xx</VAR>:8</CODE>
+<DD>
+<DT><CODE>#<VAR>xx</VAR>:16</CODE>
+<DD>
+<DT><CODE>#<VAR>xx</VAR>:32</CODE>
+<DD>
+Immediate data <VAR>xx</VAR>.  You may specify the <SAMP>`:8'</SAMP>, <SAMP>`:16'</SAMP>, or
+<SAMP>`:32'</SAMP> for clarity, if you wish; but <CODE>as</CODE> neither
+requires this nor uses it--the data size required is taken from
+context.
+
+<DT><CODE><CODE>@</CODE><CODE>@</CODE><VAR>aa</VAR></CODE>
+<DD>
+<DT><CODE><CODE>@</CODE><CODE>@</CODE><VAR>aa</VAR>:8</CODE>
+<DD>
+Memory indirect.  You may specify the <SAMP>`:8'</SAMP> for clarity, if you
+wish; but <CODE>as</CODE> neither requires this nor uses it.
+</DL>
+
+
+
+<H2><A NAME="SEC195" HREF="as_toc.html#TOC195">Floating Point</A></H2>
+
+<P>
+<A NAME="IDX573"></A>
+<A NAME="IDX574"></A>
+The H8/300 family has no hardware floating point, but the <CODE>.float</CODE>
+directive generates IEEE floating-point numbers for compatibility
+with other development tools.
+
+</P>
+
+
+<H2><A NAME="SEC196" HREF="as_toc.html#TOC196">H8/300 Machine Directives</A></H2>
+
+<P>
+<A NAME="IDX575"></A>
+<A NAME="IDX576"></A>
+<A NAME="IDX577"></A>
+<A NAME="IDX578"></A>
+<CODE>as</CODE> has only one machine-dependent directive for the
+H8/300:
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>.h8300h</CODE>
+<DD>
+<A NAME="IDX579"></A>
+ 
+Recognize and emit additional instructions for the H8/300H variant, and
+also make <CODE>.int</CODE> emit 32-bit numbers rather than the usual (16-bit)
+for the H8/300 family.
+</DL>
+
+<P>
+On the H8/300 family (including the H8/300H) <SAMP>`.word'</SAMP> directives
+generate 16-bit numbers.
+
+</P>
+
+
+<H2><A NAME="SEC197" HREF="as_toc.html#TOC197">Opcodes</A></H2>
+
+<P>
+<A NAME="IDX580"></A>
+<A NAME="IDX581"></A>
+<A NAME="IDX582"></A>
+<A NAME="IDX583"></A>
+For detailed information on the H8/300 machine instruction set, see
+<CITE>H8/300 Series Programming Manual</CITE> (Hitachi ADE--602--025).  For
+information specific to the H8/300H, see <CITE>H8/300H Series
+Programming Manual</CITE> (Hitachi).
+
+</P>
+<P>
+<CODE>as</CODE> implements all the standard H8/300 opcodes.  No additional
+pseudo-instructions are needed on this family.
+
+</P>
+
+<P>
+The following table summarizes the H8/300 opcodes, and their arguments.
+Entries marked <SAMP>`*'</SAMP> are opcodes used only on the H8/300H.
+
+</P>
+
+<PRE>
+         <I>Legend:</I>
+            Rs   source register
+            Rd   destination register
+            abs  absolute address
+            imm  immediate data
+         disp:N  N-bit displacement from a register
+        pcrel:N  N-bit displacement relative to program counter
+
+   add.b #imm,rd              *  andc #imm,ccr
+   add.b rs,rd                   band #imm,rd
+   add.w rs,rd                   band #imm,@rd
+*  add.w #imm,rd                 band #imm,@abs:8
+*  add.l rs,rd                   bra  pcrel:8
+*  add.l #imm,rd              *  bra  pcrel:16
+   adds #imm,rd                  bt   pcrel:8
+   addx #imm,rd               *  bt   pcrel:16
+   addx rs,rd                    brn  pcrel:8
+   and.b #imm,rd              *  brn  pcrel:16
+   and.b rs,rd                   bf   pcrel:8
+*  and.w rs,rd                *  bf   pcrel:16
+*  and.w #imm,rd                 bhi  pcrel:8
+*  and.l #imm,rd              *  bhi  pcrel:16
+*  and.l rs,rd                   bls  pcrel:8
+*  bls  pcrel:16                 bld  #imm,rd
+   bcc  pcrel:8                  bld  #imm,@rd
+*  bcc  pcrel:16                 bld  #imm,@abs:8
+   bhs  pcrel:8                  bnot #imm,rd
+*  bhs  pcrel:16                 bnot #imm,@rd
+   bcs  pcrel:8                  bnot #imm,@abs:8
+*  bcs  pcrel:16                 bnot rs,rd
+   blo  pcrel:8                  bnot rs,@rd
+*  blo  pcrel:16                 bnot rs,@abs:8
+   bne  pcrel:8                  bor  #imm,rd
+*  bne  pcrel:16                 bor  #imm,@rd
+   beq  pcrel:8                  bor  #imm,@abs:8
+*  beq  pcrel:16                 bset #imm,rd
+   bvc  pcrel:8                  bset #imm,@rd
+*  bvc  pcrel:16                 bset #imm,@abs:8
+   bvs  pcrel:8                  bset rs,rd
+*  bvs  pcrel:16                 bset rs,@rd
+   bpl  pcrel:8                  bset rs,@abs:8
+*  bpl  pcrel:16                 bsr  pcrel:8
+   bmi  pcrel:8                  bsr  pcrel:16
+*  bmi  pcrel:16                 bst  #imm,rd
+   bge  pcrel:8                  bst  #imm,@rd
+*  bge  pcrel:16                 bst  #imm,@abs:8
+   blt  pcrel:8                  btst #imm,rd
+*  blt  pcrel:16                 btst #imm,@rd
+   bgt  pcrel:8                  btst #imm,@abs:8
+*  bgt  pcrel:16                 btst rs,rd
+   ble  pcrel:8                  btst rs,@rd
+*  ble  pcrel:16                 btst rs,@abs:8
+   bclr #imm,rd                  bxor #imm,rd
+   bclr #imm,@rd                 bxor #imm,@rd
+   bclr #imm,@abs:8              bxor #imm,@abs:8
+   bclr rs,rd                    cmp.b #imm,rd
+   bclr rs,@rd                   cmp.b rs,rd
+   bclr rs,@abs:8                cmp.w rs,rd
+   biand #imm,rd                 cmp.w rs,rd
+   biand #imm,@rd             *  cmp.w #imm,rd
+   biand #imm,@abs:8          *  cmp.l #imm,rd
+   bild #imm,rd               *  cmp.l rs,rd
+   bild #imm,@rd                 daa  rs
+   bild #imm,@abs:8              das  rs
+   bior #imm,rd                  dec.b rs
+   bior #imm,@rd              *  dec.w #imm,rd
+   bior #imm,@abs:8           *  dec.l #imm,rd
+   bist #imm,rd                  divxu.b rs,rd
+   bist #imm,@rd              *  divxu.w rs,rd
+   bist #imm,@abs:8           *  divxs.b rs,rd
+   bixor #imm,rd              *  divxs.w rs,rd
+   bixor #imm,@rd                eepmov
+   bixor #imm,@abs:8          *  eepmovw
+*  exts.w rd                     mov.w rs,@abs:16
+*  exts.l rd                  *  mov.l #imm,rd
+*  extu.w rd                  *  mov.l rs,rd
+*  extu.l rd                  *  mov.l @rs,rd
+   inc  rs                    *  mov.l @(disp:16,rs),rd
+*  inc.w #imm,rd              *  mov.l @(disp:24,rs),rd
+*  inc.l #imm,rd              *  mov.l @rs+,rd
+   jmp  @rs                   *  mov.l @abs:16,rd
+   jmp  abs                   *  mov.l @abs:24,rd
+   jmp  @@abs:8               *  mov.l rs,@rd
+   jsr  @rs                   *  mov.l rs,@(disp:16,rd)
+   jsr  abs                   *  mov.l rs,@(disp:24,rd)
+   jsr  @@abs:8               *  mov.l rs,@-rd
+   ldc  #imm,ccr              *  mov.l rs,@abs:16
+   ldc  rs,ccr                *  mov.l rs,@abs:24
+*  ldc  @abs:16,ccr              movfpe @abs:16,rd
+*  ldc  @abs:24,ccr              movtpe rs,@abs:16
+*  ldc  @(disp:16,rs),ccr        mulxu.b rs,rd
+*  ldc  @(disp:24,rs),ccr     *  mulxu.w rs,rd
+*  ldc  @rs+,ccr              *  mulxs.b rs,rd
+*  ldc  @rs,ccr               *  mulxs.w rs,rd
+*  mov.b @(disp:24,rs),rd        neg.b rs
+*  mov.b rs,@(disp:24,rd)     *  neg.w rs
+   mov.b @abs:16,rd           *  neg.l rs
+   mov.b rs,rd                   nop
+   mov.b @abs:8,rd               not.b rs
+   mov.b rs,@abs:8            *  not.w rs
+   mov.b rs,rd                *  not.l rs
+   mov.b #imm,rd                 or.b #imm,rd
+   mov.b @rs,rd                  or.b rs,rd
+   mov.b @(disp:16,rs),rd     *  or.w #imm,rd
+   mov.b @rs+,rd              *  or.w rs,rd
+   mov.b @abs:8,rd            *  or.l #imm,rd
+   mov.b rs,@rd               *  or.l rs,rd
+   mov.b rs,@(disp:16,rd)        orc  #imm,ccr
+   mov.b rs,@-rd                 pop.w rs
+   mov.b rs,@abs:8            *  pop.l rs
+   mov.w rs,@rd                  push.w rs
+*  mov.w @(disp:24,rs),rd     *  push.l rs
+*  mov.w rs,@(disp:24,rd)        rotl.b rs
+*  mov.w @abs:24,rd           *  rotl.w rs
+*  mov.w rs,@abs:24           *  rotl.l rs
+   mov.w rs,rd                   rotr.b rs
+   mov.w #imm,rd              *  rotr.w rs
+   mov.w @rs,rd               *  rotr.l rs
+   mov.w @(disp:16,rs),rd        rotxl.b rs
+   mov.w @rs+,rd              *  rotxl.w rs
+   mov.w @abs:16,rd           *  rotxl.l rs
+   mov.w rs,@(disp:16,rd)        rotxr.b rs
+   mov.w rs,@-rd              *  rotxr.w rs
+*  rotxr.l rs                 *  stc  ccr,@(disp:24,rd)
+   bpt                        *  stc  ccr,@-rd
+   rte                        *  stc  ccr,@abs:16
+   rts                        *  stc  ccr,@abs:24
+   shal.b rs                     sub.b rs,rd
+*  shal.w rs                     sub.w rs,rd
+*  shal.l rs                  *  sub.w #imm,rd
+   shar.b rs                  *  sub.l rs,rd
+*  shar.w rs                  *  sub.l #imm,rd
+*  shar.l rs                     subs #imm,rd
+   shll.b rs                     subx #imm,rd
+*  shll.w rs                     subx rs,rd
+*  shll.l rs                  *  trapa #imm
+   shlr.b rs                     xor  #imm,rd
+*  shlr.w rs                     xor  rs,rd
+*  shlr.l rs                  *  xor.w #imm,rd
+   sleep                      *  xor.w rs,rd
+   stc  ccr,rd                *  xor.l #imm,rd
+*  stc  ccr,@rs               *  xor.l rs,rd
+*  stc  ccr,@(disp:16,rd)        xorc #imm,ccr
+</PRE>
+
+<P>
+<A NAME="IDX584"></A>
+<A NAME="IDX585"></A>
+Four H8/300 instructions (<CODE>add</CODE>, <CODE>cmp</CODE>, <CODE>mov</CODE>,
+<CODE>sub</CODE>) are defined with variants using the suffixes <SAMP>`.b'</SAMP>,
+<SAMP>`.w'</SAMP>, and <SAMP>`.l'</SAMP> to specify the size of a memory operand.
+<CODE>as</CODE> supports these suffixes, but does not require them;
+since one of the operands is always a register, <CODE>as</CODE> can
+deduce the correct size.
+
+</P>
+<P>
+For example, since <CODE>r0</CODE> refers to a 16-bit register,
+
+<PRE>
+mov    r0,@foo
+is equivalent to
+mov.w  r0,@foo
+</PRE>
+
+<P>
+If you use the size suffixes, <CODE>as</CODE> issues a warning when
+the suffix and the register size do not match.
+
+</P>
+<P><HR><P>
+<p>Go to the <A HREF="as_1.html">first</A>, <A HREF="as_13.html">previous</A>, <A HREF="as_15.html">next</A>, <A HREF="as_28.html">last</A> section, <A HREF="as_toc.html">table of contents</A>.
+</BODY>
+</HTML>

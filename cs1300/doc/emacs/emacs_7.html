@@ -1,0 +1,123 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Entering and Exiting Emacs</TITLE>
+<P>Go to the <A HREF="emacs_6.html">previous</A>, <A HREF="emacs_8.html">next</A> section.<P>
+<A NAME="IDX33"></A>
+<A NAME="IDX34"></A>
+<H1><A NAME="SEC17" HREF="emacs_toc.html#SEC17">Entering and Exiting Emacs</A></H1>
+<P>
+  The usual way to invoke Emacs is with the shell command <SAMP>`emacs'</SAMP>.
+Emacs clears the screen and then displays an initial help message and
+copyright notice.  On a window system, Emacs opens a window of its own.
+You can begin typing Emacs commands immediately afterward.
+<P>
+  Some operating systems insist on discarding all type-ahead when Emacs
+starts up; they give Emacs no way to prevent this.  Therefore, it is
+wise to wait until Emacs clears the screen before typing your first
+editing command.
+<P>
+  If you run Emacs from a shell window under the X Window System, run it
+in the background with <SAMP>`emacs&#38;'</SAMP>.  This way, Emacs does not tie up
+the shell window, so you can use it to run other shell commands while
+Emacs operates its own X windows.
+<A NAME="IDX35"></A>
+<P>
+  When Emacs starts up, it makes a buffer named <SAMP>`*scratch*'</SAMP>.
+That's the buffer you start out in.  The <SAMP>`*scratch*'</SAMP> uses Lisp
+Interaction mode; you can use it to type Lisp expressions and evaluate
+them, or you can ignore that capability and simply doodle.  (You can
+specify a different major mode for this buffer by setting the variable
+<CODE>initial-major-mode</CODE> in your init file.  See section <A HREF="emacs_35.html#SEC356">The Init File, <TT>`~/.emacs'</TT></A>.)
+<P>
+  It is also possible to specify files to be visited, Lisp files to be
+loaded, and functions to be called, by giving Emacs arguments in the
+shell command line.  See section <A HREF="emacs_37.html#SEC377">Command Line Options and Arguments</A>.  But we don't recommend
+doing this.  The feature exists mainly for compatibility with other
+editors.
+<P>
+  Many other editors are designed to be started afresh each time you
+want to edit.  You edit one file and then exit the editor.  The next
+time you want to edit either another file or the same one, you must run
+the editor again.  With these editors, it makes sense to use a command
+line argument to say which file to edit.
+<P>
+  But starting a new Emacs each time you want to edit a different file
+does not make sense.  For one thing, this would be annoyingly slow.  For
+another, this would fail to take advantage of Emacs's ability to visit
+more than one file in a single editing session.
+<P>
+  The recommended way to use GNU Emacs is to start it only once, just
+after you log in, and do all your editing in the same Emacs session.
+Each time you want to edit a different file, you visit it with the
+existing Emacs, which eventually comes to have many files in it ready
+for editing.  Usually you do not kill the Emacs until you are about to
+log out.
+<P>
+<A NAME="IDX36"></A>
+<A NAME="IDX37"></A>
+<A NAME="IDX38"></A>
+<A NAME="IDX39"></A>
+<A NAME="IDX40"></A>
+<H2><A NAME="SEC18" HREF="emacs_toc.html#SEC18">Exiting Emacs</A></H2>
+<P>
+  There are two commands for exiting Emacs because there are two kinds
+of exiting: <DFN>suspending</DFN> Emacs and <DFN>killing</DFN> Emacs.
+<P>
+  <DFN>Suspending</DFN> means stopping Emacs temporarily and returning control
+to its parent process (usually a shell), allowing you to resume editing
+later in the same Emacs job, with the same files, same kill ring, same
+undo history, and so on.  This is the usual way to exit.
+<P>
+  <DFN>Killing</DFN> Emacs means destroying the Emacs job.  You can run Emacs
+again later, but you will get a fresh Emacs; there is no way to resume
+the same editing session after it has been killed.
+<P>
+<DL COMPACT>
+<DT><KBD>C-z</KBD>
+<DD>Suspend Emacs (<CODE>suspend-emacs</CODE>).
+<DT><KBD>C-x C-c</KBD>
+<DD>Kill Emacs (<CODE>save-buffers-kill-emacs</CODE>).
+</DL>
+<A NAME="IDX41"></A>
+<A NAME="IDX42"></A>
+<P>
+  To suspend Emacs, type <KBD>C-z</KBD> (<CODE>suspend-emacs</CODE>).  This takes
+you back to the shell from which you invoked Emacs.  You can resume
+Emacs with the shell command <SAMP>`%emacs'</SAMP> in most common shells.
+<P>
+  On systems that do not permit programs to be suspended, <KBD>C-z</KBD> runs
+an inferior shell that communicates directly with the terminal, and
+Emacs waits until you exit the subshell.  (The way to do that is
+probably with <KBD>C-d</KBD> or <SAMP>`exit'</SAMP>, but it depends on which shell
+you use.)  The only way on these systems to get back to the shell from
+which Emacs was run (to log out, for example) is to kill Emacs.
+<A NAME="IDX43"></A>
+<P>
+  When Emacs communicates directly with an X server and creates its own
+dedicated X windows, <KBD>C-z</KBD> has a different meaning.  Suspending an
+applications that uses its own X windows is not meaningful or useful.
+Instead, <KBD>C-z</KBD> runs the command <CODE>iconify-frame</CODE>, which
+temporarily closes up the selected Emacs frame.  The way to get back to
+a shell window is with the window manager.
+<A NAME="IDX44"></A>
+<A NAME="IDX45"></A>
+<P>
+  To kill Emacs, type <KBD>C-x C-c</KBD> (<CODE>save-buffers-kill-emacs</CODE>).  A
+two-character key is used for this to make it harder to type.  Unless a
+numeric argument is used, this command first offers to save any modified
+buffers.  If you do not save them all, it asks for reconfirmation with
+<KBD>yes</KBD> before killing Emacs, since any changes not saved will be lost
+forever.  Also, if any subprocesses are still running, <KBD>C-x C-c</KBD>
+asks for confirmation about them, since killing Emacs will kill the
+subprocesses immediately.
+<P>
+  The operating system usually listens for certain special characters
+whose meaning is to kill or suspend the program you are running.
+<B>This operating system feature is turned off while you are in Emacs.</B>
+The meanings of <KBD>C-z</KBD> and <KBD>C-x C-c</KBD> as keys in Emacs were
+inspired by the use of <KBD>C-z</KBD> and <KBD>C-c</KBD> on several operating
+systems as the characters for stopping or killing a program, but that is
+their only relationship with the operating system.  You can customize
+these keys to run any commands (see section <A HREF="emacs_35.html#SEC345">Keymaps</A>).
+<P>Go to the <A HREF="emacs_6.html">previous</A>, <A HREF="emacs_8.html">next</A> section.<P>

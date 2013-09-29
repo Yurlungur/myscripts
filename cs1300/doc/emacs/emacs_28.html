@@ -1,0 +1,301 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Abbrevs</TITLE>
+<P>Go to the <A HREF="emacs_27.html">previous</A>, <A HREF="emacs_29.html">next</A> section.<P>
+<A NAME="IDX1201"></A>
+<A NAME="IDX1202"></A>
+<H1><A NAME="SEC236" HREF="emacs_toc.html#SEC236">Abbrevs</A></H1>
+<P>
+  An <DFN>abbrev</DFN> is a word which <DFN>expands</DFN>, if you insert it, into some
+different text.  Abbrevs are defined by the user to expand in specific
+ways.  For example, you might define <SAMP>`foo'</SAMP> as an abbrev expanding to
+<SAMP>`find outer otter'</SAMP>.  With this abbrev defined, you would be able to
+get <SAMP>`find outer otter '</SAMP> into the buffer by typing <KBD>f o o <KBD>SPC</KBD></KBD>.
+<A NAME="IDX1203"></A>
+<A NAME="IDX1204"></A>
+<A NAME="IDX1205"></A>
+<A NAME="IDX1206"></A>
+<P>
+  Abbrevs expand only when Abbrev mode (a minor mode) is enabled.
+Disabling Abbrev mode does not cause abbrev definitions to be forgotten,
+but they do not expand until Abbrev mode is enabled again.  The command
+<KBD>M-x abbrev-mode</KBD> toggles Abbrev mode; with a numeric argument, it
+turns Abbrev mode on if the argument is positive, off otherwise.
+See section <A HREF="emacs_35.html#SEC333">Minor Modes</A>.  <CODE>abbrev-mode</CODE> is also a variable; Abbrev mode is
+on when the variable is non-<CODE>nil</CODE>.  The variable <CODE>abbrev-mode</CODE>
+automatically becomes local to the current buffer when it is set.
+<P>
+  Abbrev definitions can be <DFN>mode-specific</DFN>---active only in one major
+mode.  Abbrevs can also have <DFN>global</DFN> definitions that are active in
+all major modes.  The same abbrev can have a global definition and various
+mode-specific definitions for different major modes.  A mode specific
+definition for the current major mode overrides a global definition.
+<P>
+  Abbrevs can be defined interactively during the editing session.  Lists
+of abbrev definitions can also be saved in files and reloaded in later
+sessions.  Some users keep extensive lists of abbrevs that they load in
+every session.
+<P>
+  A second kind of abbreviation facility is called the <DFN>dynamic
+expansion</DFN>.  Dynamic abbrev expansion happens only when you give an
+explicit command and the result of the expansion depends only on the
+current contents of the buffer.  See section <A HREF="emacs_28.html#SEC241">Dynamic Abbrev Expansion</A>.
+<P>
+<H2><A NAME="SEC237" HREF="emacs_toc.html#SEC237">Defining Abbrevs</A></H2>
+<P>
+<DL COMPACT>
+<DT><KBD>C-x a g</KBD>
+<DD>Define an abbrev, using one or more words before point as its expansion
+(<CODE>add-global-abbrev</CODE>).
+<DT><KBD>C-x a l</KBD>
+<DD>Similar, but define an abbrev specific to the current major mode
+(<CODE>add-mode-abbrev</CODE>).
+<DT><KBD>C-x a i g</KBD>
+<DD>Define a word in the buffer as an abbrev (<CODE>inverse-add-global-abbrev</CODE>).
+<DT><KBD>C-x a i l</KBD>
+<DD>Define a word in the buffer as a mode-specific abbrev
+(<CODE>inverse-add-mode-abbrev</CODE>).
+<DT><KBD>M-x kill-all-abbrevs</KBD>
+<DD>After this command, there are no abbrev definitions in effect.
+</DL>
+<A NAME="IDX1207"></A>
+<A NAME="IDX1208"></A>
+<P>
+  The usual way to define an abbrev is to enter the text you want the
+abbrev to expand to, position point after it, and type <KBD>C-x a g</KBD>
+(<CODE>add-global-abbrev</CODE>).  This reads the abbrev itself using the
+minibuffer, and then defines it as an abbrev for one or more words before
+point.  Use a numeric argument to say how many words before point should be
+taken as the expansion.  For example, to define the abbrev <SAMP>`foo'</SAMP> as
+mentioned above, insert the text <SAMP>`find outer otter'</SAMP> and then type
+<KBD>C-u 3 C-x a g f o o <KBD>RET</KBD></KBD>.
+<P>
+  An argument of zero to <KBD>C-x a g</KBD> means to use the contents of the
+region as the expansion of the abbrev being defined.
+<A NAME="IDX1209"></A>
+<A NAME="IDX1210"></A>
+<P>
+  The command <KBD>C-x a l</KBD> (<CODE>add-mode-abbrev</CODE>) is similar, but
+defines a mode-specific abbrev.  Mode specific abbrevs are active only in a
+particular major mode.  <KBD>C-x a l</KBD> defines an abbrev for the major mode
+in effect at the time <KBD>C-x a l</KBD> is typed.  The arguments work the same
+as for <KBD>C-x a g</KBD>.
+<A NAME="IDX1211"></A>
+<A NAME="IDX1212"></A>
+<A NAME="IDX1213"></A>
+<A NAME="IDX1214"></A>
+<P>
+  If the text of the abbrev you want is already in the buffer instead of
+the expansion, use command <KBD>C-x a i g</KBD>
+(<CODE>inverse-add-global-abbrev</CODE>) instead of <KBD>C-x a g</KBD>, or use
+<KBD>C-x a i l</KBD> (<CODE>inverse-add-mode-abbrev</CODE>) instead of <KBD>C-x a
+l</KBD>.  These commands are called "inverse" because they invert the
+meaning of the argument found in the buffer and the argument read using
+the minibuffer.
+<P>
+  To change the definition of an abbrev, just add the new definition.
+You will be asked to confirm if the abbrev has a prior definition.  To
+remove an abbrev definition, give a negative argument to <KBD>C-x a g</KBD>
+or <KBD>C-x a l</KBD>.  You must choose the command to specify whether to
+kill a global definition or a mode-specific definition for the current
+mode, since those two definitions are independent for one abbrev.
+<A NAME="IDX1215"></A>
+<P>
+  <KBD>M-x kill-all-abbrevs</KBD> removes all the abbrev definitions there are.
+<P>
+<H2><A NAME="SEC238" HREF="emacs_toc.html#SEC238">Controlling Abbrev Expansion</A></H2>
+<P>
+  An abbrev expands whenever it is present in the buffer just before point
+and a self-inserting punctuation character (<KBD>SPC</KBD>, comma, etc.) is
+typed.  Most often the way an abbrev is used is to insert the abbrev
+followed by punctuation.
+<A NAME="IDX1216"></A>
+<P>
+  Abbrev expansion preserves case; thus, <SAMP>`foo'</SAMP> expands into <SAMP>`find
+outer otter'</SAMP>; <SAMP>`Foo'</SAMP> into <SAMP>`Find outer otter'</SAMP>, and <SAMP>`FOO'</SAMP> into
+<SAMP>`FIND OUTER OTTER'</SAMP> or <SAMP>`Find Outer Otter'</SAMP> according to the
+variable <CODE>abbrev-all-caps</CODE> (a non-<CODE>nil</CODE> value chooses the first
+of the two expansions).<P>
+  These two commands are used to control abbrev expansion:
+<P>
+<DL COMPACT>
+<DT><KBD>M-'</KBD>
+<DD>Separate a prefix from a following abbrev to be expanded
+(<CODE>abbrev-prefix-mark</CODE>).
+<A NAME="IDX1217"></A>
+<DT><KBD>C-x a e</KBD>
+<DD>Expand the abbrev before point (<CODE>expand-abbrev</CODE>).
+This is effective even when Abbrev mode is not enabled.
+<DT><KBD>M-x unexpand-abbrev</KBD>
+<DD>Undo last abbrev expansion.
+<DT><KBD>M-x expand-region-abbrevs</KBD>
+<DD>Expand some or all abbrevs found in the region.
+</DL>
+<A NAME="IDX1218"></A>
+<A NAME="IDX1219"></A>
+<P>
+  You may wish to expand an abbrev with a prefix attached; for example, if
+<SAMP>`cnst'</SAMP> expands into <SAMP>`construction'</SAMP>, you might want to use it to
+enter <SAMP>`reconstruction'</SAMP>.  It does not work to type <KBD>recnst</KBD>,
+because that is not necessarily a defined abbrev.  What does work is to use
+the command <KBD>M-'</KBD> (<CODE>abbrev-prefix-mark</CODE>) in between the prefix
+<SAMP>`re'</SAMP> and the abbrev <SAMP>`cnst'</SAMP>.  First, insert <SAMP>`re'</SAMP>.  Then type
+<KBD>M-'</KBD>; this inserts a minus sign in the buffer to indicate that it has
+done its work.  Then insert the abbrev <SAMP>`cnst'</SAMP>; the buffer now contains
+<SAMP>`re-cnst'</SAMP>.  Now insert a punctuation character to expand the abbrev
+<SAMP>`cnst'</SAMP> into <SAMP>`construction'</SAMP>.  The minus sign is deleted at this
+point, because <KBD>M-'</KBD> left word for this to be done.  The resulting text
+is the desired <SAMP>`reconstruction'</SAMP>.<P>
+  If you actually want the text of the abbrev in the buffer, rather than
+its expansion, you can accomplish this by inserting the following
+punctuation with <KBD>C-q</KBD>.  Thus, <KBD>foo C-q -</KBD> leaves <SAMP>`foo-'</SAMP> in the
+buffer.
+<A NAME="IDX1220"></A>
+<P>
+  If you expand an abbrev by mistake, you can undo the expansion
+(replace the expansion by the original abbrev text) with <KBD>M-x
+unexpand-abbrev</KBD>.  <KBD>C-_</KBD> (<CODE>undo</CODE>) can also be used to undo the
+expansion; but first it undoes the insertion of the following
+punctuation character.  Therefore, if you want both the punctuation
+character and the unexpanded abbrev, you must reinsert the punctuation
+character, quoting it with <KBD>C-q</KBD>.
+<A NAME="IDX1221"></A>
+<P>
+  <KBD>M-x expand-region-abbrevs</KBD> searches through the region for defined
+abbrevs, and for each one found offers to replace it with its expansion.
+This command is useful if you have typed in text using abbrevs but forgot
+to turn on Abbrev mode first.  It may also be useful together with a
+special set of abbrev definitions for making several global replacements at
+once.  This command is effective even if Abbrev mode is not enabled.
+<P>
+  Expanding an abbrev runs the hook <CODE>pre-abbrev-expand-hook</CODE>
+(see section <A HREF="emacs_35.html#SEC337">Hooks</A>).
+<P>
+<H2><A NAME="SEC239" HREF="emacs_toc.html#SEC239">Examining and Editing Abbrevs</A></H2>
+<P>
+<DL COMPACT>
+<DT><KBD>M-x list-abbrevs</KBD>
+<DD>Print a list of all abbrev definitions.
+<DT><KBD>M-x edit-abbrevs</KBD>
+<DD>Edit a list of abbrevs; you can add, alter or remove definitions.
+</DL>
+<A NAME="IDX1222"></A>
+<P>
+  The output from <KBD>M-x list-abbrevs</KBD> looks like this:
+<P>
+<PRE>
+(lisp-mode-abbrev-table)
+"dk"	       0    "define-key"
+(global-abbrev-table)
+"dfn"	       0    "definition"
+</PRE>
+<P>
+(Some blank lines of no semantic significance, and some other abbrev
+tables, have been omitted.)
+<P>
+  A line containing a name in parentheses is the header for abbrevs in a
+particular abbrev table; <CODE>global-abbrev-table</CODE> contains all the global
+abbrevs, and the other abbrev tables that are named after major modes
+contain the mode-specific abbrevs.
+<P>
+  Within each abbrev table, each nonblank line defines one abbrev.  The
+word at the beginning is the abbrev.  The number that appears is the number
+of times the abbrev has been expanded.  Emacs keeps track of this to help
+you see which abbrevs you actually use, in case you decide to eliminate
+those that you don't use often.  The string at the end of the line is the
+expansion.
+<A NAME="IDX1223"></A>
+<A NAME="IDX1224"></A>
+<A NAME="IDX1225"></A>
+<P>
+  <KBD>M-x edit-abbrevs</KBD> allows you to add, change or kill abbrev
+definitions by editing a list of them in an Emacs buffer.  The list has the
+same format described above.  The buffer of abbrevs is called <SAMP>`*Abbrevs*'</SAMP>,
+and is in Edit-Abbrevs mode.  This mode redefines the key <KBD>C-c C-c</KBD> to
+install the abbrev definitions as specified in the buffer.  The command
+that does this is <CODE>edit-abbrevs-redefine</CODE>.  Any abbrevs not described
+in the buffer are eliminated when this is done.
+<P>
+  The command <CODE>edit-abbrevs</CODE> is actually the same as
+<CODE>list-abbrevs</CODE> except that it selects the buffer <SAMP>`*Abbrevs*'</SAMP>
+whereas <CODE>list-abbrevs</CODE> merely displays it in another window.
+<P>
+<H2><A NAME="SEC240" HREF="emacs_toc.html#SEC240">Saving Abbrevs</A></H2>
+<P>
+  These commands allow you to keep abbrev definitions between editing
+sessions.
+<P>
+<DL COMPACT>
+<DT><KBD>M-x write-abbrev-file</KBD>
+<DD>Write a file describing all defined abbrevs.
+<DT><KBD>M-x read-abbrev-file</KBD>
+<DD>Read such a file and define abbrevs as specified there.
+<DT><KBD>M-x quietly-read-abbrev-file</KBD>
+<DD>Similar but do not display a message about what is going on.
+<DT><KBD>M-x define-abbrevs</KBD>
+<DD>Define abbrevs from definitions in current buffer.
+<DT><KBD>M-x insert-abbrevs</KBD>
+<DD>Insert all abbrevs and their expansions into current buffer.
+</DL>
+<A NAME="IDX1226"></A>
+<P>
+  <KBD>M-x write-abbrev-file</KBD> reads a file name using the minibuffer and
+writes a description of all current abbrev definitions into that file.  The
+text stored in the file looks like the output of <KBD>M-x list-abbrevs</KBD>.
+This is used to save abbrev definitions for use in a later session.
+<A NAME="IDX1227"></A>
+<A NAME="IDX1228"></A>
+<A NAME="IDX1229"></A>
+<P>
+  <KBD>M-x read-abbrev-file</KBD> reads a file name using the minibuffer and
+reads the file, defining abbrevs according to the contents of the file.
+<KBD>M-x quietly-read-abbrev-file</KBD> is the same except that it does not
+display a message in the echo area saying that it is doing its work; it
+is actually useful primarily in the <TT>`.emacs'</TT> file.  If an empty
+argument is given to either of these functions, the file name used is the
+value of the variable <CODE>abbrev-file-name</CODE>, which is by default
+<CODE>"~/.abbrev_defs"</CODE>.
+<A NAME="IDX1230"></A>
+<P>
+  Emacs will offer to save abbrevs automatically if you have changed any of
+them, whenever it offers to save all files (for <KBD>C-x s</KBD> or <KBD>C-x
+C-c</KBD>).  This feature can be inhibited by setting the variable
+<CODE>save-abbrevs</CODE> to <CODE>nil</CODE>.
+<A NAME="IDX1231"></A>
+<A NAME="IDX1232"></A>
+<P>
+  The commands <KBD>M-x insert-abbrevs</KBD> and <KBD>M-x define-abbrevs</KBD> are
+similar to the previous commands but work on text in an Emacs buffer.
+<KBD>M-x insert-abbrevs</KBD> inserts text into the current buffer before point,
+describing all current abbrev definitions; <KBD>M-x define-abbrevs</KBD> parses
+the entire current buffer and defines abbrevs accordingly.<P>
+<H2><A NAME="SEC241" HREF="emacs_toc.html#SEC241">Dynamic Abbrev Expansion</A></H2>
+<P>
+  The abbrev facility described above operates automatically as you insert
+text, but all abbrevs must be defined explicitly.  By contrast,
+<DFN>dynamic abbrevs</DFN> allow the meanings of abbrevs to be determined
+automatically from the contents of the buffer, but dynamic abbrev expansion
+happens only when you request it explicitly.
+<A NAME="IDX1233"></A>
+<A NAME="IDX1234"></A>
+<P>
+<DL COMPACT>
+<DT><KBD>M-/</KBD>
+<DD>Expand the word in the buffer before point as a <DFN>dynamic abbrev</DFN>,
+by searching in the buffer for words starting with that abbreviation
+(<CODE>dabbrev-expand</CODE>).
+</DL>
+<P>
+  For example, if the buffer contains <SAMP>`does this follow '</SAMP> and you type
+<KBD>f o M-/</KBD>, the effect is to insert <SAMP>`follow'</SAMP> because that is the
+last word in the buffer that starts with <SAMP>`fo'</SAMP>.  A numeric argument to
+<KBD>M-/</KBD> says to take the second, third, etc. distinct expansion found
+looking backward from point.  Repeating <KBD>M-/</KBD> searches for an
+alternative expansion by looking farther back.  After the entire buffer
+before point has been considered, the buffer after point is searched.
+<P>
+  Dynamic abbrev expansion is completely independent of Abbrev mode; the
+expansion of a word with <KBD>M-/</KBD> is completely independent of whether
+it has a definition as an ordinary abbrev.
+<P>Go to the <A HREF="emacs_27.html">previous</A>, <A HREF="emacs_29.html">next</A> section.<P>

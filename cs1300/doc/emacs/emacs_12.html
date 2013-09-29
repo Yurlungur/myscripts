@@ -1,0 +1,347 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Help</TITLE>
+<P>Go to the <A HREF="emacs_11.html">previous</A>, <A HREF="emacs_13.html">next</A> section.<P>
+<A NAME="IDX171"></A>
+<A NAME="IDX172"></A>
+<A NAME="IDX173"></A>
+<H1><A NAME="SEC41" HREF="emacs_toc.html#SEC41">Help</A></H1>
+<P>
+  Emacs provides extensive help features accessible through a single
+character, <KBD>C-h</KBD>.  <KBD>C-h</KBD> is a prefix key that is used only for
+documentation-printing commands.  The characters that you can type after
+<KBD>C-h</KBD> are called <DFN>help options</DFN>.  One help option is <KBD>C-h</KBD>;
+that is how you ask for help about using <KBD>C-h</KBD>.
+<P>
+  <KBD>C-h C-h</KBD> prints a list of the possible help options, and then asks
+you to go ahead and type the option.  It prompts with this string:
+<P>
+<PRE>
+a b c f i k l m n p s t v w C-c C-d C-n C-w.  Type C-h for more help:
+</PRE>
+<P>
+You should then type one of those characters.
+<P>
+  Typing a third <KBD>C-h</KBD> displays a description of what the options mean;
+it still waits for you to type an option.  To cancel, type <KBD>C-g</KBD>.
+<P>
+  <KBD>C-h</KBD> means "help" in various other contexts as well.  For example,
+in <CODE>query-replace</CODE>, it describes the options available.
+<P>
+  Here is a summary of the defined help commands.
+<P>
+<DL COMPACT>
+<DT><KBD>C-h a <VAR>regexp</VAR> <KBD>RET</KBD></KBD>
+<DD>Display list of commands whose names match <VAR>regexp</VAR>
+(<CODE>command-apropos</CODE>).
+<DT><KBD>C-h b</KBD>
+<DD>Display a table of all key bindings in effect now, in this order: minor
+mode bindings, major mode bindings, and global bindings
+(<CODE>describe-bindings</CODE>).
+<DT><KBD>C-h c <VAR>key</VAR></KBD>
+<DD>Print the name of the command that <VAR>key</VAR> runs
+(<CODE>describe-key-briefly</CODE>).  <KBD>c</KBD> is for `character'.  For more
+extensive information on <VAR>key</VAR>, use <KBD>C-h k</KBD>.
+<DT><KBD>C-h f <VAR>function</VAR> <KBD>RET</KBD></KBD>
+<DD>Display documentation on the Lisp function named <VAR>function</VAR>
+(<CODE>describe-function</CODE>).  Since commands are Lisp functions,
+a command name may be used.
+<DT><KBD>C-h i</KBD>
+<DD>Run Info, the program for browsing documentation files (<CODE>info</CODE>).
+The complete Emacs manual is available on-line in Info.
+<DT><KBD>C-h k <VAR>key</VAR></KBD>
+<DD>Display name and documentation of the command that <VAR>key</VAR> runs
+(<CODE>describe-key</CODE>).
+<DT><KBD>C-h l</KBD>
+<DD>Display a description of the last 100 characters you typed
+(<CODE>view-lossage</CODE>).
+<DT><KBD>C-h m</KBD>
+<DD>Display documentation of the current major mode (<CODE>describe-mode</CODE>).
+<DT><KBD>C-h n</KBD>
+<DD>Display documentation of Emacs changes, most recent first
+(<CODE>view-emacs-news</CODE>).
+<DT><KBD>C-h p</KBD>
+<DD>Find packages by topic keyword (<CODE>finder-by-keyword</CODE>).
+<DT><KBD>C-h s</KBD>
+<DD>Display current contents of the syntax table, plus an explanation of
+what they mean (<CODE>describe-syntax</CODE>).  See section <A HREF="emacs_35.html#SEC355">The Syntax Table</A>.
+<DT><KBD>C-h t</KBD>
+<DD>Enter the Emacs interactive tutorial (<CODE>help-with-tutorial</CODE>).
+<DT><KBD>C-h v <VAR>var</VAR> <KBD>RET</KBD></KBD>
+<DD>Display the documentation of the Lisp variable <VAR>var</VAR>
+(<CODE>describe-variable</CODE>).
+<DT><KBD>C-h w <VAR>command</VAR> <KBD>RET</KBD></KBD>
+<DD>Print which keys run the command named <VAR>command</VAR> (<CODE>where-is</CODE>).
+<DT><KBD>C-h C-f <VAR>function</VAR> <KBD>RET</KBD></KBD>
+<DD>Enter Info and go to the node documenting the Emacs function <VAR>function</VAR>
+(<CODE>info-goto-emacs-command-node</CODE>).
+<DT><KBD>C-h C-k <VAR>key</VAR></KBD>
+<DD>Enter Info and go to the node where the key sequence <VAR>key</VAR> is
+documented (<CODE>info-goto-emacs-key-command-node</CODE>).
+</DL>
+<P>
+<H2><A NAME="SEC42" HREF="emacs_toc.html#SEC42">Documentation for a Key</A></H2>
+<A NAME="IDX174"></A>
+<A NAME="IDX175"></A>
+<P>
+  The most basic <KBD>C-h</KBD> options are <KBD>C-h c</KBD>
+(<CODE>describe-key-briefly</CODE>) and <KBD>C-h k</KBD> (<CODE>describe-key</CODE>).
+<KBD>C-h c <VAR>key</VAR></KBD> prints in the echo area the name of the command
+that <VAR>key</VAR> is bound to.  For example, <KBD>C-h c C-f</KBD> prints
+<SAMP>`forward-char'</SAMP>.  Since command names are chosen to describe what
+the commands do, this is a good way to get a very brief description of
+what <VAR>key</VAR> does.
+<A NAME="IDX176"></A>
+<A NAME="IDX177"></A>
+<P>
+  <KBD>C-h k <VAR>key</VAR></KBD> is similar but gives more information: it
+displays the documentation string of the command as well as its name.
+This is too big for the echo area, so a window is used for the display.
+<P>
+  <KBD>C-h c</KBD> and <KBD>C-h k</KBD> work for any sort of key sequences,
+including function keys and mouse events.
+<P>
+<H2><A NAME="SEC43" HREF="emacs_toc.html#SEC43">Help by Command or Variable Name</A></H2>
+<A NAME="IDX178"></A>
+<A NAME="IDX179"></A>
+<P>
+  <KBD>C-h f</KBD> (<CODE>describe-function</CODE>) reads the name of a Lisp function
+using the minibuffer, then displays that function's documentation string
+in a window.  Since commands are Lisp functions, you can use this to get
+the documentation of a command that is known by name.  For example,
+<P>
+<PRE>
+C-h f auto-fill-mode <KBD>RET</KBD>
+</PRE>
+<P>
+displays the documentation of <CODE>auto-fill-mode</CODE>.  This is the only
+way to get the documentation of a command that is not bound to any key
+(one which you would normally run using <KBD>M-x</KBD>).
+<P>
+  <KBD>C-h f</KBD> is also useful for Lisp functions that you are planning to
+use in a Lisp program.  For example, if you have just written the
+expression <CODE>(make-vector len)</CODE> and want to check that you are using
+<CODE>make-vector</CODE> properly, type <KBD>C-h f make-vector <KBD>RET</KBD></KBD>.
+Because <KBD>C-h f</KBD> allows all function names, not just command names,
+you may find that some of your favorite abbreviations that work in
+<KBD>M-x</KBD> don't work in <KBD>C-h f</KBD>.  An abbreviation may be unique
+among command names yet fail to be unique when other function names are
+allowed.
+<P>
+  The function name for <KBD>C-h f</KBD> to describe has a default which is
+used if you type <KBD>RET</KBD> leaving the minibuffer empty.  The default is
+the function called by the innermost Lisp expression in the buffer around
+point, <EM>provided</EM> that is a valid, defined Lisp function name.  For
+example, if point is located following the text <SAMP>`(make-vector (car
+x)'</SAMP>, the innermost list containing point is the one that starts with
+<SAMP>`(make-vector'</SAMP>, so the default is to describe the function
+<CODE>make-vector</CODE>.
+<P>
+  <KBD>C-h f</KBD> is often useful just to verify that you have the right
+spelling for the function name.  If <KBD>C-h f</KBD> mentions a default in
+the prompt, you have typed the name of a defined Lisp function.  If that
+is all you want to know, just type <KBD>C-g</KBD> to cancel the <KBD>C-h f</KBD>
+command, then go on editing.
+<A NAME="IDX180"></A>
+<A NAME="IDX181"></A>
+<P>
+  <KBD>C-h w <VAR>command</VAR> <KBD>RET</KBD></KBD> tells you what keys are bound to
+<VAR>command</VAR>.  It prints a list of the keys in the echo area.  If it
+says the command is not on any key, you must use <KBD>M-x</KBD> to run it.
+<P>
+  <KBD>C-h v</KBD> (<CODE>describe-variable</CODE>) is like <KBD>C-h f</KBD> but describes
+Lisp variables instead of Lisp functions.  Its default is the Lisp symbol
+around or before point, but only if that is the name of a known Lisp
+variable.  See section <A HREF="emacs_35.html#SEC334">Variables</A>.<P>
+<H2><A NAME="SEC44" HREF="emacs_toc.html#SEC44">Apropos</A></H2>
+<A NAME="IDX182"></A>
+<A NAME="IDX183"></A>
+<A NAME="IDX184"></A>
+<P>
+  A more sophisticated sort of question to ask is, "What are the
+commands for working with files?"  To ask this question, type <KBD>C-h
+a file <KBD>RET</KBD></KBD>, which displays a list of all command names that
+contain <SAMP>`file'</SAMP>, including <CODE>copy-file</CODE>, <CODE>find-file</CODE>, and
+so on.  With each command name appears a brief description of how to use
+the command, and what keys you can currently invoke it with.  For
+example, it would say that you can invoke <CODE>find-file</CODE> by typing
+<KBD>C-x C-f</KBD>.  The <KBD>a</KBD> in <KBD>C-h a</KBD> stands for `Apropos';
+<KBD>C-h a</KBD> runs the command <CODE>command-apropos</CODE>.
+<P>
+  Because <KBD>C-h a</KBD> looks only for functions whose names contain the
+string which you specify, you must use ingenuity in choosing the
+string.  If you are looking for commands for killing backwards and
+<KBD>C-h a kill-backwards <KBD>RET</KBD></KBD> doesn't reveal any, don't give up.
+Try just <KBD>kill</KBD>, or just <KBD>backwards</KBD>, or just <KBD>back</KBD>.  Be
+persistent.  Also note that you can use a regular expression as the
+argument, for more flexibility (see section <A HREF="emacs_17.html#SEC83">Syntax of Regular Expressions</A>).
+<P>
+  Here is a set of arguments to give to <KBD>C-h a</KBD> that covers many
+classes of Emacs commands, since there are strong conventions for naming
+the standard Emacs commands.  By giving you a feel for the naming
+conventions, this set should also serve to aid you in developing a
+technique for picking <CODE>apropos</CODE> strings.
+<P>
+<BLOCKQUOTE>
+char, line, word, sentence, paragraph, region, page, sexp, list, defun,
+rect, buffer, frame, window, file, dir, register, mode, beginning, end,
+forward, backward, next, previous, up, down, search, goto, kill, delete,
+mark, insert, yank, fill, indent, case, change, set, what, list, find,
+view, describe.
+</BLOCKQUOTE>
+<A NAME="IDX185"></A>
+<P>
+  To list all Lisp symbols that contain a match for a regexp, not just
+the ones that are defined as commands, use the command <KBD>M-x apropos</KBD>
+instead of <KBD>C-h a</KBD>.  This command does not check key bindings by
+default; specify a numeric argument if you want it to check them.
+<A NAME="IDX186"></A>
+<P>
+  The <CODE>super-apropos</CODE> command is like <CODE>apropos</CODE> except that it
+searches documentation strings as well as symbol names for matches for
+the specified regular expression.
+<P>
+<H2><A NAME="SEC45" HREF="emacs_toc.html#SEC45">Keyword Search for Lisp Libraries</A></H2>
+<A NAME="IDX187"></A>
+<A NAME="IDX188"></A>
+<P>
+The <KBD>C-h p</KBD> command lets you search the standard Emacs Lisp
+libraries by topic keywords.  Here is a partial list of keywords you can
+use:
+<P>
+<DL COMPACT>
+<DT><SAMP>`abbrev'</SAMP>
+<DD>Abbreviation handling, typing shortcuts, macros.
+<DT><SAMP>`bib'</SAMP>
+<DD>Support for the bibliography processor <CODE>bib</CODE>.
+<DT><SAMP>`c'</SAMP>
+<DD>C and C++ language support.
+<DT><SAMP>`calendar'</SAMP>
+<DD>Calendar and time management support.
+<DT><SAMP>`comm'</SAMP>
+<DD>Communications, networking, remote access to files.
+<DT><SAMP>`docs'</SAMP>
+<DD>Support for Emacs documentation.
+<DT><SAMP>`emulations'</SAMP>
+<DD>Emulations of other editors.
+<DT><SAMP>`extensions'</SAMP>
+<DD>Emacs Lisp language extensions.
+<DT><SAMP>`faces'</SAMP>
+<DD>Support for using faces (fonts and colors; see section <A HREF="emacs_22.html#SEC146">Using Multiple Typefaces</A>).
+<DT><SAMP>`games'</SAMP>
+<DD>Games, jokes and amusements.
+<DT><SAMP>`hardware'</SAMP>
+<DD>Support for interfacing with exotic hardware.
+<DT><SAMP>`help'</SAMP>
+<DD>Support for on-line help systems.
+<DT><SAMP>`i18n'</SAMP>
+<DD>Internationalization and alternate character-set support.
+<DT><SAMP>`internal'</SAMP>
+<DD>Code for Emacs internals, build process, defaults.
+<DT><SAMP>`languages'</SAMP>
+<DD>Specialized modes for editing programming languages.
+<DT><SAMP>`lisp'</SAMP>
+<DD>Support for using Lisp (including Emacs Lisp).
+<DT><SAMP>`local'</SAMP>
+<DD>Libraries local to your site.
+<DT><SAMP>`maint'</SAMP>
+<DD>Maintenance aids for the Emacs development group.
+<DT><SAMP>`mail'</SAMP>
+<DD>Modes for electronic-mail handling.
+<DT><SAMP>`news'</SAMP>
+<DD>Support for netnews reading and posting.
+<DT><SAMP>`non-text'</SAMP>
+<DD>Support for editing files that are not ordinary text.
+<DT><SAMP>`processes'</SAMP>
+<DD>Process, subshell, compilation, and job control support.
+<DT><SAMP>`terminals'</SAMP>
+<DD>Support for terminal types.
+<DT><SAMP>`tex'</SAMP>
+<DD>Support for the TeX formatter.
+<DT><SAMP>`tools'</SAMP>
+<DD>Programming tools.
+<DT><SAMP>`unix'</SAMP>
+<DD>Front-ends/assistants for, or emulators of, Unix features.
+<DT><SAMP>`vms'</SAMP>
+<DD>Support code for VMS.
+<DT><SAMP>`wp'</SAMP>
+<DD>Word processing.
+</DL>
+<P>
+<H2><A NAME="SEC46" HREF="emacs_toc.html#SEC46">Other Help Commands</A></H2>
+<A NAME="IDX189"></A>
+<A NAME="IDX190"></A>
+<A NAME="IDX191"></A>
+<A NAME="IDX192"></A>
+<A NAME="IDX193"></A>
+<P>
+  <KBD>C-h i</KBD> (<CODE>info</CODE>) runs the Info program, which is used for
+browsing through structured documentation files.  The entire Emacs manual
+is available within Info.  Eventually all the documentation of the GNU
+system will be available.  Type <KBD>h</KBD> after entering Info to run
+a tutorial on using Info.
+<A NAME="IDX194"></A>
+<A NAME="IDX195"></A>
+<A NAME="IDX196"></A>
+<A NAME="IDX197"></A>
+<P>
+  There are two special help commands for accessing Emacs documentation
+through Info.  <KBD>C-h C-f <VAR>function</VAR> <KBD>RET</KBD></KBD> enters Info and
+goes straight to the documentation of the Emacs function
+<VAR>function</VAR>.  <KBD>C-h C-k <VAR>key</VAR></KBD> enters Info and goes straight
+to the documentation of the key <VAR>key</VAR>.  These two keys run the
+commands <CODE>Info-goto-emacs-command-node</CODE> and
+<CODE>Info-goto-emacs-key-command-node</CODE>.
+<A NAME="IDX198"></A>
+<A NAME="IDX199"></A>
+<P>
+  If something surprising happens, and you are not sure what commands you
+typed, use <KBD>C-h l</KBD> (<CODE>view-lossage</CODE>).  <KBD>C-h l</KBD> prints the last
+100 command characters you typed in.  If you see commands that you don't
+know, you can use <KBD>C-h c</KBD> to find out what they do.
+<A NAME="IDX200"></A>
+<A NAME="IDX201"></A>
+<P>
+  Emacs has numerous major modes, each of which redefines a few keys and
+makes a few other changes in how editing works.  <KBD>C-h m</KBD>
+(<CODE>describe-mode</CODE>) prints documentation on the current major mode,
+which normally describes all the commands that are changed in this
+mode.
+<A NAME="IDX202"></A>
+<A NAME="IDX203"></A>
+<P>
+  <KBD>C-h b</KBD> (<CODE>describe-bindings</CODE>) and <KBD>C-h s</KBD>
+(<CODE>describe-syntax</CODE>) present other information about the current
+Emacs mode.  <KBD>C-h b</KBD> displays a list of all the key bindings now in
+effect; the local bindings defined by the current minor modes first,
+then the local bindings defined by the current major mode, and finally
+the global bindings (see section <A HREF="emacs_35.html#SEC344">Customizing Key Bindings</A>).  <KBD>C-h s</KBD> displays the
+contents of the syntax table, with explanations of each character's
+syntax (see section <A HREF="emacs_35.html#SEC355">The Syntax Table</A>).
+<P>
+  You can get a similar list for a particular prefix key by typing
+<KBD>C-h</KBD> after the prefix key.  (There are a few prefix keys for which
+this does not work--those that provide their own bindings for
+<KBD>C-h</KBD>.  One of these is <KBD>ESC</KBD>, because <KBD><KBD>ESC</KBD> C-h</KBD> is
+actually <KBD>C-M-h</KBD>, which marks a defun.)
+<A NAME="IDX204"></A>
+<A NAME="IDX205"></A>
+<A NAME="IDX206"></A>
+<A NAME="IDX207"></A>
+<A NAME="IDX208"></A>
+<A NAME="IDX209"></A>
+<A NAME="IDX210"></A>
+<A NAME="IDX211"></A>
+<P>
+  The other <KBD>C-h</KBD> options display various files of useful information.
+<KBD>C-h C-w</KBD> displays the full details on the complete absence of warranty
+for GNU Emacs.  <KBD>C-h n</KBD> (<CODE>view-emacs-news</CODE>) displays the file
+<TT>`emacs/etc/NEWS'</TT>, which contains documentation on Emacs changes
+arranged chronologically.  <KBD>C-h t</KBD> (<CODE>help-with-tutorial</CODE>) displays
+the learn-by-doing Emacs tutorial.  <KBD>C-h C-c</KBD> (<CODE>describe-copying</CODE>)
+displays the file <TT>`emacs/etc/COPYING'</TT>, which tells you the conditions
+you must obey in distributing copies of Emacs.  <KBD>C-h C-d</KBD>
+(<CODE>describe-distribution</CODE>) displays the file <TT>`emacs/etc/DISTRIB'</TT>,
+which tells you how you can order a copy of the latest version of
+Emacs.<P>Go to the <A HREF="emacs_11.html">previous</A>, <A HREF="emacs_13.html">next</A> section.<P>

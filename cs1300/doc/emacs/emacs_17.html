@@ -1,0 +1,804 @@
+<!-- This HTML file has been created by texi2html 1.27
+     from emacs.texi on 3 March 1994 -->
+
+<TITLE>GNU Emacs Manual - Searching and Replacement</TITLE>
+<P>Go to the <A HREF="emacs_16.html">previous</A>, <A HREF="emacs_18.html">next</A> section.<P>
+<A NAME="IDX346"></A>
+<A NAME="IDX347"></A>
+<H1><A NAME="SEC77" HREF="emacs_toc.html#SEC77">Searching and Replacement</A></H1>
+<P>
+  Like other editors, Emacs has commands for searching for occurrences of
+a string.  The principal search command is unusual in that it is
+<DFN>incremental</DFN>; it begins to search before you have finished typing the
+search string.  There are also nonincremental search commands more like
+those of other editors.
+<P>
+  Besides the usual <CODE>replace-string</CODE> command that finds all
+occurrences of one string and replaces them with another, Emacs has a fancy
+replacement command called <CODE>query-replace</CODE> which asks interactively
+which occurrences to replace.
+<P>
+<H2><A NAME="SEC78" HREF="emacs_toc.html#SEC78">Incremental Search</A></H2>
+<A NAME="IDX348"></A>
+<P>
+  An incremental search begins searching as soon as you type the first
+character of the search string.  As you type in the search string, Emacs
+shows you where the string (as you have typed it so far) would be
+found.  When you have typed enough characters to identify the place you
+want, you can stop.  Depending on what you plan to do next, you may or
+may not need to terminate the search explicitly with <KBD>RET</KBD>.
+<P>
+<DL COMPACT>
+<DT><KBD>C-s</KBD>
+<DD>Incremental search forward (<CODE>isearch-forward</CODE>).
+<DT><KBD>C-r</KBD>
+<DD>Incremental search backward (<CODE>isearch-backward</CODE>).
+</DL>
+<A NAME="IDX349"></A>
+<A NAME="IDX350"></A>
+<A NAME="IDX351"></A>
+<A NAME="IDX352"></A>
+<P>
+  <KBD>C-s</KBD> starts an incremental search.  <KBD>C-s</KBD> reads characters from
+the keyboard and positions the cursor at the first occurrence of the
+characters that you have typed.  If you type <KBD>C-s</KBD> and then <KBD>F</KBD>,
+the cursor moves right after the first <SAMP>`F'</SAMP>.  Type an <KBD>O</KBD>, and see
+the cursor move to after the first <SAMP>`FO'</SAMP>.  After another <KBD>O</KBD>, the
+cursor is after the first <SAMP>`FOO'</SAMP> after the place where you started the
+search.  Meanwhile, the search string <SAMP>`FOO'</SAMP> has been echoed in the
+echo area.<P>
+  If you make a mistake in typing the search string, you can cancel
+characters with <KBD>DEL</KBD>.  Each <KBD>DEL</KBD> cancels the last character of
+search string.  This does not happen until Emacs is ready to read another
+input character; first it must either find, or fail to find, the character
+you want to erase.  If you do not want to wait for this to happen, use
+<KBD>C-g</KBD> as described below.
+<P>
+  When you are satisfied with the place you have reached, you can type
+<KBD>RET</KBD>, which stops searching, leaving the cursor where the search
+brought it.  Also, any command not specially meaningful in searches
+stops the searching and is then executed.  Thus, typing <KBD>C-a</KBD> would
+exit the search and then move to the beginning of the line.  <KBD>RET</KBD>
+is necessary only if the next command you want to type is a printing
+character, <KBD>DEL</KBD>, <KBD>RET</KBD>, or another control character that is
+special within searches (<KBD>C-q</KBD>, <KBD>C-w</KBD>, <KBD>C-r</KBD>, <KBD>C-s</KBD>,
+<KBD>C-y</KBD>, <KBD>M-y</KBD>, <KBD>M-r</KBD>, or <KBD>M-s</KBD>).
+<P>
+  Sometimes you search for <SAMP>`FOO'</SAMP> and find it, but not the one you
+expected to find.  There was a second <SAMP>`FOO'</SAMP> that you forgot about,
+before the one you were looking for.  In this event, type another <KBD>C-s</KBD>
+to move to the next occurrence of the search string.  This can be done any
+number of times.  If you overshoot, you can cancel some <KBD>C-s</KBD>
+characters with <KBD>DEL</KBD>.
+<P>
+  After you exit a search, you can search for the same string again by
+typing just <KBD>C-s C-s</KBD>: the first <KBD>C-s</KBD> is the key that invokes
+incremental search, and the second <KBD>C-s</KBD> means "search again".
+<P>
+  To reuse earlier search strings, use the <DFN>search ring</DFN>.  The
+commands <KBD>M-p</KBD> and <KBD>M-n</KBD> move through the ring to pick a search
+string to reuse.  These commands leave the selected search ring element
+in the minibuffer, where you can edit it.  Type <KBD>C-s</KBD> or <KBD>C-r</KBD>
+to terminate editing the string and search for it.
+<P>
+  If your string is not found at all, the echo area says <SAMP>`Failing
+I-Search'</SAMP>.  The cursor is after the place where Emacs found as much of your
+string as it could.  Thus, if you search for <SAMP>`FOOT'</SAMP>, and there is no
+<SAMP>`FOOT'</SAMP>, you might see the cursor after the <SAMP>`FOO'</SAMP> in <SAMP>`FOOL'</SAMP>.
+At this point there are several things you can do.  If your string was
+mistyped, you can rub some of it out and correct it.  If you like the place
+you have found, you can type <KBD>RET</KBD> or some other Emacs command to
+"accept what the search offered".  Or you can type <KBD>C-g</KBD>, which
+removes from the search string the characters that could not be found (the
+<SAMP>`T'</SAMP> in <SAMP>`FOOT'</SAMP>), leaving those that were found (the <SAMP>`FOO'</SAMP> in
+<SAMP>`FOOT'</SAMP>).  A second <KBD>C-g</KBD> at that point cancels the search
+entirely, returning point to where it was when the search started.
+<P>
+  An upper-case letter in the search string makes the search
+case-sensitive.  If you delete the upper-case character from the search
+string, it ceases to have this effect.  See section <A HREF="emacs_17.html#SEC84">Searching and Case</A>.
+<P>
+  If a search is failing and you ask to repeat it by typing another
+<KBD>C-s</KBD>, it starts again from the beginning of the buffer.  Repeating
+a failing reverse search with <KBD>C-r</KBD> starts again from the end.  This
+is called <DFN>wrapping around</DFN>.  <SAMP>`Wrapped'</SAMP> appears in the search
+prompt once this has happened.
+<A NAME="IDX353"></A>
+<P>
+  The <KBD>C-g</KBD> "quit" character does special things during searches;
+just what it does depends on the status of the search.  If the search has
+found what you specified and is waiting for input, <KBD>C-g</KBD> cancels the
+entire search.  The cursor moves back to where you started the search.  If
+<KBD>C-g</KBD> is typed when there are characters in the search string that have
+not been found--because Emacs is still searching for them, or because it
+has failed to find them--then the search string characters which have not
+been found are discarded from the search string.  With them gone, the
+search is now successful and waiting for more input, so a second <KBD>C-g</KBD>
+will cancel the entire search.
+<P>
+  To search for a newline, type <KBD>LFD</KBD> (also known as <KBD>C-j</KBD>).  To
+search for another control character such as control-S or carriage
+return, you must quote it by typing <KBD>C-q</KBD> first.  This function of
+<KBD>C-q</KBD> is analogous to its meaning as an Emacs command: it causes the
+following character to be treated the way a graphic character would
+normally be treated in the same context.  You can also specify a
+character by its octal code: enter <KBD>C-q</KBD> followed by three octal
+digits.
+<P>
+  You can change to searching backwards with <KBD>C-r</KBD>.  If a search fails
+because the place you started was too late in the file, you should do this.
+Repeated <KBD>C-r</KBD> keeps looking for more occurrences backwards.  A
+<KBD>C-s</KBD> starts going forwards again.  <KBD>C-r</KBD> in a search can be cancelled
+with <KBD>DEL</KBD>.
+<P>
+  If you know initially that you want to search backwards, you can
+use <KBD>C-r</KBD> instead of <KBD>C-s</KBD> to start the search, because <KBD>C-r</KBD>
+is also a key running a command (<CODE>isearch-backward</CODE>) to search
+backward.
+<P>
+  The characters <KBD>C-y</KBD> and <KBD>C-w</KBD> can be used in incremental
+search to grab text from the buffer into the search string.  This makes
+it convenient to search for another occurrence of text at point.
+<KBD>C-w</KBD> copies the word after point as part of the search string,
+advancing point over that word.  Another <KBD>C-s</KBD> to repeat the search
+will then search for a string including that word.  <KBD>C-y</KBD> is similar
+to <KBD>C-w</KBD> but copies all the rest of the current line into the search
+string.  Both <KBD>C-y</KBD> and <KBD>C-w</KBD> convert the text they copy to
+lower case if the search is current not case-sensitive; this is so the
+search remains case-insensitive.
+<P>
+  The character <KBD>M-y</KBD> copies the most recent killed text into the
+search string.
+<A NAME="IDX354"></A>
+<P>
+  To customize the special characters that incremental search understands,
+alter their bindings in the keymap <CODE>isearch-mode-map</CODE>.
+<P>
+<H3><A NAME="SEC79" HREF="emacs_toc.html#SEC79">Slow Terminal Incremental Search</A></H3>
+<P>
+  Incremental search on a slow terminal uses a modified style of display
+that is designed to take less time.  Instead of redisplaying the buffer at
+each place the search gets to, it creates a new single-line window and uses
+that to display the line that the search has found.  The single-line window
+comes into play as soon as point gets outside of the text that is already
+on the screen.
+<P>
+  When you terminate the search, the single-line window is removed.
+Then Emacs redisplays the window in which the search was done, to show
+its new position of point.
+<P>
+<A NAME="IDX355"></A>
+<P>
+  The slow terminal style of display is used when the terminal baud rate is
+less than or equal to the value of the variable <CODE>search-slow-speed</CODE>,
+initially 1200.
+<A NAME="IDX356"></A>
+<P>
+  The number of lines to use in slow terminal search display is controlled
+by the variable <CODE>search-slow-window-lines</CODE>.  1 is its normal value.
+<P>
+<A NAME="IDX357"></A>
+<H2><A NAME="SEC80" HREF="emacs_toc.html#SEC80">Nonincremental Search</A></H2>
+<P>
+  Emacs also has conventional nonincremental search commands, which require
+you to type the entire search string before searching begins.
+<P>
+<DL COMPACT>
+<DT><KBD>C-s <KBD>RET</KBD> <VAR>string</VAR> <KBD>RET</KBD></KBD>
+<DD>Search for <VAR>string</VAR>.
+<DT><KBD>C-r <KBD>RET</KBD> <VAR>string</VAR> <KBD>RET</KBD></KBD>
+<DD>Search backward for <VAR>string</VAR>.
+</DL>
+<P>
+  To do a nonincremental search, first type <KBD>C-s <KBD>RET</KBD></KBD>.  This
+enters the minibuffer to read the search string; terminate the string
+with <KBD>RET</KBD>, and then the search takes place.  If the string is not
+found, the search command gets an error.
+<P>
+  The way <KBD>C-s <KBD>RET</KBD></KBD> works is that the <KBD>C-s</KBD> invokes
+incremental search, which is specially programmed to invoke nonincremental
+search if the argument you give it is empty.  (Such an empty argument would
+otherwise be useless.)  <KBD>C-r <KBD>RET</KBD></KBD> also works this way.
+<P>
+  However, nonincremental searches performed using <KBD>C-s <KBD>RET</KBD></KBD> do
+not call <CODE>search-forward</CODE> right away.  The first thing done is to see
+if the next character is <KBD>C-w</KBD>, which requests a word search.
+<A NAME="IDX358"></A>
+<A NAME="IDX359"></A>
+<P>
+  Forward and backward nonincremental searches are implemented by the
+commands <CODE>search-forward</CODE> and <CODE>search-backward</CODE>.  These
+commands may be bound to keys in the usual manner.  The feature that you
+can get to them via the incremental search commands exists for
+historical reasons, and to avoid the need to find suitable key sequences
+for them.
+<P>
+<A NAME="IDX360"></A>
+<H2><A NAME="SEC81" HREF="emacs_toc.html#SEC81">Word Search</A></H2>
+<P>
+  Word search searches for a sequence of words without regard to how the
+words are separated.  More precisely, you type a string of many words,
+using single spaces to separate them, and the string can be found even if
+there are multiple spaces, newlines or other punctuation between the words.
+<P>
+  Word search is useful for editing a printed document made with a text
+formatter.  If you edit while looking at the printed, formatted version,
+you can't tell where the line breaks are in the source file.  With word
+search, you can search without having to know them.
+<P>
+<DL COMPACT>
+<DT><KBD>C-s <KBD>RET</KBD> C-w <VAR>words</VAR> <KBD>RET</KBD></KBD>
+<DD>Search for <VAR>words</VAR>, ignoring details of punctuation.
+<DT><KBD>C-r <KBD>RET</KBD> C-w <VAR>words</VAR> <KBD>RET</KBD></KBD>
+<DD>Search backward for <VAR>words</VAR>, ignoring details of punctuation.
+</DL>
+<P>
+  Word search is a special case of nonincremental search and is invoked
+with <KBD>C-s <KBD>RET</KBD> C-w</KBD>.  This is followed by the search string,
+which must always be terminated with <KBD>RET</KBD>.  Being nonincremental,
+this search does not start until the argument is terminated.  It works
+by constructing a regular expression and searching for that; see
+section <A HREF="emacs_17.html#SEC82">Regular Expression Search</A>.
+<P>
+  Use <KBD>C-r <KBD>RET</KBD> C-w</KBD> to do backward word search.
+<A NAME="IDX361"></A>
+<A NAME="IDX362"></A>
+<P>
+  Forward and backward word searches are implemented by the commands
+<CODE>word-search-forward</CODE> and <CODE>word-search-backward</CODE>.  These
+commands may be bound to keys in the usual manner.  The feature that you
+can get to them via the incremental search commands exists for historical
+reasons, and to avoid the need to find suitable key sequences for them.
+<P>
+<A NAME="IDX363"></A>
+<A NAME="IDX364"></A>
+<H2><A NAME="SEC82" HREF="emacs_toc.html#SEC82">Regular Expression Search</A></H2>
+<P>
+  A <DFN>regular expression</DFN> (<DFN>regexp</DFN>, for short) is a pattern that
+denotes a class of alternative strings to match, possibly infinitely
+many.  In GNU Emacs, you can search for the next match for a regexp
+either incrementally or not.
+<A NAME="IDX365"></A>
+<A NAME="IDX366"></A>
+<A NAME="IDX367"></A>
+<A NAME="IDX368"></A>
+<P>
+  Incremental search for a regexp is done by typing <KBD>C-M-s</KBD>
+(<CODE>isearch-forward-regexp</CODE>).  This command reads a search string
+incrementally just like <KBD>C-s</KBD>, but it treats the search string as a
+regexp rather than looking for an exact match against the text in the
+buffer.  Each time you add text to the search string, you make the
+regexp longer, and the new regexp is searched for.  To search backward
+in the buffer, use <KBD>C-M-r</KBD> (<CODE>isearch-backward-regexp</CODE>).
+<P>
+  All of the control characters that do special things within an
+ordinary incremental search have the same function in incremental regexp
+search.  Typing <KBD>C-s</KBD> or <KBD>C-r</KBD> immediately after starting the
+search retrieves the last incremental search regexp used; that is to
+say, incremental regexp and non-regexp searches have independent
+defaults.  They also have separate search rings that you can access with
+<KBD>M-p</KBD> and <KBD>M-n</KBD>.
+<P>
+  If you type <KBD>SPC</KBD> in incremental regexp search, it matches any
+sequence of whitespace characters, including newlines.  If you want
+to match just a space, type <KBD>C-q <KBD>SPC</KBD></KBD>.
+<P>
+  Note that adding characters to the regexp in an incremental regexp
+search can make the cursor move back and start again.  For example, if
+you have searched for <SAMP>`foo'</SAMP> and you add <SAMP>`\|bar'</SAMP>, the cursor
+backs up in case the first <SAMP>`bar'</SAMP> precedes the first <SAMP>`foo'</SAMP>.
+<A NAME="IDX369"></A>
+<A NAME="IDX370"></A>
+<P>
+  Nonincremental search for a regexp is done by the functions
+<CODE>re-search-forward</CODE> and <CODE>re-search-backward</CODE>.  You can invoke
+these with <KBD>M-x</KBD>, or bind them to keys, or invoke them by way of
+incremental regexp search with <KBD>C-M-s <KBD>RET</KBD></KBD> and <KBD>C-M-r
+<KBD>RET</KBD></KBD>.
+<P>
+<A NAME="IDX371"></A>
+<H2><A NAME="SEC83" HREF="emacs_toc.html#SEC83">Syntax of Regular Expressions</A></H2>
+<P>
+  Regular expressions have a syntax in which a few characters are
+special constructs and the rest are <DFN>ordinary</DFN>.  An ordinary
+character is a simple regular expression which matches that same
+character and nothing else.  The special characters are <SAMP>`$'</SAMP>,
+<SAMP>`^'</SAMP>, <SAMP>`.'</SAMP>, <SAMP>`*'</SAMP>, <SAMP>`+'</SAMP>, <SAMP>`?'</SAMP>, <SAMP>`['</SAMP>, <SAMP>`]'</SAMP> and
+<SAMP>`\'</SAMP>.  Any other character appearing in a regular expression is
+ordinary, unless a <SAMP>`\'</SAMP> precedes it.
+<P>
+  For example, <SAMP>`f'</SAMP> is not a special character, so it is ordinary, and
+therefore <SAMP>`f'</SAMP> is a regular expression that matches the string
+<SAMP>`f'</SAMP> and no other string.  (It does <EM>not</EM> match the string
+<SAMP>`ff'</SAMP>.)  Likewise, <SAMP>`o'</SAMP> is a regular expression that matches
+only <SAMP>`o'</SAMP>.  (When case distinctions are being ignored, these regexps
+also match <SAMP>`F'</SAMP> and <SAMP>`O'</SAMP>, but we consider this a generalization
+of "the same string", rather than an exception.)
+<P>
+  Any two regular expressions <VAR>a</VAR> and <VAR>b</VAR> can be concatenated.  The
+result is a regular expression which matches a string if <VAR>a</VAR> matches
+some amount of the beginning of that string and <VAR>b</VAR> matches the rest of
+the string.<P>
+  As a simple example, we can concatenate the regular expressions <SAMP>`f'</SAMP>
+and <SAMP>`o'</SAMP> to get the regular expression <SAMP>`fo'</SAMP>, which matches only
+the string <SAMP>`fo'</SAMP>.  Still trivial.  To do something nontrivial, you
+need to use one of the special characters.  Here is a list of them.
+<P>
+<DL COMPACT>
+<DT><KBD>. (Period)</KBD>
+<DD>is a special character that matches any single character except a newline.
+Using concatenation, we can make regular expressions like <SAMP>`a.b'</SAMP> which
+matches any three-character string which begins with <SAMP>`a'</SAMP> and ends with
+<SAMP>`b'</SAMP>.<P>
+<DT><KBD>*</KBD>
+<DD>is not a construct by itself; it is a postfix operator, which means to
+match the preceding regular expression repetitively as many times as
+possible.  Thus, <SAMP>`o*'</SAMP> matches any number of <SAMP>`o'</SAMP>s (including no
+<SAMP>`o'</SAMP>s).
+<P>
+<SAMP>`*'</SAMP> always applies to the <EM>smallest</EM> possible preceding
+expression.  Thus, <SAMP>`fo*'</SAMP> has a repeating <SAMP>`o'</SAMP>, not a repeating
+<SAMP>`fo'</SAMP>.  It matches <SAMP>`f'</SAMP>, <SAMP>`fo'</SAMP>, <SAMP>`foo'</SAMP>, and so on.
+<P>
+The matcher processes a <SAMP>`*'</SAMP> construct by matching, immediately,
+as many repetitions as can be found.  Then it continues with the rest
+of the pattern.  If that fails, backtracking occurs, discarding some
+of the matches of the <SAMP>`*'</SAMP>-modified construct in case that makes
+it possible to match the rest of the pattern.  For example, matching
+<SAMP>`ca*ar'</SAMP> against the string <SAMP>`caaar'</SAMP>, the <SAMP>`a*'</SAMP> first
+tries to match all three <SAMP>`a'</SAMP>s; but the rest of the pattern is
+<SAMP>`ar'</SAMP> and there is only <SAMP>`r'</SAMP> left to match, so this try fails.
+The next alternative is for <SAMP>`a*'</SAMP> to match only two <SAMP>`a'</SAMP>s.
+With this choice, the rest of the regexp matches successfully.<P>
+<DT><KBD>+</KBD>
+<DD>is a postfix character, similar to <SAMP>`*'</SAMP> except that it must match
+the preceding expression at least once.  So, for example, <SAMP>`ca+r'</SAMP>
+matches the strings <SAMP>`car'</SAMP> and <SAMP>`caaaar'</SAMP> but not the string
+<SAMP>`cr'</SAMP>, whereas <SAMP>`ca*r'</SAMP> matches all three strings.
+<P>
+<DT><KBD>?</KBD>
+<DD>is a postfix character, similar to <SAMP>`*'</SAMP> except that it can match the
+preceding expression either once or not at all.  For example,
+<SAMP>`ca?r'</SAMP> matches <SAMP>`car'</SAMP> or <SAMP>`cr'</SAMP>; nothing else.
+<P>
+<DT><KBD>[ ... ]</KBD>
+<DD>is a <DFN>character set</DFN>, which begins with <SAMP>`['</SAMP> and is terminated
+by a <SAMP>`]'</SAMP>.  In the simplest case, the characters between the two
+brackets are what this set can match.
+<P>
+Thus, <SAMP>`[ad]'</SAMP> matches either one <SAMP>`a'</SAMP> or one <SAMP>`d'</SAMP>, and
+<SAMP>`[ad]*'</SAMP> matches any string composed of just <SAMP>`a'</SAMP>s and <SAMP>`d'</SAMP>s
+(including the empty string), from which it follows that <SAMP>`c[ad]*r'</SAMP>
+matches <SAMP>`cr'</SAMP>, <SAMP>`car'</SAMP>, <SAMP>`cdr'</SAMP>, <SAMP>`caddaar'</SAMP>, etc.<P>
+You can also include character ranges a character set, by writing two
+characters with a <SAMP>`-'</SAMP> between them.  Thus, <SAMP>`[a-z]'</SAMP> matches any
+lower-case letter.  Ranges may be intermixed freely with individual
+characters, as in <SAMP>`[a-z$%.]'</SAMP>, which matches any lower case letter
+or <SAMP>`$'</SAMP>, <SAMP>`%'</SAMP> or period.<P>
+Note that the usual special characters are not special any more inside
+a character set.  A completely different set of special characters
+exists inside character sets: <SAMP>`]'</SAMP>, <SAMP>`-'</SAMP> and <SAMP>`^'</SAMP>.<P>
+To include a <SAMP>`]'</SAMP> in a character set, you must make it the first
+character.  For example, <SAMP>`[]a]'</SAMP> matches <SAMP>`]'</SAMP> or <SAMP>`a'</SAMP>.  To
+include a <SAMP>`-'</SAMP>, write <SAMP>`-'</SAMP> at the beginning or end of a range.
+To include <SAMP>`^'</SAMP>, make it other than the first character in the
+set.<P>
+<DT><KBD>[^ ... ]</KBD>
+<DD><SAMP>`[^'</SAMP> begins a <DFN>complemented character set</DFN>, which matches any
+character except the ones specified.  Thus, <SAMP>`[^a-z0-9A-Z]'</SAMP> matches
+all characters <EM>except</EM> letters and digits.
+<P>
+<SAMP>`^'</SAMP> is not special in a character set unless it is the first
+character.  The character following the <SAMP>`^'</SAMP> is treated as if it
+were first (<SAMP>`-'</SAMP> and <SAMP>`]'</SAMP> are not special there).
+<P>
+A complemented character set can match a newline, unless newline is
+mentioned as one of the characters not to match.  This is in contrast to
+the handling of regexps in programs such as <CODE>grep</CODE>.
+<P>
+<DT><KBD>^</KBD>
+<DD>is a special character that matches the empty string, but only at the
+beginning of a line in the text being matched.  Otherwise it fails to
+match anything.  Thus, <SAMP>`^foo'</SAMP> matches a <SAMP>`foo'</SAMP> which occurs at
+the beginning of a line.
+<P>
+<DT><KBD>$</KBD>
+<DD>is similar to <SAMP>`^'</SAMP> but matches only at the end of a line.  Thus,
+<SAMP>`xx*$'</SAMP> matches a string of one <SAMP>`x'</SAMP> or more at the end of a line.
+<P>
+<DT><KBD>\</KBD>
+<DD>has two functions: it quotes the special characters (including
+<SAMP>`\'</SAMP>), and it introduces additional special constructs.
+<P>
+Because <SAMP>`\'</SAMP> quotes special characters, <SAMP>`\$'</SAMP> is a regular
+expression which matches only <SAMP>`$'</SAMP>, and <SAMP>`\['</SAMP> is a regular
+expression which matches only <SAMP>`['</SAMP>, etc.
+</DL>
+<P>
+Note: for historical compatibility, special characters are treated as
+ordinary ones if they are in contexts where their special meanings make no
+sense.  For example, <SAMP>`*foo'</SAMP> treats <SAMP>`*'</SAMP> as ordinary since there is
+no preceding expression on which the <SAMP>`*'</SAMP> can act.  It is poor practice
+to depend on this behavior; better to quote the special character anyway,
+regardless of where is appears.<P>
+For the most part, <SAMP>`\'</SAMP> followed by any character matches only that
+character.  However, there are several exceptions: two-character
+sequences starting with <SAMP>`\'</SAMP> which have special meanings.  The
+second character in the sequence is always an ordinary character on
+their own.  Here is a table of <SAMP>`\'</SAMP> constructs.
+<P>
+<DL COMPACT>
+<DT><KBD>\|</KBD>
+<DD>specifies an alternative.  Two regular expressions <VAR>a</VAR> and <VAR>b</VAR>
+with <SAMP>`\|'</SAMP> in between form an expression that matches anything that
+either <VAR>a</VAR> or <VAR>b</VAR> matches.<P>
+Thus, <SAMP>`foo\|bar'</SAMP> matches either <SAMP>`foo'</SAMP> or <SAMP>`bar'</SAMP>
+but no other string.<P>
+<SAMP>`\|'</SAMP> applies to the largest possible surrounding expressions.  Only a
+surrounding <SAMP>`\( ... \)'</SAMP> grouping can limit the scope of
+<SAMP>`\|'</SAMP>.<P>
+Full backtracking capability exists to handle multiple uses of <SAMP>`\|'</SAMP>.
+<P>
+<DT><KBD>\( ... \)</KBD>
+<DD>is a grouping construct that serves three purposes:
+<P>
+<OL>
+<DT><KBD></KBD>
+<DD>To enclose a set of <SAMP>`\|'</SAMP> alternatives for other operations.
+Thus, <SAMP>`\(foo\|bar\)x'</SAMP> matches either <SAMP>`foox'</SAMP> or <SAMP>`barx'</SAMP>.
+<P>
+<DT><KBD></KBD>
+<DD>To enclose a complicated expression for the postfix operators <SAMP>`*'</SAMP>,
+<SAMP>`+'</SAMP> and <SAMP>`?'</SAMP> to operate on.  Thus, <SAMP>`ba\(na\)*'</SAMP> matches
+<SAMP>`bananana'</SAMP>, etc., with any (zero or more) number of <SAMP>`na'</SAMP>
+strings.<P>
+<DT><KBD></KBD>
+<DD>To mark a matched substring for future reference.
+</OL>
+<P>
+This last application is not a consequence of the idea of a
+parenthetical grouping; it is a separate feature which is assigned as a
+second meaning to the same <SAMP>`\( ... \)'</SAMP> construct.  In practice
+there is no conflict between the two meanings.  Here is an explanation
+of this feature:
+<P>
+<DT><KBD>\<VAR>d</VAR></KBD>
+<DD>after the end of a <SAMP>`\( ... \)'</SAMP> construct, the matcher remembers
+the beginning and end of the text matched by that construct.  Then,
+later on in the regular expression, you can use <SAMP>`\'</SAMP> followed by the
+digit <VAR>d</VAR> to mean "match the same text matched the <VAR>d</VAR>th time
+by the <SAMP>`\( ... \)'</SAMP> construct."
+<P>
+The strings matching the first nine <SAMP>`\( ... \)'</SAMP> constructs
+appearing in a regular expression are assigned numbers 1 through 9 in
+order that the open-parentheses appear in the regular expression.
+<SAMP>`\1'</SAMP> through <SAMP>`\9'</SAMP> refer to the text previously matched by the
+corresponding <SAMP>`\( ... \)'</SAMP> construct.
+<P>
+For example, <SAMP>`\(.*\)\1'</SAMP> matches any newline-free string that is
+composed of two identical halves.  The <SAMP>`\(.*\)'</SAMP> matches the first
+half, which may be anything, but the <SAMP>`\1'</SAMP> that follows must match
+the same exact text.
+<P>
+If a particular <SAMP>`\( ... \)'</SAMP> construct matches more than once
+(which can easily happen if it is followed by <SAMP>`*'</SAMP>), only the last
+match is recorded.
+<P>
+<DT><KBD>\`</KBD>
+<DD>matches the empty string, provided it is at the beginning
+of the buffer.
+<P>
+<DT><KBD>\'</KBD>
+<DD>matches the empty string, provided it is at the end of
+the buffer.
+<P>
+<DT><KBD>\b</KBD>
+<DD>matches the empty string, provided it is at the beginning or
+end of a word.  Thus, <SAMP>`\bfoo\b'</SAMP> matches any occurrence of
+<SAMP>`foo'</SAMP> as a separate word.  <SAMP>`\bballs?\b'</SAMP> matches
+<SAMP>`ball'</SAMP> or <SAMP>`balls'</SAMP> as a separate word.<P>
+<DT><KBD>\B</KBD>
+<DD>matches the empty string, provided it is <EM>not</EM> at the beginning or
+end of a word.
+<P>
+<DT><KBD>\&#60;</KBD>
+<DD>matches the empty string, provided it is at the beginning of a word.
+<P>
+<DT><KBD>\&#62;</KBD>
+<DD>matches the empty string, provided it is at the end of a word.
+<P>
+<DT><KBD>\w</KBD>
+<DD>matches any word-constituent character.  The syntax table
+determines which characters these are.
+<P>
+<DT><KBD>\W</KBD>
+<DD>matches any character that is not a word-constituent.
+<P>
+<DT><KBD>\s<VAR>c</VAR></KBD>
+<DD>matches any character whose syntax is <VAR>c</VAR>.  Here <VAR>c</VAR> is a
+character which represents a syntax code: thus, <SAMP>`w'</SAMP> for word
+constituent, <SAMP>`('</SAMP> for open-parenthesis, etc.  Represent a character
+of whitespace (which can be a newline) by either <SAMP>`-'</SAMP> or a space
+character.
+<P>
+<DT><KBD>\S<VAR>c</VAR></KBD>
+<DD>matches any character whose syntax is not <VAR>c</VAR>.
+</DL>
+<P>
+  The constructs that pertain to words and syntax are controlled by the
+setting of the syntax table (see section <A HREF="emacs_35.html#SEC355">The Syntax Table</A>).
+<P>
+  Here is a complicated regexp, used by Emacs to recognize the end of a
+sentence together with any whitespace that follows.  It is given in Lisp
+syntax to enable you to distinguish the spaces from the tab characters.  In
+Lisp syntax, the string constant begins and ends with a double-quote.
+<SAMP>`\"'</SAMP> stands for a double-quote as part of the regexp, <SAMP>`\\'</SAMP> for a
+backslash as part of the regexp, <SAMP>`\t'</SAMP> for a tab and <SAMP>`\n'</SAMP> for a
+newline.
+<P>
+<PRE>
+"[.?!][]\"')]*\\($\\|\t\\|  \\)[ \t\n]*"
+</PRE>
+<P>
+This contains four parts in succession: a character set matching period,
+<SAMP>`?'</SAMP>, or <SAMP>`!'</SAMP>; a character set matching close-brackets, quotes,
+or parentheses, repeated any number of times; an alternative in
+backslash-parentheses that matches end-of-line, a tab, or two spaces;
+and a character set matching whitespace characters, repeated any number
+of times.
+<P>
+  To enter the same regexp interactively, you would type <KBD>TAB</KBD> to
+enter a tab, and <KBD>C-q C-j</KBD> to enter a newline.  You would also type
+single slashes as themselves, instead of doubling them for Lisp syntax.
+<P>
+<H2><A NAME="SEC84" HREF="emacs_toc.html#SEC84">Searching and Case</A></H2>
+<A NAME="IDX372"></A>
+<P>
+  All sorts of searches in Emacs normally ignore the case of the text
+they are searching through, if you specify the text in lower case.
+Thus, if you specify searching for <SAMP>`foo'</SAMP>, then <SAMP>`Foo'</SAMP> and
+<SAMP>`foo'</SAMP> are also considered a match.  Regexps, and in particular
+character sets, are included: <SAMP>`[ab]'</SAMP> would match <SAMP>`a'</SAMP> or
+<SAMP>`A'</SAMP> or <SAMP>`b'</SAMP> or <SAMP>`B'</SAMP>.<P>
+  An upper-case letter in the search string makes the search
+case-sensitive.  Thus, searching for <SAMP>`Foo'</SAMP> does not find <SAMP>`foo'</SAMP>
+or <SAMP>`FOO'</SAMP>.  This applies to regular expression search also.  If you
+delete the upper-case character from the search string, it ceases to
+have this effect.
+<P>
+  If you set the variable <CODE>case-fold-search</CODE> to <CODE>nil</CODE>, then
+all letters must match exactly, including case.  This is a per-buffer
+variable; altering the variable affects only the current buffer, but
+there is a default value which you can change as well.  See section <A HREF="emacs_35.html#SEC338">Local Variables</A>.
+<P>
+<A NAME="IDX373"></A>
+<A NAME="IDX374"></A>
+<A NAME="IDX375"></A>
+<A NAME="IDX376"></A>
+<H2><A NAME="SEC85" HREF="emacs_toc.html#SEC85">Replacement Commands</A></H2>
+<P>
+  Global search-and-replace operations are not needed as often in Emacs
+as they are in other editors<A NAME="FOOT1" HREF="emacs_foot.html#FOOT1">(1)</A>, but they are available.  In addition to the
+simple <KBD>M-x replace-string</KBD> command which is like that found in most
+editors, there is a <KBD>M-x query-replace</KBD> command which asks you, for
+each occurrence of the pattern, whether to replace it.
+<P>
+  The replace commands all replace one string (or regexp) with one
+replacement string.  It is possible to perform several replacements in
+parallel using the command <CODE>expand-region-abbrevs</CODE>.  See section <A HREF="emacs_28.html#SEC238">Controlling Abbrev Expansion</A>.
+<P>
+<A NAME="IDX377"></A>
+<A NAME="IDX378"></A>
+<H3><A NAME="SEC86" HREF="emacs_toc.html#SEC86">Unconditional Replacement</A></H3>
+<P>
+<DL COMPACT>
+<DT><KBD>M-x replace-string <KBD>RET</KBD> <VAR>string</VAR> <KBD>RET</KBD> <VAR>newstring</VAR> <KBD>RET</KBD></KBD>
+<DD>Replace every occurrence of <VAR>string</VAR> with <VAR>newstring</VAR>.
+<DT><KBD>M-x replace-regexp <KBD>RET</KBD> <VAR>regexp</VAR> <KBD>RET</KBD> <VAR>newstring</VAR> <KBD>RET</KBD></KBD>
+<DD>Replace every match for <VAR>regexp</VAR> with <VAR>newstring</VAR>.
+</DL>
+<P>
+  To replace every instance of <SAMP>`foo'</SAMP> after point with <SAMP>`bar'</SAMP>,
+use the command <KBD>M-x replace-string</KBD> with the two arguments
+<SAMP>`foo'</SAMP> and <SAMP>`bar'</SAMP>.  Replacement happens only in the text after
+point, so if you want to cover the whole buffer you must go to the
+beginning first.  All occurrences up to the end of the buffer are
+replaced; to limit replacement to part of the buffer, narrow to that
+part of the buffer before doing the replacement (see section <A HREF="emacs_34.html#SEC323">Narrowing</A>).
+<P>
+  When <CODE>replace-string</CODE> exits, point is left at the last occurrence
+replaced.  The position of point where the <CODE>replace-string</CODE> command
+was issued is remembered on the mark ring; use <KBD>C-u C-<KBD>SPC</KBD></KBD> to
+move back there.
+<P>
+  A numeric argument restricts replacement to matches that are surrounded
+by word boundaries.
+<P>
+<H3><A NAME="SEC87" HREF="emacs_toc.html#SEC87">Regexp Replacement</A></H3>
+<P>
+  The <KBD>M-x replace-string</KBD> command replaces exact matches for a
+single string.  The similar command <KBD>M-x replace-regexp</KBD> replaces
+any match for a specified pattern.
+<P>
+  In <CODE>replace-regexp</CODE>, the <VAR>newstring</VAR> need not be constant: it
+can refer to all or part of what is matched by the <VAR>regexp</VAR>.
+<SAMP>`\&#38;'</SAMP> in <VAR>newstring</VAR> stands for the entire text being replaced.
+<SAMP>`\<VAR>d</VAR>'</SAMP> in <VAR>newstring</VAR>, where <VAR>d</VAR> is a digit, stands for
+whatever matched the <VAR>d</VAR>th parenthesized grouping in <VAR>regexp</VAR>.
+To include a <SAMP>`\'</SAMP> in the text to replace with, you must give
+<SAMP>`\\'</SAMP>.  For example,
+<P>
+<PRE>
+M-x replace-regexp <KBD>RET</KBD> c[ad]+r <KBD>RET</KBD> \&#38;-safe <KBD>RET</KBD>
+</PRE>
+<P>
+replaces (for example) <SAMP>`cadr'</SAMP> with <SAMP>`cadr-safe'</SAMP> and <SAMP>`cddr'</SAMP>
+with <SAMP>`cddr-safe'</SAMP>.
+<P>
+<PRE>
+M-x replace-regexp <KBD>RET</KBD> \(c[ad]+r\)-safe <KBD>RET</KBD> \1 <KBD>RET</KBD>
+</PRE>
+<P>
+performs the inverse transformation.
+<P>
+<H3><A NAME="SEC88" HREF="emacs_toc.html#SEC88">Replace Commands and Case</A></H3>
+<A NAME="IDX379"></A>
+<P>
+  If the arguments to a replace command are in lower case, it preserves
+case when it makes a replacement.  Thus, the command
+<P>
+<PRE>
+M-x replace-string <KBD>RET</KBD> foo <KBD>RET</KBD> bar <KBD>RET</KBD>
+</PRE>
+<P>
+replaces a lower case <SAMP>`foo'</SAMP> with a lower case <SAMP>`bar'</SAMP>,
+<SAMP>`FOO'</SAMP> with <SAMP>`BAR'</SAMP>, and <SAMP>`Foo'</SAMP> with <SAMP>`Bar'</SAMP>.  If upper
+case letters are used in the second argument, they remain upper case
+every time that argument is inserted.  If upper case letters are used in
+the first argument, the second argument is always substituted exactly as
+given, with no case conversion.  Likewise, if the variable
+<CODE>case-replace</CODE> is set to <CODE>nil</CODE>, replacement is done without
+case conversion.  If <CODE>case-fold-search</CODE> is set to <CODE>nil</CODE>, case
+is significant in matching occurrences of <SAMP>`foo'</SAMP> to replace; this
+also inhibits case conversion of the replacement string.
+<P>
+<A NAME="IDX380"></A>
+<H3><A NAME="SEC89" HREF="emacs_toc.html#SEC89">Query Replace</A></H3>
+<P>
+<DL COMPACT>
+<DT><KBD>M-% <VAR>string</VAR> <KBD>RET</KBD> <VAR>newstring</VAR> <KBD>RET</KBD></KBD>
+<DD><DT><KBD>M-x query-replace <KBD>RET</KBD> <VAR>string</VAR> <KBD>RET</KBD> <VAR>newstring</VAR> <KBD>RET</KBD></KBD>
+<DD>Replace some occurrences of <VAR>string</VAR> with <VAR>newstring</VAR>.
+<DT><KBD>M-x query-replace-regexp <KBD>RET</KBD> <VAR>regexp</VAR> <KBD>RET</KBD> <VAR>newstring</VAR> <KBD>RET</KBD></KBD>
+<DD>Replace some matches for <VAR>regexp</VAR> with <VAR>newstring</VAR>.
+</DL>
+<A NAME="IDX381"></A>
+<A NAME="IDX382"></A>
+<P>
+  If you want to change only some of the occurrences of <SAMP>`foo'</SAMP> to
+<SAMP>`bar'</SAMP>, not all of them, then you cannot use an ordinary
+<CODE>replace-string</CODE>.  Instead, use <KBD>M-%</KBD> (<CODE>query-replace</CODE>).
+This command finds occurrences of <SAMP>`foo'</SAMP> one by one, displays each
+occurrence and asks you whether to replace it.  A numeric argument to
+<CODE>query-replace</CODE> tells it to consider only occurrences that are
+bounded by word-delimiter characters.  This preserves case, just like
+<CODE>replace-string</CODE>, provided <CODE>case-replace</CODE> is non-<CODE>nil</CODE>,
+as it normally is.
+<A NAME="IDX383"></A>
+<P>
+  Aside from querying, <CODE>query-replace</CODE> works just like
+<CODE>replace-string</CODE>, and <CODE>query-replace-regexp</CODE> works just like
+<CODE>replace-regexp</CODE>.  The shortest way to type this command name is
+<KBD>M-x qu <KBD>SPC</KBD> <KBD>SPC</KBD> <KBD>SPC</KBD> <KBD>RET</KBD></KBD>.
+<P>
+  The things you can type when you are shown an occurrence of <VAR>string</VAR>
+or a match for <VAR>regexp</VAR> are:
+<P>
+<DL COMPACT>
+<DT><KBD><KBD>SPC</KBD></KBD>
+<DD>to replace the occurrence with <VAR>newstring</VAR>.
+<P>
+<DT><KBD><KBD>DEL</KBD></KBD>
+<DD>to skip to the next occurrence without replacing this one.
+<P>
+<DT><KBD>, (Comma)</KBD>
+<DD>to replace this occurrence and display the result.  You are then asked
+for another input character, except that since the replacement has
+already been made, <KBD>DEL</KBD> and <KBD>SPC</KBD> are equivalent.  You could
+type <KBD>C-r</KBD> at this point (see below) to alter the replaced text.  You
+could also type <KBD>C-x u</KBD> to undo the replacement; this exits the
+<CODE>query-replace</CODE>, so if you want to do further replacement you must use
+<KBD>C-x <KBD>ESC</KBD> <KBD>RET</KBD></KBD> to restart (see section <A HREF="emacs_10.html#SEC39">Repeating Minibuffer Commands</A>).
+<P>
+<DT><KBD><KBD>RET</KBD></KBD>
+<DD><DT><KBD><KBD>ESC</KBD></KBD>
+<DD>to exit without doing any more replacements.
+<P>
+<DT><KBD>. (Period)</KBD>
+<DD>to replace this occurrence and then exit without searching for more
+occurrences.
+<P>
+<DT><KBD>!</KBD>
+<DD>to replace all remaining occurrences without asking again.
+<P>
+<DT><KBD>^</KBD>
+<DD>to go back to the position of the previous occurrence (or what used to
+be an occurrence), in case you changed it by mistake.  This works by
+popping the mark ring.  Only one <KBD>^</KBD> in a row is allowed, because
+only one previous replacement position is kept during <CODE>query-replace</CODE>.
+<P>
+<DT><KBD>C-r</KBD>
+<DD>to enter a recursive editing level, in case the occurrence needs to be
+edited rather than just replaced with <VAR>newstring</VAR>.  When you are
+done, exit the recursive editing level with <KBD>C-M-c</KBD> to proceed to
+the next occurrence.  See section <A HREF="emacs_36.html#SEC365">Recursive Editing Levels</A>.
+<P>
+<DT><KBD>C-w</KBD>
+<DD>to delete the occurrence, and then enter a recursive editing level as in
+<KBD>C-r</KBD>.  Use the recursive edit to insert text to replace the deleted
+occurrence of <VAR>string</VAR>.  When done, exit the recursive editing level
+with <KBD>C-M-c</KBD> to proceed to the next occurrence.
+<P>
+<DT><KBD>C-l</KBD>
+<DD>to redisplay the screen.  Then you must type another character to
+specify what to do with this occurrence.
+<P>
+<DT><KBD>C-h</KBD>
+<DD>to display a message summarizing these options.  Then you must type
+another character to specify what to do with this occurrence.
+</DL>
+<P>
+  Some other characters are aliases for the ones listed above: <KBD>y</KBD>,
+<KBD>n</KBD> and <KBD>q</KBD> are equivalent to <KBD>SPC</KBD>, <KBD>DEL</KBD> and
+<KBD>ESC</KBD>.
+<P>
+  Aside from this, any other character exits the <CODE>query-replace</CODE>,
+and is then reread as part of a key sequence.  Thus, if you type
+<KBD>C-k</KBD>, it exits the <CODE>query-replace</CODE> and then kills to end of
+line.
+<P>
+  To restart a <CODE>query-replace</CODE> once it is exited, use <KBD>C-x
+<KBD>ESC</KBD></KBD>, which repeats the <CODE>query-replace</CODE> because it used the
+minibuffer to read its arguments.  See section <A HREF="emacs_10.html#SEC39">Repeating Minibuffer Commands</A>.
+<P>
+  See also section <A HREF="emacs_32.html#SEC277">Transforming File Names in Dired</A>, for Dired commands to rename,
+copy, or link files by replacing regexp matches in file names.
+<P>
+<H2><A NAME="SEC90" HREF="emacs_toc.html#SEC90">Other Search-and-Loop Commands</A></H2>
+<P>
+  Here are some other commands that find matches for a regular expression.
+They all operate from point to the end of the buffer.
+<A NAME="IDX384"></A>
+<A NAME="IDX385"></A>
+<A NAME="IDX386"></A>
+<A NAME="IDX387"></A>
+<A NAME="IDX388"></A>
+<P>
+<DL COMPACT>
+<DT><KBD>M-x occur <KBD>RET</KBD> <VAR>regexp</VAR> <KBD>RET</KBD></KBD>
+<DD>Print each line that follows point and contains a match for
+<VAR>regexp</VAR>.  A numeric argument specifies the number of context lines
+to print before and after each matching line; the default is none.
+<A NAME="IDX389"></A>
+<P>
+The buffer <SAMP>`*Occur*'</SAMP> containing the output serves as a menu for
+finding the occurrences in their original context.  Find an occurrence
+as listed in <SAMP>`*Occur*'</SAMP>, position point there and type <KBD>C-c
+C-c</KBD>; this switches to the buffer that was searched and moves point to
+the original of the same occurrence.
+<P>
+<DT><KBD>M-x list-matching-lines</KBD>
+<DD>Synonym for <KBD>M-x occur</KBD>.
+<P>
+<DT><KBD>M-x count-matches <KBD>RET</KBD> <VAR>regexp</VAR> <KBD>RET</KBD></KBD>
+<DD>Print the number of matches for <VAR>regexp</VAR> after point.
+<P>
+<DT><KBD>M-x flush-lines <KBD>RET</KBD> <VAR>regexp</VAR> <KBD>RET</KBD></KBD>
+<DD>Delete each line that follows point and contains a match for
+<VAR>regexp</VAR>.
+<P>
+<DT><KBD>M-x keep-lines <KBD>RET</KBD> <VAR>regexp</VAR> <KBD>RET</KBD></KBD>
+<DD>Delete each line that follows point and does not contain a match for
+<VAR>regexp</VAR>.
+</DL>
+<P>Go to the <A HREF="emacs_16.html">previous</A>, <A HREF="emacs_18.html">next</A> section.<P>
