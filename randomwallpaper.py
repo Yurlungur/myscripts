@@ -26,7 +26,7 @@ WALLPAPER_DIRECTORY = '/home/jonah/Storage/Pictures/wallpapers/'
 SETCOMMAND = '/usr/bin/nitrogen --set-zoom-fill'
 
 # This is the name of file that contains used wallpaper names
-CONFIGURATION_FILE = '/home/jonah/myscripts/.usedwallpapers.dat'
+CONFIGURATION_FILE = '/home/jonah/.usedwallpapers.dat'
 #--------------------------------------------------------------------------
 
 
