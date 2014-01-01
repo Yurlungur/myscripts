@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+cp /root/resolv.conf.normal /etc/resolv.conf
