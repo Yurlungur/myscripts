@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo + Switching to $*
+echo + Press CTRL-D to return to `pwd`
+
+echo $* > ~/.lastdir
+bash --login

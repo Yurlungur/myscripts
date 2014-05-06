@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author: Matthew Lawson
-# Time-stamp: <2014-01-01 18:14:52 (jonah)>
+# Time-stamp: <2014-01-20 17:44:30 (jonah)>
 
 #This script toggles on and off an external monitor
 #----------------------------------------------------------------------
@@ -18,3 +18,6 @@ if (xrandr | grep "$EXT" | grep " connected"); then
     xrandr --output $IN --off --output $EXT --auto
 fi
 fi
+pkill trayer
+trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 14 --transparent true --tint 0x000000 --alpha 0 --height 16 &
+/home/jonah/myscripts/randomwallpaper.py
